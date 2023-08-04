@@ -43,8 +43,6 @@ implementation
 
 {$R *.dfm}
 
-//test_branch_dev_test
-
 procedure TForm1.Button1Click(Sender: TObject);
 begin
  comPort.Connect;
@@ -93,10 +91,10 @@ var
   i: integer;
   buf:string;
 begin
-  // РљРѕРїРёСЂСѓРµРј РїРѕР»СѓС‡РµРЅРЅС‹Рµ Р±Р°Р№С‚С‹ РІ СЃС‚СЂРѕРєСѓ s
+  // Копируем полученные байты в строку s
   SetString(s, PAnsiChar(DataPtr), DataSize);
 
-  // РџРµСЂРµР±РёСЂР°РµРј РІСЃРµ Р±Р°Р№С‚С‹ РІ СЃС‚СЂРѕРєРµ Рё РєРѕРЅРІРµСЂС‚РёСЂСѓРµРј РєР°Р¶РґС‹Р№ Р±Р°Р№С‚ РІ С„РѕСЂРјР°С‚ hex
+  // Перебираем все байты в строке и конвертируем каждый байт в формат hex
   hexString := '';
   for i := 1 to Length(s) do
   begin
