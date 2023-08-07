@@ -2,7 +2,8 @@ program Terminator;
 
 uses
   Vcl.Forms,
-  main in 'main.pas' {Form1};
+  main in 'main.pas' {Form1},
+  Terminal in 'lib\Terminal.pas';
 
 {$R *.res}
 

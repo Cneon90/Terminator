@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.873,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.455,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.100,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Terminator.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.873,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.132,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.942,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.147,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2023.08.04 14:44:46.251,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2023.08.04 15:58:46.455,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>2023.08.04 16:19:08.873,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.dfm=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>2023.08.04 16:19:08.873,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2023.08.04 16:19:18.100,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Terminator.dproj=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.251,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023.08.07 09:58:11.918,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.pas</Transaction>
+    <Transaction>2023.08.07 10:00:23.995,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>
