@@ -2,7 +2,7 @@ program Terminator;
 
 uses
   Vcl.Forms,
-  main in 'main.pas' {Form1},
+  main in 'main.pas' {fr_main},
   Terminal in 'lib\Terminal.pas';
 
 {$R *.res}
@@ -10,6 +10,6 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(Tfr_main, fr_main);
   Application.Run;
 end.

@@ -1,66 +1,84 @@
-unit main;
+п»їunit main;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, CPDrv, Vcl.StdCtrls, System.Actions,
-  Vcl.ActnList, Vcl.ExtCtrls, System.Notification;
+  Vcl.ActnList, Vcl.ExtCtrls, System.Notification, terminal;
 
 type
-  TForm1 = class(TForm)
-    Memo1: TMemo;
+  Tfr_main = class(TForm)
+    mmTerminal: TMemo;
     btnConnection: TButton;
-    Button3: TButton;
+    btnPing: TButton;
     Button4: TButton;
     comPort: TCommPortDriver;
-    Button5: TButton;
+    btnRead: TButton;
     cbComPorts: TComboBox;
     actList: TActionList;
     actConnect: TAction;
     actDisconnect: TAction;
     switchConnection: TAction;
     Notification1: TNotificationCenter;
+    btnWrite: TButton;
+    btnClose: TButton;
+    actClose: TAction;
+    btnInfo: TButton;
+    lbInfo: TLabel;
     procedure comPortReceiveData(Sender: TObject; DataPtr: Pointer;
       DataSize: Cardinal);
-    procedure Button3Click(Sender: TObject);
+    procedure btnPingClick(Sender: TObject);
     procedure Button4Click(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
+    procedure btnReadClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actConnectExecute(Sender: TObject);
     procedure actDisconnectExecute(Sender: TObject);
     procedure switchConnectionExecute(Sender: TObject);
+    procedure actCloseExecute(Sender: TObject);
+    procedure btnInfoClick(Sender: TObject);
   private
     { Private declarations }
     procedure switchButtons;
+    procedure print(buf:Tarray<byte>);
     procedure sendMessage(message: String);
   public
     { Public declarations }
   end;
 
 var
-  Form1: TForm1;
-
-type
-  TtrmCommand = class
-  public
-    Head : byte;
-    Command : array[0..20] of byte;
-  end;
-
-
+  fr_main: Tfr_main;
+  Terminal: Tterminal;
 implementation
 
 {$R *.dfm}
 
 //test_branch_dev_test
 
+//Р Р°СЃРїРµС‡Р°С‚Р°С‚СЊ РјР°СЃСЃРёРІ
+procedure Tfr_main.Print(buf: TArray<byte>);
+var
+hexString: string;
+i: Integer;
+begin
+hexString := '';
 
-procedure Tform1.sendMessage(message: String);
+  for i := 0 to Length(buf) - 1 do
+  begin
+    hexString := hexString + IntToHex(buf[i], 2) + ' ';
+  end;
+
+mmTerminal.Lines.Append(hexString);
+end;
+
+
+
+
+procedure Tfr_main.sendMessage(message: String);
 var
   Notification: TNotification;
 begin
-  // Создаем и отправляем уведомление
+  // РЎРѕР·РґР°РµРј Рё РѕС‚РїСЂР°РІР»СЏРµРј СѓРІРµРґРѕРјР»РµРЅРёРµ
   Notification := Notification1.CreateNotification;
   try
     Notification.Name := 'MyNotification';
@@ -72,99 +90,102 @@ begin
 end;
 
 
-procedure TForm1.switchButtons;
+procedure Tfr_main.switchButtons;
 begin
  if comPort.Connected then
   begin
     btnConnection.Caption := 'Disconnect';
-//    sendMessage('Подключен');
+//    sendMessage('РџРѕРґРєР»СЋС‡РµРЅ');
   end else
   begin
     btnConnection.Caption := 'Connect';
-//    sendMessage('Отключен');
+//    sendMessage('РћС‚РєР»СЋС‡РµРЅ');
   end;
 end;
 
-procedure TForm1.actConnectExecute(Sender: TObject);
+procedure Tfr_main.actCloseExecute(Sender: TObject);
+begin
+  close;
+end;
+
+procedure Tfr_main.actConnectExecute(Sender: TObject);
 begin
   if cbComPorts.Text = '' then
    begin
-       sendMessage('Укажите порт');
+       sendMessage('РЈРєР°Р¶РёС‚Рµ РїРѕСЂС‚');
    end;
   comPort.PortName := cbComPorts.Text;
   comPort.Connect;
   switchButtons;
 end;
 
-procedure TForm1.actDisconnectExecute(Sender: TObject);
+procedure Tfr_main.actDisconnectExecute(Sender: TObject);
 begin
   comPort.Disconnect;
   switchButtons;
 end;
 
-procedure TForm1.switchConnectionExecute(Sender: TObject);
+procedure Tfr_main.switchConnectionExecute(Sender: TObject);
 begin
   if comPort.Connected then actDisconnect.Execute
                        else actConnect.Execute;
 end;
 
-procedure TForm1.Button3Click(Sender: TObject);
-var
-  data: Array[0..2] of byte;
+procedure Tfr_main.btnInfoClick(Sender: TObject);
+var i:integer;
 begin
-  data[0] := $55;
-  data[1] := $01;
-  data[2] := $A9;
-  comPort.SendData(@data[0], Length(data));
+  Terminal.info;
+
+  lbInfo.Caption:='';
+  if Length(Terminal.serialNumber) = 4 then
+    for I := 0 to 3 do
+      lbInfo.Caption := lbInfo.Caption + IntToHex(Terminal.serialNumber[i], 2);
+
+
+
 end;
 
-procedure TForm1.Button4Click(Sender: TObject);
+procedure Tfr_main.btnPingClick(Sender: TObject);
 begin
- Memo1.Clear;
+  Terminal.ping;
 end;
 
-procedure TForm1.Button5Click(Sender: TObject);
-var
-  data: Array[0..2] of byte;
+procedure Tfr_main.Button4Click(Sender: TObject);
 begin
-
-  data[0] := $55;
-  data[1] := $EC;
-  data[2] := $BE;
-
-  comPort.SendData(@data[0], Length(data));
+ mmTerminal.Clear;
 end;
 
-procedure TForm1.comPortReceiveData(Sender: TObject; DataPtr: Pointer;
+procedure Tfr_main.btnReadClick(Sender: TObject);
+begin
+  Terminal.getTerminalConfig;
+end;
+
+procedure Tfr_main.comPortReceiveData(Sender: TObject; DataPtr: Pointer;
   DataSize: Cardinal);
 var
   s: AnsiString;
   hexString: string;
   i: integer;
-  buf:string;
+  buf: TArray<byte>;
 begin
-  // Копируем полученные байты в строку s
-  SetString(s, PAnsiChar(DataPtr), DataSize);
-
-  // Перебираем все байты в строке и конвертируем каждый байт в формат hex
-  hexString := '';
-  for i := 1 to Length(s) do
-  begin
-    hexString := hexString + IntToHex(Ord(s[i]), 2) + ' ';
-  end;
-
-  memo1.Lines.Append(hexString);
-
+  SetLength(buf, DataSize);
+  Move(DataPtr^, buf[0], DataSize);
+  Print(buf);
+  Terminal.checkAnswer(buf);
 end;
 
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure Tfr_main.FormCreate(Sender: TObject);
 begin
-  // Получаем список доступных com ports
+   //РџРµСЂРµРґР°С‡Р° РєРѕРјРїРѕРЅРµРЅС‚Р°
+   Terminal := Tterminal.Create(comPort);
+
+  // РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… com ports
   comPort.EnumComPorts(cbComPorts.Items);
-  //Если список не пуст, выбираем первый
+  //Р•СЃР»Рё СЃРїРёСЃРѕРє РЅРµ РїСѓСЃС‚, РІС‹Р±РёСЂР°РµРј РїРµСЂРІС‹Р№
   if cbComPorts.Items.Count <> 0 then
     cbComPorts.ItemIndex := 0;
+
 end;
 
 end.

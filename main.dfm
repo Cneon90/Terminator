@@ -1,7 +1,7 @@
-object Form1: TForm1
+object fr_main: Tfr_main
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Terminator'
   ClientHeight = 702
   ClientWidth = 918
   Color = clBtnFace
@@ -12,7 +12,14 @@ object Form1: TForm1
   Font.Style = []
   OnCreate = FormCreate
   TextHeight = 15
-  object Memo1: TMemo
+  object lbInfo: TLabel
+    Left = 510
+    Top = 53
+    Width = 31
+    Height = 15
+    Caption = 'lbInfo'
+  end
+  object mmTerminal: TMemo
     Left = 8
     Top = 50
     Width = 483
@@ -28,17 +35,17 @@ object Form1: TForm1
     Action = switchConnection
     TabOrder = 1
   end
-  object Button3: TButton
-    Left = 280
+  object btnPing: TButton
+    Left = 173
     Top = 19
     Width = 75
     Height = 25
     Caption = 'Ping'
     TabOrder = 2
-    OnClick = Button3Click
+    OnClick = btnPingClick
   end
   object Button4: TButton
-    Left = 442
+    Left = 754
     Top = 19
     Width = 75
     Height = 25
@@ -46,14 +53,14 @@ object Form1: TForm1
     TabOrder = 3
     OnClick = Button4Click
   end
-  object Button5: TButton
-    Left = 361
+  object btnRead: TButton
+    Left = 254
     Top = 19
     Width = 75
     Height = 25
     Caption = 'Read'
     TabOrder = 4
-    OnClick = Button5Click
+    OnClick = btnReadClick
   end
   object cbComPorts: TComboBox
     Left = 8
@@ -63,6 +70,31 @@ object Form1: TForm1
     Style = csDropDownList
     Sorted = True
     TabOrder = 5
+  end
+  object btnWrite: TButton
+    Left = 335
+    Top = 19
+    Width = 75
+    Height = 25
+    Caption = 'Write'
+    TabOrder = 6
+  end
+  object btnClose: TButton
+    Left = 835
+    Top = 19
+    Width = 75
+    Height = 25
+    Action = actClose
+    TabOrder = 7
+  end
+  object btnInfo: TButton
+    Left = 416
+    Top = 19
+    Width = 75
+    Height = 25
+    Caption = 'INFO'
+    TabOrder = 8
+    OnClick = btnInfoClick
   end
   object comPort: TCommPortDriver
     Port = pnCustom
@@ -87,6 +119,10 @@ object Form1: TForm1
     object switchConnection: TAction
       Caption = 'Connect'
       OnExecute = switchConnectionExecute
+    end
+    object actClose: TAction
+      Caption = 'Close'
+      OnExecute = actCloseExecute
     end
   end
   object Notification1: TNotificationCenter

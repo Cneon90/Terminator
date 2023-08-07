@@ -99,7 +99,7 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="main.pas">
-            <Form>Form1</Form>
+            <Form>fr_main</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="lib\Terminal.pas"/>

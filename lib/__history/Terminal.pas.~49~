@@ -1,0 +1,187 @@
+unit Terminal;
+
+interface
+
+ uses CPDrv;
+
+type
+  Tterminal = class
+  const
+    CMD_HEAD_REQUST    = $55;
+    CMD_HEAD_RESPONSE  = $AA;
+    CMD_TEST_CONNECT   = $01;
+    CMD_CONFIG_READ    = $EC;
+    CMD_CONFIG_WRITE   = $ED;
+    CMD_TERMINAL_INFO  = $0F;
+
+
+  private
+     FCommPort: TCommPortDriver; // Поле для хранения ссылки на TCommPortDriver
+     function paсkageChecked:byte;
+     function getSumData:byte;
+     function getParams(_data: Tarray<byte>; index:integer; ofset : integer):Tarray<byte>;
+     procedure _getSN(_data:array of byte);
+  public
+     packageData:Tarray<byte>;
+     packageCmd:byte;
+     ProdDate : array[0..2] of byte;
+     serialNumber : array[0..3] of byte;
+     coding:array[0..4] of byte;
+     SW:array[0..5] of byte;
+     name:array[0..5] of byte;
+     MAC_AP:array[0..6] of byte;
+     MAC_ST:array[0..6] of byte;
+     GSM_EN:byte;
+     SIM_ID:array[0..20] of byte;
+
+
+     constructor Create(ACommPort: TCommPortDriver); // Конструктор класса с параметром
+     function makeCommad:Tarray<byte>;
+     function checkAnswer(_data:Tarray<byte>): Tarray<byte>;
+     procedure ping;
+     procedure getTerminalConfig;
+     procedure send(_data:Tarray<byte>);
+     procedure info;
+
+  end;
+
+
+
+implementation
+
+
+constructor Tterminal.Create(ACommPort: TCommPortDriver);
+begin
+  FCommPort := ACommPort; // Присваиваем ссылку на TCommPortDriver полю FCommPort
+end;
+
+//Отправка в консоль
+procedure Tterminal.send(_data:Tarray<byte>);
+begin
+  if Assigned(FCommPort) then
+  begin
+    FCommPort.SendData(_data,Length(_data));
+  end;
+end;
+
+//Получение суммы всех данных
+function Tterminal.getSumData:byte;
+var
+  sum:integer;
+  ByteValue: Byte;
+begin
+  sum := 0;
+  for ByteValue in packageData do
+    Sum := Sum + ByteValue;
+
+  result:=byte(sum);
+end;
+
+//Собираем команду для отправки на терминал
+function Tterminal.makeCommad:Tarray<byte>;
+var _data:Tarray<byte>;
+    i,dataLength : integer;
+begin
+   dataLength := Length(packageData);
+   SetLength(_data,dataLength+3);
+   _data[0] := CMD_HEAD_REQUST;
+   _data[1] := packageCmd;
+
+   for i := 0 to dataLength-1 do
+      _data[i+2] := packageData[i];
+
+   _data[dataLength+2] := paсkageChecked;
+
+   result := _data;
+end;
+
+//Получение проверочного байта
+function Tterminal.paсkageChecked: Byte;
+begin
+     result := byte($FF - (CMD_HEAD_REQUST + packageCmd + getSumData));
+end;
+
+//Проверка связи с терминалом
+procedure Tterminal.ping;
+begin
+  packageCmd := CMD_TEST_CONNECT;
+  packageData := [];
+  send(Self.makeCommad);
+end;
+
+//Проверка связи с терминалом
+procedure Tterminal.getTerminalConfig;
+begin
+  packageCmd := CMD_CONFIG_READ;
+  packageData := [];
+  send(Self.makeCommad);
+end;
+
+//Получение информации о Терминале
+procedure Tterminal.info;
+begin
+  packageCmd := CMD_TERMINAL_INFO;
+  packageData := [];
+  send(self.makeCommad);
+end;
+
+procedure Tterminal._getSN(_data:array of byte);
+begin
+  serialNumber[0] := _data[5];
+  serialNumber[1] := _data[6];
+  serialNumber[2] := _data[7];
+  serialNumber[3] := _data[8];
+end;
+
+
+function Tterminal.getParams( _data: Tarray<byte>; index:integer; ofset : integer):Tarray<byte>;
+var
+   buf : Tarray<byte>;
+   i, len :integer;
+begin
+   len :=  ofset - index;
+   SetLength(buf, len);
+   for i := 0 to len - 1 do
+      begin
+        buf[i] := _data[i+1];
+      end;
+
+   result := buf;
+end;
+
+
+function Tterminal.checkAnswer(_data:Tarray<byte>): Tarray<byte>;
+begin
+  if _data[0] <> CMD_HEAD_RESPONSE then exit;
+
+  //Получение информации
+  if _data[1] = CMD_TERMINAL_INFO then
+    begin
+
+       result := getParams(_data,5,8 );
+
+
+
+//       ProdDate[0] :=  _data[2];
+//       ProdDate[1] :=  _data[3];
+//       ProdDate[2] :=  _data[4];
+//
+//       _getSN(_data);
+//
+//     coding[0] :=
+//
+//     SW:array[0..5] of byte;
+//     name:array[0..5] of byte;
+//     MAC_AP:array[0..6] of byte;
+//     MAC_ST:array[0..6] of byte;
+//     GSM_EN:byte;
+//     SIM_ID:array[0..20] of byte;
+
+
+    end;
+
+
+end;
+
+
+end.
