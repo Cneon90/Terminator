@@ -115,7 +115,7 @@ type
     procedure buttonOptionColorRed;
     procedure loadCaption;
     procedure OnTerminalDataReceived(const Data: TArray<Byte>);
-
+    procedure OnConnect(connect:boolean);
   public
     { Public declarations }
     Terminal: Tterminal;                    // Данные Терминала
@@ -128,6 +128,7 @@ type
     procedure getAvalibleComPorts;          // Получение доступных COM портов
     procedure print(buf:Tarray<byte>);      // Вывод байтов
     procedure sendMessage(message: String); // Отправка уведомлений
+
     function getCustomName:Tbytes;
   end;
 
@@ -273,9 +274,7 @@ end;
 // Событие подключения терминала
 procedure Tfr_main.actTerminalConnectExecute(Sender: TObject);
 begin
-  //При подключении терминала запросить данные конфигурации и информацию о Терминале
-  spTerminal.Brush.Color := clgreen;
-
+  spTerminal.Brush.Color := clGreen;
   //Имя терминала при подключении
   if cbTypeTerminalName.ItemIndex = 0 then
     edTerminalName.Text := Terminal.getNameTerminal;
@@ -416,7 +415,6 @@ begin
 
   SetLength(name,32);
   SetLength(_config, 380);
-
   case cbTypeTerminalName.ItemIndex of
   0:move(TerminalBuf.TerminalInfo.name,name[0],32);
   1: //Custom
@@ -769,8 +767,13 @@ begin
   cbTypeTerminalName.ItemIndex := 0;
 
   TerminalHead := TTerminalThread.Create(comport, OnTerminalDataReceived);
-//  TerminalHead.TerminateEvent := TEvent.Create(nil, True, False, '');
+  TerminalHead.TerminateEvent := TEvent.Create(nil, True, False, '');
   TerminalHead.Resume;
+end;
+
+procedure Tfr_main.OnConnect(connect:boolean);
+begin
+
 end;
 
 // Received
@@ -782,6 +785,8 @@ begin
   HexString := '';
   for i := 0 to High(Data) do
     HexString := HexString + IntToHex(Data[i], 2) + ' ';
+
+
   Terminal.checkAnswer(data);
    //Если информация о терминале
   if Data[1] = CMD_TERMINAL_INFO  then printInfoTerminal;
@@ -809,10 +814,16 @@ begin
        edTerminalName.Text := Terminal.getNameTerminal;
   end;
 
-  actTerminalConnect.Execute;
+  if (data[0]=$FF)AND(data[1]=$FF)AND(data[2]=$F0)AND(data[3]=$FE)
+    then actTerminalDisconnect.Execute; //терминал отключен
+
+  if (data[0]=$F0)AND(data[1]=$FE)AND(data[2]=$FF)AND(data[3]=$FF)
+    then actTerminalConnect.Execute;  //терминал Подключен
+
   TThread.Queue(nil,
     procedure
     begin
+
       fr_Terminal.mmTerminal.Lines.Add('Received data: ' + HexString);
     end
   );

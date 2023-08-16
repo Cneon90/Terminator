@@ -426,6 +426,7 @@ object fr_main: Tfr_main
           Top = 3
           Width = 19
           Height = 25
+          Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           TabOrder = 0
@@ -493,6 +494,7 @@ object fr_main: Tfr_main
           Top = 3
           Width = 19
           Height = 25
+          Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           Font.Charset = DEFAULT_CHARSET
@@ -565,6 +567,7 @@ object fr_main: Tfr_main
           Top = 3
           Width = 19
           Height = 25
+          Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           TabOrder = 0
@@ -631,6 +634,7 @@ object fr_main: Tfr_main
           Top = 3
           Width = 19
           Height = 25
+          Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           TabOrder = 0

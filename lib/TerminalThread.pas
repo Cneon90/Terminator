@@ -11,7 +11,6 @@ uses
   SyncObjs;
 
 type
- //Поток com-port
   TDataReceivedCallback = procedure(const Data: TArray<Byte>) of object;
   TTerminalThread = class(TThread)
 
@@ -30,10 +29,18 @@ type
     constructor Create(ACommPort: TCommPortDriver = nil; DataReceivedCallback: TDataReceivedCallback = nil);
   end;
 
+var
+  pingData: Tbytes;
+  DataPtr: Pointer;
+  DataSize: Cardinal;
+
 implementation
 
 //Конструктор потока
-constructor TTerminalThread.Create(ACommPort: TCommPortDriver = nil; DataReceivedCallback: TDataReceivedCallback = nil);
+constructor TTerminalThread.Create(
+    ACommPort: TCommPortDriver = nil;
+    DataReceivedCallback: TDataReceivedCallback = nil
+);
 begin
   inherited Create(True);
   FCommPort := ACommPort;
@@ -41,6 +48,7 @@ begin
   FTerminateEvent := TEvent.Create(nil, True, False, '');
   FTerminal := Tterminal.Create(FCommPort);
   FCommPort.OnReceiveData := CommPortReceiveData;
+  pingData :=[$FF,$FF,$F0,$FE];
 end;
 
 //Приём данных
@@ -48,14 +56,20 @@ procedure TTerminalThread.CommPortReceiveData(Sender: TObject; DataPtr: Pointer;
 var
   hexString: string;
   buf: TArray<byte>;
+
 begin
   try
     SetLength(buf, DataSize);
     Move(DataPtr^, buf[0], DataSize);
+
+    if buf[0] = $AA then pingData :=[$F0,$FE,$FF,$FF]
+                    else pingData :=[$FF,$FF,$F0,$FE];
+
     if buf[1] = $F0 then Fterminal.stopBootloader;
 
     if Assigned(FDataReceivedCallback) then
       FDataReceivedCallback(buf);
+
   except
   on E: Exception do
     begin
@@ -67,14 +81,20 @@ end;
 
 //Поток
 procedure TTerminalThread.Execute;
+
 begin
   while not Terminated do
   begin
+     DataPtr := @pingData[0];
+     DataSize := SizeOf(pingData);
+     CommPortReceiveData(nil,  DataPtr, DataSize);
+
     if FCommPort.Connected then
     begin
       FTerminal.info;
-      sleep(1000);
+
     end;
+    sleep(500);
   end;
 end;
 
