@@ -103,6 +103,11 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="lib\Terminal.pas"/>
+        <DCCReference Include="forms\Unit1.pas">
+            <Form>fr_Terminal</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="lib\TerminalThread.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

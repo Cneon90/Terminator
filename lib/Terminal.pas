@@ -2,63 +2,144 @@ unit Terminal;
 
 interface
 
- uses CPDrv;
+uses CPDrv, SysUtils, DateUtils;
 
 type
-  Tterminal = class
-  const
-    CMD_HEAD_REQUST    = $55;
-    CMD_HEAD_RESPONSE  = $AA;
-    CMD_TEST_CONNECT   = $01;
-    CMD_CONFIG_READ    = $EC;
-    CMD_CONFIG_WRITE   = $ED;
-    CMD_TERMINAL_INFO  = $0F;
 
-
-  private
-     FCommPort: TCommPortDriver; // Поле для хранения ссылки на TCommPortDriver
-     function paсkageChecked:byte;
-     function getSumData:byte;
-     function getParams(_data: Tarray<byte>; index:integer; ofset : integer):Tarray<byte>;
-     procedure _getSN(_data:array of byte);
-  public
-     packageData:Tarray<byte>;
-     packageCmd:byte;
-     ProdDate : array[0..2] of byte;
-     serialNumber : array[0..3] of byte;
-     coding:array[0..4] of byte;
-     SW:array[0..5] of byte;
-     name:array[0..5] of byte;
-     MAC_AP:array[0..6] of byte;
-     MAC_ST:array[0..6] of byte;
-     GSM_EN:byte;
-     SIM_ID:array[0..20] of byte;
-
-
-     constructor Create(ACommPort: TCommPortDriver); // Конструктор класса с параметром
-     function makeCommad:Tarray<byte>;
-     function checkAnswer(_data:Tarray<byte>): Tarray<byte>;
-     procedure ping;
-     procedure getTerminalConfig;
-     procedure send(_data:Tarray<byte>);
-     procedure info;
-
+  // Информации о терминале
+  TterminalInfo = record
+     head:byte;
+     answer: byte;
+     ProdDate: array[0..02]   of byte; // Дата производства
+     ID:       array[0..03]   of byte; // ID терминала
+     coding:   array[0..03]   of byte; // Опции (G|GC|GW|GWC)
+     SW:       array[0..04]   of byte; // Версия прошивки
+     name:     array[0..31]   of byte; // Название терминала
+     MAC_EN:byte;
+     MAC_AP:   array[0..05]   of byte; // MAC точки доступа
+     MAC_ST:   array[0..05]   of byte; // MAC
+     GSM_ENB:byte;
+     SIM_ID:   array[0..19]   of byte; // ID сим карты
+     check:byte;
   end;
 
+  //Конфигурация терминала
+  TterminalConfig = record
+     head:byte;
+     answer: byte;
+     TerminalName: array[0..31]  of byte;  // Имя терминала
+     ServerSyncTS: array[0..3]   of byte;  // TS синхронизация с сервером. Используется во время работы. При настройке должно задаваться 0
+     HWSetting1:   array[0..3]   of byte;  // hardware настройка 1
+     CANDriverName:array[0..15]  of byte;  // Имя файла драйвера
+     CANDriverTS:  array[0..3]   of byte;  // UnixTime файла драйвера
+     CANDriverData:array[0..99]  of byte;  // Данные файла драйвера
+     HWSetting2:   array[0..44]  of byte;  // hardware настройка 2
+     WIFICfg:      array[0..114] of byte;  // Настройки wi-fi
+     ServerAddress:array[0..37]  of byte;  // Адрес сервера
+     ServerPort:   array[0..1]   of byte;  // Порт
+     HWSetting3:   array[0..19]  of byte;  // hardware настройка 2
+     check:byte;
+  end;
 
+  Tterminal = class
+  const
+    ATTEMPT_AMOUNT     = 5;        // Количество попыток отправки сообщения
+    CMD_HEAD_REQUST    = $55;      // Заголовок запроса
+    CMD_HEAD_RESPONSE  = $AA;      // Заголовок ответа
+    CMD_TEST_CONNECT   = $01;      // Тест соединения
+    CMD_CONFIG_READ    = $EC;      // Прочитать конфигурацию
+    CMD_CONFIG_WRITE   = $ED;      // Записать конфигурацию
+    CMD_TERMINAL_INFO  = $0F;      // Информация о терминале
+
+  private
+     FCommPort: TCommPortDriver;    // Поле для хранения ссылки на TCommPortDriver
+     function getSumData:byte;      // Сумма байтов данных packageData
+     function paсkageChecked:byte;  // Получить проверочный байт
+     function printformat(mac :Tarray<byte>; symbol :String =':'):String; //Форматирование
+  public
+     packageData:Tarray<byte>;      // Данные для отправки в Терминал
+     packageCmd:byte;               // Команда для отправки
+
+     //-------Информация о терминале --------------------------
+     TerminalInfo : TterminalInfo;
+
+     //-------Конфигурация терминала -------------------------
+     TermianlConfig : TterminalConfig;
+
+     constructor Create(ACommPort: TCommPortDriver=nil);     // Конструктор класса с параметром
+
+     function getSW:String;                                  // Получение версии прошивки в формтае vX.X(dd.mm.YY)
+     function getProdDate:String;                            // Дата производства преобразованная
+     function decodeCoding:String;                           // получить название опции (G|GC|GW|GWC)
+     function getCANDriverTS:String;                         // Дата создания CAN файла
+     function getNameTerminal:String;                        // Получить имя строкой
+     function getNameTerminalConfig:String;                  // Имя в конфигурации
+     function makeCommad:Tarray<byte>;                       // Собрать пакет для отправки
+     function getCANDriverName:String;                       // Имя драйвера CAN
+     function checkAnswer(_data:Tarray<byte>): Tarray<byte>; // Проверочный байт
+     function getTerminalID:String;                          // Получение ID терминала
+     function getMacAp:String;                               // Получение форматированного MAC_AP
+     function getMacST:String;                               // Получение форматированного MAC_ST
+     function getSimID:String;                               // Получение SIM_ID
+     function getCANSpeed:String;                            // Получение скорости CAN шины
+     function getWifiNameAccessPoint:String;                 // Получение названия точки доступа
+     function getWifiNameClientPoint:String;                 // Получение названия сети клиента 
+     function getServerAdress: String;                       // Получение Адреса сервера
+     function getServerPort: word;                           // Получение Порт сервера
+     function getHWcanStatus : String;                       // Получение информации о CAN из HW setting1
+
+     function stringToHex(strToConvert : String):TBytes;// Преобразование в hex
+
+     procedure ping;                                 // Проверка связи
+     procedure info;                                 // Информация о терминале
+     procedure clearInfo;                            // Очистка данных Информации
+     procedure clearConfigInfo;                      // Очистка данных Конфигурации
+     procedure stopBootloader;                       // Выход из бутлоадера
+     procedure getTerminalConfig;                    // Получить конфигурацию
+     procedure send(_data:Tarray<byte>);             // Отправка данных
+     procedure sendСonfirmation(_data:Tarray<byte>); // Отправка данных многократно
+     procedure firmware;
+  end;
 
 implementation
 
-
-constructor Tterminal.Create(ACommPort: TCommPortDriver);
+constructor Tterminal.Create(ACommPort: TCommPortDriver = nil);
 begin
   FCommPort := ACommPort; // Присваиваем ссылку на TCommPortDriver полю FCommPort
 end;
 
-//Отправка в консоль
-procedure Tterminal.send(_data:Tarray<byte>);
+//Отправка сообщений с проверкой ответа в Терминал
+procedure Tterminal.sendСonfirmation(_data:Tarray<byte>);
+var
+  answer : byte;
+  count : integer;
 begin
   if Assigned(FCommPort) then
+  begin
+    count := 0;
+    //Сообщение отправляется пока в ответ не придёт байт $AA
+    //Или не исчерпается число попыток
+    //Или не закроется соединение
+    while True do
+      begin
+        FCommPort.SendData(_data,Length(_data));
+        if (answer = CMD_HEAD_RESPONSE) or
+           (count >= ATTEMPT_AMOUNT) or
+           (FCommPort.Connected = false)
+        then
+            break;               
+        inc(count);
+      end;
+  end;
+end;
+
+//Отправка сообщений 
+procedure Tterminal.send(_data:Tarray<byte>);
+var
+  answer : byte;
+  count : integer;
+begin
+  if Assigned(FCommPort) and (FCommPort.Connected) then
   begin
     FCommPort.SendData(_data,Length(_data));
   end;
@@ -98,7 +179,7 @@ end;
 //Получение проверочного байта
 function Tterminal.paсkageChecked: Byte;
 begin
-     result := byte($FF - (CMD_HEAD_REQUST + packageCmd + getSumData));
+  result := byte($FF - (CMD_HEAD_REQUST + packageCmd + getSumData));
 end;
 
 //Проверка связи с терминалом
@@ -109,86 +190,343 @@ begin
   send(Self.makeCommad);
 end;
 
-//Проверка связи с терминалом
+//Получение конфигурации
 procedure Tterminal.getTerminalConfig;
 begin
   packageCmd := CMD_CONFIG_READ;
   packageData := [];
-  send(Self.makeCommad);
+  send(self.makeCommad);
 end;
 
 //Получение информации о Терминале
 procedure Tterminal.info;
 begin
-  packageCmd := CMD_TERMINAL_INFO;
-  packageData := [];
+  try
+    packageCmd := CMD_TERMINAL_INFO;
+    packageData := [];
+    send(self.makeCommad);
+  finally
+
+  end;
+
+end;
+
+//Выход из режима загрузчика
+procedure Tterminal.stopBootloader;
+begin
+  packageCmd := $FE;
+  packageData:=[$49, $0B];
   send(self.makeCommad);
 end;
 
-procedure Tterminal._getSN(_data:array of byte);
-begin
-  serialNumber[0] := _data[5];
-  serialNumber[1] := _data[6];
-  serialNumber[2] := _data[7];
-  serialNumber[3] := _data[8];
-end;
-
-
-function Tterminal.getParams( _data: Tarray<byte>; index:integer; ofset : integer):Tarray<byte>;
+// Запись конфигурации в терминал
+procedure Tterminal.firmware();
 var
-   buf : Tarray<byte>;
-   i, len :integer;
+  _config : Tbytes;
+  i: Integer;
+  firmware : Tbytes;
 begin
-   len :=  ofset - index;
-   SetLength(buf, len);
-   for i := 0 to len - 1 do
-      begin
-        buf[i] := _data[i+1];
-      end;
-
-   result := buf;
+  SetLength(_config, Sizeof(TermianlConfig)-1);
+  SetLength(firmware, 382);
+  firmware[0] := $3F;
+  firmware[1] := $51;
+  Move(TermianlConfig, _config[0], Sizeof(TermianlConfig)-1);
+  for I := 2 to 381 do
+    firmware[i] := _config[i];
+  packageCmd := CMD_CONFIG_WRITE;
+  packageData:= firmware;
+  send(self.makeCommad);
 end;
 
 
+//Обработка ответа
 function Tterminal.checkAnswer(_data:Tarray<byte>): Tarray<byte>;
 var i:integer;
 begin
-  if _data[0] <> CMD_HEAD_RESPONSE then exit;
 
-  //Получение информации
+  //Информации о терминале
   if _data[1] = CMD_TERMINAL_INFO then
     begin
-
-    for i := 0 to 2 do
-      ProdDate[i] := _data[i+2];
-
-    for i := 0 to 3 do
-      serialNumber[i] := _data[i+5];
-
-    for i := 0 to 3 do
-      coding[i] := _data[i+9];
-
-//    for i := 0 to 3 do
-//      SW[i] := _data[i+5];
-//
-//
-//    for i := 0 to 3 do
-//      name[i] := _data[i+5];
-//
-//
-//    for i := 0 to 2 do
-//      MAC_AP[i] := _data[i+2];
-//
-//    for i := 0 to 3 do
-//      MAC_ST[i] := _data[i+5];
-//
-//    GSM_EN := _data[40];
-//
-//    for i := 0 to 3 do
-//      SIM_ID[i] := _data[i+5];
+      if Length(_data) = SizeOf(TterminalInfo) then
+        Move(_data[0], TerminalInfo, SizeOf(TterminalInfo));// Копируем данные в структуру
     end;
 
+   //конфигурация терминала
+  if _data[1] = CMD_CONFIG_READ then
+    begin
+      if Length(_data) = SizeOf(TterminalConfig) then
+        Move(_data[0], TermianlConfig, SizeOf(TterminalConfig)); // Копируем данные в структуру
+    end;
+end;
 
+//----------Пос. обработка------------------------------------------------------
+
+
+// Получение названия из Информации о терминале
+function Tterminal.getNameTerminal:String;
+var
+  asciiString: string;
+  temp:array[0..32] of byte;
+begin
+//  TerminalInfo.name[32] := 0; //Добавляем символ конца строки
+  move(TerminalInfo.name[0], temp, 32);
+  temp[32] := 0;
+  result := PAnsiChar(@temp);
+end;
+
+//Получение названия из конфигурации
+function Tterminal.getNameTerminalConfig:String;
+var
+  asciiString: string;
+  Temp:array[0..32] of byte;
+begin
+  move(TermianlConfig.TerminalName[0],Temp,32);
+  Temp[32] := 0; //Добавляем символ конца строки
+  result := PAnsiChar(@Temp[0]);
+end;
+
+//перевод в строковое значение coding
+function Tterminal.decodeCoding:String;
+var 
+  i, x :integer;
+begin
+//  //Ищем заполненый байт
+  for i := 0 to 3 do
+    if TerminalInfo.coding[i] <> $0 then x:=i;
+
+  case TerminalInfo.coding[x] of
+    $02: result:= 'G';
+    $08: result:= 'W';
+    $0A: result:= 'GW';
+    $82: result:= 'GC';
+    $88: result:= 'WC';
+    $8A: result:= 'GWC';
+  end;
+end;
+
+//Получение даты производства 
+function Tterminal.getProdDate:String;
+var OutputStr: string;
+begin
+    // Проверка на разумность значений
+  if (TerminalInfo.ProdDate[0] >= 1) and (TerminalInfo.ProdDate[0] <= 31) and
+     (TerminalInfo.ProdDate[1] >= 1) and (TerminalInfo.ProdDate[1] <= 12) then
+  begin
+    // Отображение даты в формате "день.месяц.год"
+    OutputStr := Format('%.2d.%.2d.%d',
+     [TerminalInfo.ProdDate[0],
+     TerminalInfo.ProdDate[1],
+     TerminalInfo.ProdDate[2]]
+     );
+  end
+  else
+  begin
+    OutputStr := 'Некорректная дата';
+  end;
+   result:=OutputStr;
+end;
+
+//Получение версии прошивки в формтае vX.X(dd.mm.YY)
+function Tterminal.getSW:String;
+begin
+  result:= Format('v%d.%d(%.2d.%.2d.%d)',[
+  TerminalInfo.SW[0],
+  TerminalInfo.SW[1],
+  TerminalInfo.SW[2],
+  TerminalInfo.SW[3],
+  TerminalInfo.SW[4]]
+  );
+end;
+
+//Очистить информацию о Информации терминала
+procedure Tterminal.clearInfo;
+var i:integer;
+begin
+   FillChar(terminalInfo, SizeOf(TterminalInfo), 0);
+end;
+
+//Очистить информацию о Конфигурации терминала
+procedure Tterminal.clearConfigInfo;
+var i:integer;
+begin
+  FillChar(TermianlConfig, SizeOf(TterminalConfig), 0);
+end;
+
+//Получить имя драйвера CAN
+function Tterminal.getCANDriverName:String;
+var
+  asciiString: string;
+begin
+  result := PAnsiChar(@TermianlConfig.CANDriverName[0]);
+end;
+
+//Получить ДатуВремя файла драйвера CAN
+function Tterminal.getCANDriverTS:String;
+begin
+
+end;
+
+//Преобразование ID в строку
+function Tterminal.getTerminalID:String;
+var st: string;
+    i: integer;
+begin
+  for I := 0 to 3 do
+    st := st + IntToHex(TerminalInfo.ID[i], 2);
+  result := st;
+end;
+
+// Преобразования из массива строку, с разделителем
+function Tterminal.printformat(mac :Tarray<byte>; symbol :String =':'):String;
+var
+  st : string;
+  i : integer;
+begin
+  for  i := 0 to Length(mac)-1 do
+    if i <> Length(mac)-1  then st := st + IntToHex(mac[i], 2)+symbol
+                           else st := st + IntToHex(mac[i], 2);
+  result:=st;
+end;
+
+//Получение MAC_AP
+function Tterminal.getMacAp:String;
+var 
+  i : integer;
+  len : integer;
+  mac : Tarray<byte>;
+begin
+  if TerminalInfo.MAC_EN = $00 then
+  begin
+    result := '-';
+    exit;
+  end;
+  len := Length(TerminalInfo.MAC_AP);
+  SetLength(mac, len);
+  for i := 0 to len-1 do
+    mac[i] := TerminalInfo.MAC_AP[i];
+
+  result := printformat(mac);
+end;
+
+//Получение MAC_ST
+function Tterminal.getMacSt:String;
+var
+  i : integer;
+  len : integer;
+  mac : Tarray<byte>;
+begin
+  if TerminalInfo.MAC_EN = $00 then
+  begin
+    result := '-';
+    exit;
+  end;
+  len := Length(TerminalInfo.MAC_ST);
+  SetLength(mac, len);
+  for i := 0 to len-1 do
+    mac[i] := TerminalInfo.MAC_ST[i];
+
+  result := printformat(mac);
+end;
+
+
+//Получение SIM_ID
+function Tterminal.getSimID:String;
+var
+  st: String;
+  i, len:integer;
+  simId : Tarray<byte>;
+begin
+  //Если байт запрета возвращаем -
+  if TerminalInfo.GSM_ENB = $00 then
+    begin
+      Result := '-';
+      exit;
+    end;
+  len := Length(TerminalInfo.SIM_ID);
+
+  SetLength(simId, len);
+  st := '';
+  for i := 0 to len-1 do
+    st := st + intTostr(TerminalInfo.SIM_ID[i])+':';
+
+  Result :=  st;
+end;
+
+//Получение скорости CAN
+function Tterminal.getCANSpeed:String;
+var 
+  speedBits: Integer;
+begin
+  try
+// Конкатенируем два байта в одно 16-битное число
+  speedBits := ( TermianlConfig.CANDriverData[4] shl 8) or TermianlConfig.CANDriverData[5];
+  if speedBits <> 0 then result := floattostr(100000/speedBits);
+  except
+
+  end;
+
+end;
+
+// Получение названия точки доступа
+function Tterminal.getWifiNameAccessPoint:String;
+var
+  asciiString: string;
+begin
+  result := PAnsiChar(@TermianlConfig.WIFICfg[2]);
+end;
+
+// Получение названия точки доступа Клиент сети
+function Tterminal.getWifiNameClientPoint:String;
+var
+  asciiString: string;
+begin
+  result := PAnsiChar(@TermianlConfig.WIFICfg[48]);
+end;
+
+// Получение адреса поделючения сервера
+function Tterminal.getServerAdress: String;
+var
+  asciiString: string;
+begin
+  result := PAnsiChar(@TermianlConfig.ServerAddress[0]);
+end;
+
+//Получение порта подключения сервера
+function Tterminal.getServerPort: Word;
+var
+  asciiString: string;
+begin
+  result :=  (TermianlConfig.ServerPort[1] shl 8) or TermianlConfig.ServerPort[0]
+end;
+
+// Получение статуса CAN
+function Tterminal.getHWcanStatus : String;
+begin
+  case TermianlConfig.HWSetting1[3] of
+    $00: result:= 'Отключен';
+    $01: result:= 'Базовый';
+    $02: result:= 'Внешний файл';
+  end;
+end;
+
+//Преобразование из строки в HEX
+function Tterminal.stringToHex(strToConvert : String):TBytes;
+var
+  hexResult: TBytes;
+  i: Integer;
+begin
+  Result := [];
+  if strToConvert = '' then
+    Exit;
+
+  // Преобразуем каждый символ строки в его шестнадцатеричное значение
+  SetLength(hexResult, Length(strToConvert));
+  for i := 0 to Length(strToConvert) - 1 do
+  begin
+    hexResult[i] := Ord(strToConvert[i + 1]);
+  end;
+
+  Result := hexResult;
 end;
 
 

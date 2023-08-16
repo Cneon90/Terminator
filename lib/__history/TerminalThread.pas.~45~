@@ -1,0 +1,114 @@
+unit TerminalThread;
+
+interface
+
+uses
+  CPDrv,
+  SysUtils,
+  DateUtils,
+  System.Classes,
+  terminal,
+  SyncObjs,
+  ExtCtrls;
+
+type
+  TDataReceivedCallback = function(const Data: TArray<Byte>): Boolean of object; // Изменили тип на функцию Boolean
+  TTerminalThread = class(TThread)
+  private
+    FTerminateEvent: TEvent;
+    FTimer: TTimer; // Добавляем TTimer
+    FTimeout: Integer; // Время ожидания в миллисекундах
+    FResponseReceived: Boolean; // Флаг получения ответа
+    procedure TimerTimeout(Sender: TObject); // Обработчик события истечения времени
+    procedure ResetTimer; // Сброс таймера
+  protected
+    FCommPort: TCommPortDriver;
+    FTerminal: Tterminal;
+    FDataReceivedCallback: TDataReceivedCallback;
+    procedure Execute; override;
+    procedure CommPortReceiveData(Sender: TObject; DataPtr: Pointer; DataSize: Cardinal);
+  public
+    constructor Create(ACommPort: TCommPortDriver = nil; DataReceivedCallback: TDataReceivedCallback = nil;
+      Timeout: Integer = 2000); // Добавляем параметр для времени ожидания
+    destructor Destroy; override;
+  end;
+
+implementation
+
+constructor TTerminalThread.Create(ACommPort: TCommPortDriver = nil; DataReceivedCallback: TDataReceivedCallback = nil;
+  Timeout: Integer = 2000);
+begin
+  inherited Create(True);
+  FCommPort := ACommPort;
+  FDataReceivedCallback := DataReceivedCallback;
+  FTimeout := Timeout;
+  FTerminateEvent := TEvent.Create(nil, True, False, '');
+  FTerminal := Tterminal.Create(FCommPort);
+  FCommPort.OnReceiveData := CommPortReceiveData;
+
+  FTimer := TTimer.Create(nil); // Создаем и настраиваем таймер
+  FTimer.Interval := FTimeout;
+  FTimer.OnTimer := TimerTimeout;
+end;
+
+destructor TTerminalThread.Destroy;
+begin
+  FTimer.Free; // Освобождаем таймер
+  FTerminateEvent.Free;
+  inherited Destroy;
+end;
+
+procedure TTerminalThread.ResetTimer;
+begin
+  FResponseReceived := False; // Сбрасываем флаг получения ответа
+  FTimer.Enabled := True; // Запускаем таймер
+end;
+
+procedure TTerminalThread.TimerTimeout(Sender: TObject);
+begin
+  FTimer.Enabled := False; // Останавливаем таймер
+  if not FResponseReceived and Assigned(FDataReceivedCallback) then
+    FDataReceivedCallback([]); // Вызываем callback функцию с пустым массивом байт и возвращаем false
+end;
+
+procedure TTerminalThread.CommPortReceiveData(Sender: TObject; DataPtr: Pointer; DataSize: Cardinal);
+var
+  hexString: string;
+  buf: TArray<byte>;
+begin
+  try
+    SetLength(buf, DataSize);
+    Move(DataPtr^, buf[0], DataSize);
+    if buf[1] = $F0 then
+      Fterminal.stopBootloader;
+
+    if Assigned(FDataReceivedCallback) then
+    begin
+      FResponseReceived := True; // Устанавливаем флаг получения ответа
+      FTimer.Enabled := False; // Останавливаем таймер
+      if not FDataReceivedCallback(buf) then
+        Terminate; // Завершаем поток при необходимости
+    end;
+  except
+    on E: Exception do
+    begin
+      // Обработка исключения
+      // sendMessage('Ошибка: ' + E.Message);
+    end;
+  end;
+end;
+
+procedure TTerminalThread.Execute;
+begin
+  while not Terminated do
+  begin
+    if FCommPort.Connected then
+    begin
+      FTerminal.info;
+      ResetTimer; // Сбрасываем таймер перед запросом информации
+      Sleep(1000);
+    end;
+  end;
+end;
+
+end.

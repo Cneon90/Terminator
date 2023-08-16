@@ -1,15 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.918,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.995,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.873,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.455,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.100,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Terminator.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.873,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.995,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.873,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.132,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.230,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\Unit1.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.230,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\Unit1.dfm=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.918,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.251,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.942,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.147,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.251,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.327,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.873,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.132,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023.08.14 16:17:19.557,=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit2.pas</Transaction>
+    <Transaction>2023.08.14 16:20:02.419,C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\TerminalThread.pas=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Unit2.pas</Transaction>
   </Transactions>
 </BorlandProject>
