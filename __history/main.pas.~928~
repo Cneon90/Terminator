@@ -92,7 +92,6 @@ type
     procedure tmrTerminalConnectionTimer(Sender: TObject);
     procedure cbTypeTerminalNameChange(Sender: TObject);
     procedure edNameModelChange(Sender: TObject);
-    procedure Action1Execute(Sender: TObject);
     procedure actTerminalConnectExecute(Sender: TObject);
     procedure actTerminalDisconnectExecute(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -161,11 +160,6 @@ implementation
 uses Unit1;
 
 {$I-}
-
-procedure Tfr_main.loadCaption;
-begin
-
-end;
 
 // Кнопки опций в красный цвет
 procedure Tfr_main.buttonOptionColorRed;
@@ -269,11 +263,13 @@ begin
   fr_terminal.btnInfo.Enabled:=true;
   fr_terminal.btnGetName.Enabled:=true;
   btnLoadFromTerminal.Enabled := true;
+
 end;
 
 // Событие подключения терминала
 procedure Tfr_main.actTerminalConnectExecute(Sender: TObject);
 begin
+  spTerminal.Brush.Color := clGreen;
   //Имя терминала при подключении
   if cbTypeTerminalName.ItemIndex = 0 then
     edTerminalName.Text := Terminal.getNameTerminal;
@@ -654,11 +650,6 @@ begin
   end;
 end;
 
-procedure Tfr_main.Action1Execute(Sender: TObject);
-begin
-
-end;
-
 //Переключение (подключено/отключено)
 procedure Tfr_main.switchConnectionExecute(Sender: TObject);
 begin
@@ -767,7 +758,7 @@ begin
 
   TerminalHead := TTerminalThread.Create(comport, OnTerminalDataReceived);
   TerminalHead.TerminateEvent := TEvent.Create(nil, True, False, '');
-  TerminalHead.Resume;
+  TerminalHead.Start;
 end;
 
 procedure Tfr_main.OnConnect(connect:boolean);
@@ -813,31 +804,12 @@ begin
        edTerminalName.Text := Terminal.getNameTerminal;
   end;
 
-  if  //Если терминал отключен
-   (data[0] = $FF) AND
-   (data[1] = $FF) AND
-   (data[2] = $F0) AND
-   (data[3] = $FE)
-  then
-  begin
+  if (data[0]=$FF)AND(data[1]=$FF)AND(data[2]=$F0)AND(data[3]=$FE)
+    then actTerminalDisconnect.Execute; //терминал отключен
 
-    spTerminal.Brush.Color := clRed;
-  end;
+  if (data[0]=$F0)AND(data[1]=$FE)AND(data[2]=$FF)AND(data[3]=$FF)
+    then actTerminalConnect.Execute;  //терминал Подключен
 
-  if  //Если терминал Подключен
-   (data[0] = $F0) AND
-   (data[1] = $FE) AND
-   (data[2] = $FF) AND
-   (data[3] = $FF)
-  then
-  begin
-
-    spTerminal.Brush.Color := clGreen;
-  end;
-
-
-
-  actTerminalConnect.Execute;
   TThread.Queue(nil,
     procedure
     begin
@@ -871,6 +843,7 @@ begin
    if comPortlist.Count = 0 then
     begin
       actDisconnect.Execute;
+      actTerminalDisconnect.Execute;
       sendMessage('Система не обнаружила доступных COM портов');
     end;
     //Если доступен только один ком порт, выбираем его и пытаемся подключиться

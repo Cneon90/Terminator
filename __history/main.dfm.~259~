@@ -1,6 +1,6 @@
 object fr_main: Tfr_main
   Left = 0
-  Top = 0
+  Top = 353
   Margins.Left = 15
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -14,6 +14,7 @@ object fr_main: Tfr_main
   Font.Name = 'Segoe UI'
   Font.Style = []
   Menu = MainMenu1
+  Position = poDesigned
   StyleElements = [seClient, seBorder]
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -269,7 +270,7 @@ object fr_main: Tfr_main
         Align = alLeft
         ExplicitHeight = 15
       end
-      object BitBtn1: TBitBtn
+      object btnLoadFromTerminal: TBitBtn
         AlignWithMargins = True
         Left = 15
         Top = 3
@@ -279,10 +280,11 @@ object fr_main: Tfr_main
         Margins.Right = 5
         Align = alLeft
         Caption = #1048#1079' '#1090#1077#1088#1084#1080#1085#1072#1083#1072
+        Enabled = False
         ImageIndex = 0
         Images = imgList
         TabOrder = 0
-        OnClick = BitBtn1Click
+        OnClick = btnLoadFromTerminalClick
         ExplicitTop = 2
       end
       object BitBtn2: TBitBtn
@@ -340,6 +342,7 @@ object fr_main: Tfr_main
         Margins.Left = 15
         Align = alLeft
         MaxLength = 32
+        ReadOnly = True
         TabOrder = 0
         ExplicitHeight = 23
       end
@@ -405,6 +408,7 @@ object fr_main: Tfr_main
         Transparent = True
         WordWrap = True
         StyleElements = []
+        OnClick = btnOptionHWClick
         ExplicitLeft = 0
         ExplicitHeight = 184
       end
@@ -423,6 +427,7 @@ object fr_main: Tfr_main
           Top = 3
           Width = 19
           Height = 25
+          Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           TabOrder = 0
@@ -436,6 +441,12 @@ object fr_main: Tfr_main
         Height = 25
         Align = alBottom
         Caption = 'Default'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         OnClick = btnOptionHWClick
         ExplicitLeft = 90
@@ -465,6 +476,7 @@ object fr_main: Tfr_main
         Margins.Left = 10
         Align = alClient
         WordWrap = True
+        OnClick = btnOptionCANClick
         ExplicitWidth = 3
         ExplicitHeight = 15
       end
@@ -483,6 +495,7 @@ object fr_main: Tfr_main
           Top = 3
           Width = 19
           Height = 25
+          Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           Font.Charset = DEFAULT_CHARSET
@@ -502,6 +515,12 @@ object fr_main: Tfr_main
         Height = 25
         Align = alBottom
         Caption = 'Default'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         OnClick = btnOptionCANClick
         ExplicitLeft = 4
@@ -530,6 +549,7 @@ object fr_main: Tfr_main
         Margins.Left = 10
         Align = alClient
         WordWrap = True
+        OnClick = btnOptionWIFIClick
         ExplicitWidth = 3
         ExplicitHeight = 15
       end
@@ -548,6 +568,7 @@ object fr_main: Tfr_main
           Top = 3
           Width = 19
           Height = 25
+          Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           TabOrder = 0
@@ -561,6 +582,12 @@ object fr_main: Tfr_main
         Height = 25
         Align = alBottom
         Caption = 'Default'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         OnClick = btnOptionWIFIClick
         ExplicitLeft = 4
@@ -575,7 +602,7 @@ object fr_main: Tfr_main
       Height = 240
       Cursor = crHandPoint
       Align = alLeft
-      Caption = 'Serv'
+      Caption = 'Server'
       Color = clBtnFace
       ParentBackground = False
       ParentColor = False
@@ -586,9 +613,11 @@ object fr_main: Tfr_main
         Top = 20
         Width = 203
         Height = 190
+        Hint = #1069#1082#1089#1087#1086#1088#1090
         Margins.Left = 10
         Align = alClient
         WordWrap = True
+        OnClick = btnOptionServClick
         ExplicitWidth = 3
         ExplicitHeight = 15
       end
@@ -607,6 +636,7 @@ object fr_main: Tfr_main
           Top = 3
           Width = 19
           Height = 25
+          Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           TabOrder = 0
@@ -620,6 +650,12 @@ object fr_main: Tfr_main
         Height = 25
         Align = alBottom
         Caption = 'Default'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         OnClick = btnOptionServClick
         ExplicitLeft = 4
@@ -640,7 +676,7 @@ object fr_main: Tfr_main
     ModalResult = 1
     TabOrder = 3
     OnClick = btnFirmwareClick
-    ExplicitWidth = 994
+    ExplicitLeft = 2
   end
   object plInfo: TPanel
     Left = 0
@@ -901,6 +937,7 @@ object fr_main: Tfr_main
     Top = 50
   end
   object SaveDialog: TSaveDialog
+    Title = 'SaveFile'
     Left = 970
     Top = 50
   end

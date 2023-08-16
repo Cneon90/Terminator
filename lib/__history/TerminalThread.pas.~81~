@@ -12,12 +12,10 @@ uses
 
 type
   TDataReceivedCallback = procedure(const Data: TArray<Byte>) of object;
-  TCallbackFunction = procedure(const connect: boolean) of object;
   TTerminalThread = class(TThread)
 
   private
     { Private declarations }
-    FConnectionCallBack: TCallbackFunction;
   protected
     FTerminateEvent: TEvent;
     procedure Execute; override;
@@ -28,7 +26,7 @@ type
     FTerminal: Tterminal;
     FDataReceivedCallback: TDataReceivedCallback;
     procedure CommPortReceiveData(Sender: TObject; DataPtr: Pointer;  DataSize: Cardinal);
-    constructor Create(ACommPort: TCommPortDriver = nil; DataReceivedCallback: TDataReceivedCallback = nil; ConnectionCallBack:TCallbackFunction = nil);
+    constructor Create(ACommPort: TCommPortDriver = nil; DataReceivedCallback: TDataReceivedCallback = nil);
   end;
 
 var
@@ -41,17 +39,16 @@ implementation
 //Конструктор потока
 constructor TTerminalThread.Create(
     ACommPort: TCommPortDriver = nil;
-    DataReceivedCallback: TDataReceivedCallback = nil;
-    ConnectionCallBack:TCallbackFunction = nil
+    DataReceivedCallback: TDataReceivedCallback = nil
 );
 begin
   inherited Create(True);
   FCommPort := ACommPort;
   FDataReceivedCallback := DataReceivedCallback;
-  FConnectionCallBack := ConnectionCallBack;
   FTerminateEvent := TEvent.Create(nil, True, False, '');
   FTerminal := Tterminal.Create(FCommPort);
   FCommPort.OnReceiveData := CommPortReceiveData;
+  pingData :=[$FF,$FF,$F0,$FE];
 end;
 
 //Приём данных
@@ -61,25 +58,25 @@ var
   buf: TArray<byte>;
 
 begin
-  try
-
+//  try
     SetLength(buf, DataSize);
     Move(DataPtr^, buf[0], DataSize);
+
+    if buf[0] = $AA then pingData :=[$F0,$FE,$FF,$FF]
+                    else pingData :=[$FF,$FF,$F0,$FE];
+
     if buf[1] = $F0 then Fterminal.stopBootloader;
-
-    if buf[0] = $AA then pingData[$F0,$FE,$FF,$FF];
-
 
     if Assigned(FDataReceivedCallback) then
       FDataReceivedCallback(buf);
 
-  except
-  on E: Exception do
-    begin
- // Обработка исключения
-//     sendMessage('Ошибка: ' + E.Message);
-    end;
-  end;
+//  except
+//  on E: Exception do
+//    begin
+// // Обработка исключения
+////     sendMessage('Ошибка: ' + E.Message);
+//    end;
+//  end;
 end;
 
 //Поток
@@ -88,16 +85,13 @@ procedure TTerminalThread.Execute;
 begin
   while not Terminated do
   begin
-    pingData :=[$FF,$FF,$F0,$FE];
+
     DataPtr := @pingData[0];
-    DataSize := SizeOf(Data);
+    DataSize := SizeOf(pingData);
     CommPortReceiveData(nil,  DataPtr, DataSize);
 
-    if FCommPort.Connected then
-    begin
-      FTerminal.info;
-      sleep(1000);
-    end;
+    if FCommPort.Connected then  FTerminal.info;
+    sleep(500);
   end;
 end;
 

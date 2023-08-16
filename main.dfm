@@ -1,6 +1,6 @@
 object fr_main: Tfr_main
-  Left = 0
-  Top = 0
+  Left = 449
+  Top = 228
   Margins.Left = 15
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -14,7 +14,9 @@ object fr_main: Tfr_main
   Font.Name = 'Segoe UI'
   Font.Style = []
   Menu = MainMenu1
+  Position = poDesigned
   StyleElements = [seClient, seBorder]
+  StyleName = 'Windows'
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   TextHeight = 15
@@ -25,7 +27,6 @@ object fr_main: Tfr_main
     Height = 30
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1008
     object Label1: TLabel
       AlignWithMargins = True
       Left = 16
@@ -128,7 +129,7 @@ object fr_main: Tfr_main
       Action = switchConnection
       Align = alLeft
       TabOrder = 1
-      ExplicitTop = 2
+      ExplicitTop = 5
     end
   end
   object plGeneratorName: TPanel
@@ -138,7 +139,6 @@ object fr_main: Tfr_main
     Height = 30
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1008
     object Label4: TLabel
       AlignWithMargins = True
       Left = 16
@@ -221,7 +221,6 @@ object fr_main: Tfr_main
       MaxLength = 8
       TabOrder = 2
       OnChange = edNameModelChange
-      ExplicitLeft = 570
       ExplicitHeight = 23
     end
     object edNameParkNumber: TEdit
@@ -235,7 +234,6 @@ object fr_main: Tfr_main
       MaxLength = 3
       TabOrder = 3
       OnChange = edNameModelChange
-      ExplicitLeft = 812
       ExplicitHeight = 23
     end
   end
@@ -247,7 +245,6 @@ object fr_main: Tfr_main
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 1008
     object plButtons: TPanel
       Left = 0
       Top = 0
@@ -257,7 +254,6 @@ object fr_main: Tfr_main
       BevelOuter = bvNone
       TabOrder = 0
       StyleElements = []
-      ExplicitWidth = 1008
       object lbconfigAll: TLabel
         AlignWithMargins = True
         Left = 309
@@ -284,7 +280,6 @@ object fr_main: Tfr_main
         Images = imgList
         TabOrder = 0
         OnClick = btnLoadFromTerminalClick
-        ExplicitTop = 2
       end
       object BitBtn2: TBitBtn
         AlignWithMargins = True
@@ -297,7 +292,6 @@ object fr_main: Tfr_main
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
         TabOrder = 1
         OnClick = BitBtn2Click
-        ExplicitLeft = 886
       end
       object btnLoadConfAll: TBitBtn
         AlignWithMargins = True
@@ -319,7 +313,6 @@ object fr_main: Tfr_main
       Align = alTop
       Caption = 'Terminal name'
       TabOrder = 1
-      ExplicitWidth = 1008
       object Label8: TLabel
         AlignWithMargins = True
         Left = 862
@@ -360,7 +353,6 @@ object fr_main: Tfr_main
           'Default'
           'Custom'
           'Generator')
-        ExplicitLeft = 891
       end
     end
     object gbHW: TGroupBox
@@ -419,7 +411,6 @@ object fr_main: Tfr_main
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 190
         object BitBtn4: TBitBtn
           AlignWithMargins = True
           Left = 3
@@ -448,9 +439,6 @@ object fr_main: Tfr_main
         ParentFont = False
         TabOrder = 1
         OnClick = btnOptionHWClick
-        ExplicitLeft = 90
-        ExplicitTop = 150
-        ExplicitWidth = 75
       end
     end
     object gbCAN: TGroupBox
@@ -487,7 +475,6 @@ object fr_main: Tfr_main
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 190
         object BitBtn5: TBitBtn
           AlignWithMargins = True
           Left = 3
@@ -522,8 +509,6 @@ object fr_main: Tfr_main
         ParentFont = False
         TabOrder = 1
         OnClick = btnOptionCANClick
-        ExplicitLeft = 4
-        ExplicitTop = 187
       end
     end
     object gbWIFI: TGroupBox
@@ -560,7 +545,6 @@ object fr_main: Tfr_main
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 190
         object BitBtn6: TBitBtn
           AlignWithMargins = True
           Left = 3
@@ -589,8 +573,6 @@ object fr_main: Tfr_main
         ParentFont = False
         TabOrder = 1
         OnClick = btnOptionWIFIClick
-        ExplicitLeft = 4
-        ExplicitTop = 187
       end
     end
     object gbServ: TGroupBox
@@ -612,6 +594,7 @@ object fr_main: Tfr_main
         Top = 20
         Width = 203
         Height = 190
+        Hint = #1069#1082#1089#1087#1086#1088#1090
         Margins.Left = 10
         Align = alClient
         WordWrap = True
@@ -627,7 +610,6 @@ object fr_main: Tfr_main
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 190
         object BitBtn7: TBitBtn
           AlignWithMargins = True
           Left = 3
@@ -656,8 +638,6 @@ object fr_main: Tfr_main
         ParentFont = False
         TabOrder = 1
         OnClick = btnOptionServClick
-        ExplicitLeft = 4
-        ExplicitTop = 187
       end
     end
   end
@@ -674,7 +654,6 @@ object fr_main: Tfr_main
     ModalResult = 1
     TabOrder = 3
     OnClick = btnFirmwareClick
-    ExplicitLeft = 2
   end
   object plInfo: TPanel
     Left = 0
@@ -686,7 +665,6 @@ object fr_main: Tfr_main
     DoubleBuffered = True
     ParentDoubleBuffered = False
     TabOrder = 4
-    ExplicitWidth = 1008
     object lbConfig: TLabel
       Left = 0
       Top = 0
@@ -771,7 +749,6 @@ object fr_main: Tfr_main
     Top = 105
   end
   object trmAvailableComports: TTimer
-    Interval = 500
     OnTimer = trmAvailableComportsTimer
     Left = 900
     Top = 50

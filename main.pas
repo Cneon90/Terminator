@@ -92,7 +92,6 @@ type
     procedure tmrTerminalConnectionTimer(Sender: TObject);
     procedure cbTypeTerminalNameChange(Sender: TObject);
     procedure edNameModelChange(Sender: TObject);
-    procedure Action1Execute(Sender: TObject);
     procedure actTerminalConnectExecute(Sender: TObject);
     procedure actTerminalDisconnectExecute(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -113,14 +112,12 @@ type
 
     procedure printInfoTerminal;
     procedure buttonOptionColorRed;
-    procedure loadCaption;
     procedure OnTerminalDataReceived(const Data: TArray<Byte>);
     procedure OnConnect(connect:boolean);
   public
     { Public declarations }
     Terminal: Tterminal;                    // Данные Терминала
     TerminalBuf: Tterminal;                 // Буфер данных Терминала
-//    TerminalConfall : Tterminal;            // Полная конфигурация терминала из файла
     procedure SaveSettings;                 // Сохранение INI
     procedure LoadSettings;                 // Загрузка INI
     procedure switchButtons;                // Переключение кнопок connect/disconnect
@@ -132,7 +129,6 @@ type
     function getCustomName:Tbytes;
   end;
 
-
 Const
   CMD_HEAD_REQUST    = $55;  // Заголовок запроса
   CMD_HEAD_RESPONSE  = $AA;  // Заголовок ответа
@@ -141,10 +137,10 @@ Const
   CMD_CONFIG_WRITE   = $ED;  // Записать конфигурацию
   CMD_TERMINAL_INFO  = $0F;  // Информация о терминале
 
-  MODEL_LENGH = 9;
   SERIAL_LENGH = 7;
   CLIENT_LENGH = 7;
-  PARK_LENGH = 2;
+  MODEL_LENGH  = 9;
+  PARK_LENGH   = 2;
 
 var
   fr_main: Tfr_main;
@@ -161,11 +157,6 @@ implementation
 uses Unit1;
 
 {$I-}
-
-procedure Tfr_main.loadCaption;
-begin
-
-end;
 
 // Кнопки опций в красный цвет
 procedure Tfr_main.buttonOptionColorRed;
@@ -552,7 +543,6 @@ begin
   SaveDialog.DefaultExt := '.tcsr';
   if SaveDialog.Execute then
   begin
-
     FileStream := TFileStream.Create(SaveDialog.FileName, fmCreate);
     try
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.ServerAddress, Length(TerminalBuf.TermianlConfig.ServerAddress));
@@ -653,11 +643,6 @@ begin
       btnOptionWIFI.Caption := ExtractFileName(OpenDialog.FileName);
     end;
   end;
-end;
-
-procedure Tfr_main.Action1Execute(Sender: TObject);
-begin
-
 end;
 
 //Переключение (подключено/отключено)
@@ -768,7 +753,7 @@ begin
 
   TerminalHead := TTerminalThread.Create(comport, OnTerminalDataReceived);
   TerminalHead.TerminateEvent := TEvent.Create(nil, True, False, '');
-  TerminalHead.Resume;
+  TerminalHead.Start;
 end;
 
 procedure Tfr_main.OnConnect(connect:boolean);
@@ -853,14 +838,21 @@ begin
    if comPortlist.Count = 0 then
     begin
       actDisconnect.Execute;
+      actTerminalDisconnect.Execute;
       sendMessage('Система не обнаружила доступных COM портов');
     end;
     //Если доступен только один ком порт, выбираем его и пытаемся подключиться
-    if (comPortList.Count = 1)  then
-    begin
-    cbComPorts.ItemIndex := 0;
-//    actConnect.Execute;
+        if (comPortList.Count = 1)  then
+         begin
+      try
+        cbComPorts.ItemIndex := 0; // выбираем первый ком порт,и пытаемся подключиться
+        comport.Connect;
+        actConnect.Execute;
+      except
+
+      end;
    end;
+
   end;
  comPortlist.Free;
 end;

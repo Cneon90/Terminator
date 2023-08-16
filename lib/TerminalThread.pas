@@ -85,16 +85,17 @@ procedure TTerminalThread.Execute;
 begin
   while not Terminated do
   begin
-     DataPtr := @pingData[0];
-     DataSize := SizeOf(pingData);
-     CommPortReceiveData(nil,  DataPtr, DataSize);
 
-    if FCommPort.Connected then
-    begin
-      FTerminal.info;
-
+    DataPtr := @pingData[0];
+    DataSize := SizeOf(pingData);
+    CommPortReceiveData(nil,  DataPtr, DataSize);
+    try
+      if FCommPort.Connected then  FTerminal.info;
+    except
+      FCommPort.Disconnect;
     end;
-    sleep(500);
+
+    sleep(1000);
   end;
 end;
 
