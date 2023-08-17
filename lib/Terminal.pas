@@ -66,6 +66,8 @@ type
      //-------Конфигурация терминала -------------------------
      TermianlConfig : TterminalConfig;
 
+     CanDriverNameBuf : String;
+
      constructor Create(ACommPort: TCommPortDriver=nil);     // Конструктор класса с параметром
 
      function getSW:String;                                  // Получение версии прошивки в формтае vX.X(dd.mm.YY)
@@ -88,6 +90,8 @@ type
      function getServerPort: word;                           // Получение Порт сервера
      function getHWcanStatus : String;                       // Получение информации о CAN из HW setting1
 
+     procedure setCanDriverName(name : String);// Установить имя драйвера
+
      function stringToHex(strToConvert : String):TBytes;// Преобразование в hex
 
      procedure ping;                                 // Проверка связи
@@ -99,6 +103,7 @@ type
      procedure send(_data:Tarray<byte>);             // Отправка данных
      procedure sendСonfirmation(_data:Tarray<byte>); // Отправка данных многократно
      procedure firmware;
+     procedure resetTerminal;
   end;
 
 implementation
@@ -106,6 +111,38 @@ implementation
 constructor Tterminal.Create(ACommPort: TCommPortDriver = nil);
 begin
   FCommPort := ACommPort; // Присваиваем ссылку на TCommPortDriver полю FCommPort
+end;
+
+procedure Tterminal.resetTerminal;
+begin
+  packageCmd := $F0;
+  packageData := [$D9,$FF];
+  send(Self.makeCommad);
+end;
+
+procedure Tterminal.setCanDriverName(name : String);
+var _nameHex : Tbytes;
+    _nameBuf : String;
+    i:integer;
+begin
+  //Заполняем пробелами все имя
+  FillChar(TermianlConfig.CANDriverName, SizeOf(TermianlConfig.CANDriverName), $20);
+
+  //Если имя больше обрезаем
+   if Length(name) > 16 then
+    _nameBuf := Copy(name, 1, 16)
+  else
+    _nameBuf := name;
+
+  //Перекодировка
+  _nameHex := TEncoding.ASCII.GetBytes(_nameBuf);
+
+  //Копируем
+  for  i:= 0 to Length(_nameBuf)-1 do
+    TermianlConfig.CANDriverName[i] := _nameHex[i];
+
+  TermianlConfig.CANDriverName[15] := 0;
+
 end;
 
 //Отправка сообщений с проверкой ответа в Терминал
@@ -363,8 +400,10 @@ end;
 function Tterminal.getCANDriverName:String;
 var
   asciiString: string;
+  temp:array[0..17] of byte;
 begin
-  result := PAnsiChar(@TermianlConfig.CANDriverName[0]);
+  move(TermianlConfig.CANDriverName[0], temp, 16);
+  result := PAnsiChar(@temp);
 end;
 
 //Получить ДатуВремя файла драйвера CAN
@@ -404,7 +443,7 @@ var
 begin
   if TerminalInfo.MAC_EN = $00 then
   begin
-    result := '-';
+    result := '-:-:-:-:-:-';
     exit;
   end;
   len := Length(TerminalInfo.MAC_AP);
@@ -424,7 +463,7 @@ var
 begin
   if TerminalInfo.MAC_EN = $00 then
   begin
-    result := '-';
+    result := '-:-:-:-:-:-';
     exit;
   end;
   len := Length(TerminalInfo.MAC_ST);
@@ -494,7 +533,7 @@ function Tterminal.getServerPort: Word;
 var
   asciiString: string;
 begin
-  result :=  (TermianlConfig.ServerPort[1] shl 8) or TermianlConfig.ServerPort[0]
+  result :=  (TermianlConfig.ServerPort[0] shl 8) or TermianlConfig.ServerPort[1]
 end;
 
 // Получение статуса CAN

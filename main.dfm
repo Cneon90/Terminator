@@ -5,63 +5,64 @@ object fr_main: Tfr_main
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Terminator'
-  ClientHeight = 621
-  ClientWidth = 1012
+  ClientHeight = 750
+  ClientWidth = 1385
   Color = clSkyBlue
-  Font.Charset = DEFAULT_CHARSET
+  Font.Charset = RUSSIAN_CHARSET
   Font.Color = clWindowText
-  Font.Height = -12
-  Font.Name = 'Segoe UI'
-  Font.Style = []
+  Font.Height = -21
+  Font.Name = 'Courier New'
+  Font.Style = [fsBold]
   Menu = MainMenu1
   Position = poDesigned
   StyleElements = [seClient, seBorder]
   StyleName = 'Windows'
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  TextHeight = 15
+  TextHeight = 23
   object plConnect: TPanel
     Left = 0
     Top = 0
-    Width = 1012
+    Width = 1385
     Height = 30
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1012
     object Label1: TLabel
       AlignWithMargins = True
       Left = 15
-      Top = 6
-      Width = 31
-      Height = 21
+      Top = 5
+      Width = 65
+      Height = 22
       Margins.Left = 15
-      Margins.Top = 6
+      Margins.Top = 5
       Margins.Right = 9
       Align = alLeft
       Caption = 'PORT:'
-      ExplicitLeft = 16
-      ExplicitTop = 7
-      ExplicitHeight = 15
+      ExplicitHeight = 23
     end
     object Label2: TLabel
       AlignWithMargins = True
-      Left = 941
-      Top = 5
-      Width = 31
-      Height = 22
-      Margins.Top = 5
+      Left = 1299
+      Top = 3
+      Width = 52
+      Height = 24
+      Margins.Left = 10
+      Margins.Right = 0
       Align = alRight
-      Caption = 'UART:'
-      ExplicitLeft = 940
-      ExplicitTop = 6
-      ExplicitHeight = 15
+      Caption = 'COM:'
+      ExplicitLeft = 1295
+      ExplicitTop = 0
     end
     object spConnectins: TShape
       AlignWithMargins = True
-      Left = 978
+      Left = 1351
       Top = 0
       Width = 19
       Height = 27
+      Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 15
       Align = alRight
@@ -73,36 +74,35 @@ object fr_main: Tfr_main
     end
     object Label3: TLabel
       AlignWithMargins = True
-      Left = 862
-      Top = 5
-      Width = 48
-      Height = 22
-      Margins.Top = 5
+      Left = 1150
+      Top = 3
+      Width = 117
+      Height = 24
+      Margins.Right = 0
       Align = alRight
       Caption = 'Terminal:'
-      ExplicitLeft = 861
-      ExplicitTop = 6
-      ExplicitHeight = 15
+      ExplicitLeft = 772
+      ExplicitTop = 5
+      ExplicitHeight = 23
     end
     object spTerminal: TShape
       AlignWithMargins = True
-      Left = 916
+      Left = 1267
       Top = 0
       Width = 19
       Height = 27
+      Margins.Left = 0
       Margins.Top = 0
       Align = alRight
       Brush.Color = clRed
       Shape = stCircle
-      ExplicitLeft = 1025
-      ExplicitTop = -1
-      ExplicitHeight = 26
+      ExplicitTop = -3
     end
     object lbTerminalID: TLabel
       AlignWithMargins = True
-      Left = 341
+      Left = 793
       Top = 3
-      Width = 8
+      Width = 12
       Height = 24
       Margins.Left = 100
       Align = alLeft
@@ -110,205 +110,215 @@ object fr_main: Tfr_main
       Caption = '-'
       Font.Charset = ANSI_CHARSET
       Font.Color = clBackground
-      Font.Height = -19
-      Font.Name = '@Microsoft JhengHei'
+      Font.Height = -21
+      Font.Name = 'Consolas'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitLeft = 342
-      ExplicitTop = 4
+      ExplicitLeft = 470
     end
     object cbComPorts: TComboBox
       AlignWithMargins = True
-      Left = 58
+      Left = 92
       Top = 3
       Width = 100
-      Height = 23
+      Height = 31
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1086#1083#1085#1091#1102' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1102' '#1080#1079' '#1090#1077#1088#1084#1080#1085#1072#1083#1072
+      Margins.Bottom = 10
       Align = alLeft
       Style = csDropDownList
       Sorted = True
       TabOrder = 0
-      ExplicitLeft = 59
-      ExplicitTop = 4
     end
     object btnConnection: TButton
       AlignWithMargins = True
-      Left = 164
+      Left = 198
       Top = 3
-      Width = 74
-      Height = 24
+      Width = 169
+      Height = 27
+      Cursor = crHandPoint
+      Margins.Bottom = 0
       Action = switchConnection
       Align = alLeft
       TabOrder = 1
-      ExplicitLeft = 165
-      ExplicitTop = 5
-      ExplicitHeight = 22
+    end
+    object chbResetTerminal: TCheckBox
+      Left = 370
+      Top = 0
+      Width = 323
+      Height = 30
+      Align = alLeft
+      Caption = #1055#1077#1088#1077#1079#1072#1075#1088#1091#1078#1072#1090#1100' '#1090#1077#1088#1084#1080#1085#1072#1083' '#1087#1086#1089#1083#1077' '#1079#1072#1075#1088#1091#1079#1082#1080
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 2
     end
   end
   object plGeneratorName: TPanel
     Left = 0
-    Top = 215
-    Width = 1012
+    Top = 597
+    Width = 1385
     Height = 30
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
     TabStop = True
+    ExplicitWidth = 1012
     object Label4: TLabel
       AlignWithMargins = True
       Left = 15
       Top = 6
-      Width = 37
+      Width = 78
       Height = 21
       Margins.Left = 15
       Margins.Top = 6
       Align = alLeft
       Caption = 'Model:'
-      ExplicitLeft = 16
-      ExplicitTop = 7
-      ExplicitHeight = 15
+      ExplicitHeight = 23
     end
     object Label5: TLabel
       AlignWithMargins = True
-      Left = 268
+      Left = 708
       Top = 6
-      Width = 18
+      Width = 39
       Height = 21
-      Margins.Left = 15
+      Margins.Left = 5
       Margins.Top = 6
-      Align = alLeft
+      Align = alRight
       Caption = 'SN:'
-      ExplicitLeft = 269
-      ExplicitTop = 7
-      ExplicitHeight = 15
+      ExplicitLeft = 724
     end
     object Label6: TLabel
       AlignWithMargins = True
-      Left = 535
+      Left = 367
       Top = 6
-      Width = 34
+      Width = 94
       Height = 21
-      Margins.Left = 15
       Margins.Top = 6
-      Align = alRight
+      Align = alLeft
       Caption = 'Client:'
-      ExplicitLeft = 534
-      ExplicitTop = 7
-      ExplicitHeight = 15
+      ExplicitLeft = 355
     end
     object Label7: TLabel
       AlignWithMargins = True
-      Left = 773
+      Left = 1040
       Top = 6
-      Width = 38
+      Width = 79
       Height = 21
-      Margins.Left = 15
       Margins.Top = 6
       Align = alRight
       Caption = 'Park N:'
-      ExplicitLeft = 772
-      ExplicitTop = 7
-      ExplicitHeight = 15
+      StyleName = 'Windows'
+      ExplicitLeft = 1039
     end
     object edNameSN: TEdit
       AlignWithMargins = True
-      Left = 292
+      Left = 753
       Top = 3
-      Width = 180
+      Width = 281
       Height = 24
-      Align = alLeft
+      Align = alRight
+      Enabled = False
       TabOrder = 0
       OnChange = edNameModelChange
       OnKeyPress = edNameSNKeyPress
-      ExplicitLeft = 293
-      ExplicitTop = 4
-      ExplicitHeight = 23
+      ExplicitLeft = 380
+      ExplicitHeight = 31
     end
     object edNameModel: TEdit
       AlignWithMargins = True
-      Left = 58
+      Left = 99
       Top = 3
-      Width = 180
+      Width = 250
       Height = 24
       Margins.Right = 15
       Align = alLeft
+      Enabled = False
       MaxLength = 10
       TabOrder = 1
       OnChange = edNameModelChange
       OnKeyPress = edNameModelKeyPress
-      ExplicitLeft = 59
-      ExplicitTop = 4
-      ExplicitHeight = 23
+      ExplicitHeight = 31
     end
     object edNameClient: TEdit
       AlignWithMargins = True
-      Left = 575
+      Left = 467
       Top = 3
-      Width = 180
+      Width = 227
       Height = 24
-      Align = alRight
+      Align = alLeft
+      Enabled = False
       MaxLength = 8
       TabOrder = 2
       OnChange = edNameModelChange
       OnKeyPress = edNameClientKeyPress
-      ExplicitLeft = 574
-      ExplicitTop = 4
-      ExplicitHeight = 23
+      ExplicitHeight = 31
     end
     object edNameParkNumber: TEdit
       AlignWithMargins = True
-      Left = 817
+      Left = 1125
       Top = 3
-      Width = 180
+      Width = 250
       Height = 24
-      Margins.Right = 15
+      Margins.Right = 10
       Align = alRight
-      MaxLength = 3
+      Enabled = False
+      MaxLength = 255
       TabOrder = 3
       OnChange = edNameModelChange
       OnKeyPress = edNameParkNumberKeyPress
-      ExplicitLeft = 816
-      ExplicitTop = 4
-      ExplicitHeight = 23
+      ExplicitLeft = 752
+      ExplicitHeight = 31
     end
   end
   object plFirmware: TPanel
     Left = 0
-    Top = 245
-    Width = 1012
+    Top = 271
+    Width = 1385
     Height = 326
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 1012
     object plButtons: TPanel
       Left = 0
       Top = 0
-      Width = 1012
-      Height = 30
+      Width = 1385
+      Height = 49
       Align = alTop
-      BevelOuter = bvNone
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 0
       StyleElements = []
-      ExplicitTop = 2
+      ExplicitWidth = 1012
       object lbconfigAll: TLabel
         AlignWithMargins = True
-        Left = 268
-        Top = 7
-        Width = 3
-        Height = 20
+        Left = 380
+        Top = 8
+        Width = 9
+        Height = 37
         Margins.Left = 10
         Margins.Top = 7
         Align = alLeft
-        ExplicitLeft = 309
-        ExplicitHeight = 15
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -15
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitHeight = 17
       end
       object btnLoadFromTerminal: TBitBtn
         AlignWithMargins = True
-        Left = 15
-        Top = 3
-        Width = 116
-        Height = 24
+        Left = 16
+        Top = 4
+        Width = 190
+        Height = 41
+        Cursor = crHandPoint
+        Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1086#1083#1085#1091#1102' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1102' '#1080#1079' '#1090#1077#1088#1084#1080#1085#1072#1083#1072
         Margins.Left = 15
         Margins.Right = 5
         Align = alLeft
@@ -316,93 +326,54 @@ object fr_main: Tfr_main
         Enabled = False
         ImageIndex = 0
         Images = imgList
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 0
         OnClick = btnLoadFromTerminalClick
       end
       object btnSaveAllConfig: TBitBtn
         AlignWithMargins = True
-        Left = 890
-        Top = 3
-        Width = 107
-        Height = 24
+        Left = 1222
+        Top = 4
+        Width = 147
+        Height = 41
+        Cursor = crHandPoint
+        Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1086#1083#1085#1091#1102' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1102' '#1074' '#1092#1072#1081#1083
         Margins.Right = 15
         Align = alRight
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
         Images = imgList
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 1
+        StyleName = 'Windows'
         OnClick = btnSaveAllConfigClick
+        ExplicitLeft = 849
       end
       object btnLoadConfAll: TBitBtn
         AlignWithMargins = True
-        Left = 139
-        Top = 3
-        Width = 116
-        Height = 24
+        Left = 214
+        Top = 4
+        Width = 153
+        Height = 41
+        Cursor = crHandPoint
+        Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1086#1083#1085#1091#1102' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1102' '#1080#1079' '#1092#1072#1081#1083#1072
         Align = alLeft
         Caption = #1048#1079' '#1092#1072#1081#1083#1072
         ImageIndex = 1
         Images = imgList
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 2
         OnClick = btnLoadConfAllClick
-      end
-    end
-    object gbName: TGroupBox
-      Left = 0
-      Top = 30
-      Width = 1012
-      Height = 50
-      Align = alTop
-      Caption = 'Terminal name'
-      TabOrder = 1
-      object Label8: TLabel
-        AlignWithMargins = True
-        Left = 862
-        Top = 23
-        Width = 27
-        Height = 22
-        Margins.Left = 15
-        Margins.Top = 6
-        Align = alRight
-        Caption = 'Type:'
-        ExplicitHeight = 15
-      end
-      object edTerminalName: TEdit
-        AlignWithMargins = True
-        Left = 17
-        Top = 20
-        Width = 456
-        Height = 25
-        Margins.Left = 15
-        Align = alLeft
-        MaxLength = 32
-        ReadOnly = True
-        TabOrder = 0
-        OnKeyPress = edTerminalNameKeyPress
-        ExplicitHeight = 23
-      end
-      object cbTypeTerminalName: TComboBox
-        AlignWithMargins = True
-        Left = 895
-        Top = 20
-        Width = 100
-        Height = 23
-        Margins.Right = 15
-        Align = alRight
-        Style = csDropDownList
-        TabOrder = 1
-        OnChange = cbTypeTerminalNameChange
-        Items.Strings = (
-          'Default'
-          'Custom'
-          'Generator')
       end
     end
     object gbHW: TGroupBox
       AlignWithMargins = True
       Left = 7
-      Top = 83
-      Width = 245
-      Height = 240
+      Top = 52
+      Width = 340
+      Height = 271
       Cursor = crHandPoint
       Margins.Left = 7
       Align = alLeft
@@ -410,43 +381,10 @@ object fr_main: Tfr_main
       Color = clSkyBlue
       ParentBackground = False
       ParentColor = False
-      TabOrder = 2
-      object lbHW: TLabel
-        AlignWithMargins = True
-        Left = 12
-        Top = 20
-        Width = 203
-        Height = 190
-        Margins.Left = 10
-        ParentCustomHint = False
-        Align = alClient
-        AutoSize = False
-        BiDiMode = bdLeftToRight
-        Color = clBtnFace
-        EllipsisPosition = epPathEllipsis
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        GlowSize = 10
-        ParentBiDiMode = False
-        ParentColor = False
-        ParentFont = False
-        ParentShowHint = False
-        ShowAccelChar = False
-        ShowHint = False
-        Touch.ParentTabletOptions = False
-        Touch.TabletOptions = [toPressAndHold]
-        Transparent = True
-        WordWrap = True
-        StyleElements = []
-        OnClick = btnOptionHWClick
-        ExplicitTop = 17
-      end
+      TabOrder = 1
       object Image1: TImage
-        Left = 12
-        Top = 166
+        Left = 9
+        Top = 174
         Width = 43
         Height = 41
         Picture.Data = {
@@ -1002,20 +940,36 @@ object fr_main: Tfr_main
         Transparent = True
         OnClick = btnOptionCANClick
       end
+      object Label15: TLabel
+        Left = 22
+        Top = 50
+        Width = 40
+        Height = 18
+        Caption = 'CAN:'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
       object Panel2: TPanel
-        Left = 218
-        Top = 17
-        Width = 25
+        Left = 290
+        Top = 25
+        Width = 48
         Height = 196
         Align = alRight
         BevelOuter = bvNone
+        ParentShowHint = False
+        ShowHint = False
         TabOrder = 0
         object btnExportHW: TBitBtn
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 19
+          Width = 42
           Height = 25
+          Cursor = crHandPoint
           Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
@@ -1027,51 +981,53 @@ object fr_main: Tfr_main
       end
       object btnOptionHW: TBitBtn
         Left = 2
-        Top = 213
-        Width = 241
-        Height = 25
+        Top = 221
+        Width = 336
+        Height = 48
+        Cursor = crHandPoint
         Align = alBottom
         Caption = 'Default'
-        Font.Charset = DEFAULT_CHARSET
+        Font.Charset = RUSSIAN_CHARSET
         Font.Color = clRed
-        Font.Height = -12
-        Font.Name = 'Segoe UI'
+        Font.Height = -21
+        Font.Name = 'Consolas'
         Font.Style = []
         ParentFont = False
         TabOrder = 1
         OnClick = btnOptionHWClick
-        ExplicitLeft = 1
+      end
+      object edOptionHWCan: TEdit
+        Left = 22
+        Top = 70
+        Width = 250
+        Height = 26
+        Color = clSkyBlue
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 2
       end
     end
     object gbCAN: TGroupBox
       AlignWithMargins = True
-      Left = 258
-      Top = 83
-      Width = 245
-      Height = 240
+      Left = 353
+      Top = 52
+      Width = 340
+      Height = 271
       Cursor = crHandPoint
       Align = alLeft
       Caption = 'CAN'
       Color = clSkyBlue
       ParentBackground = False
       ParentColor = False
-      TabOrder = 3
-      object lbCan: TLabel
-        AlignWithMargins = True
-        Left = 12
-        Top = 20
-        Width = 203
-        Height = 190
-        Margins.Left = 10
-        Align = alClient
-        WordWrap = True
-        OnClick = btnOptionCANClick
-        ExplicitWidth = 3
-        ExplicitHeight = 15
-      end
+      TabOrder = 2
       object Image4: TImage
         Left = 12
-        Top = 166
+        Top = 174
         Width = 43
         Height = 41
         Picture.Data = {
@@ -1386,10 +1342,36 @@ object fr_main: Tfr_main
         Transparent = True
         OnClick = btnOptionCANClick
       end
+      object Label16: TLabel
+        Left = 18
+        Top = 50
+        Width = 100
+        Height = 18
+        Caption = 'Name file:'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label17: TLabel
+        Left = 18
+        Top = 110
+        Width = 60
+        Height = 18
+        Caption = 'Speed:'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
       object Panel1: TPanel
-        Left = 218
-        Top = 17
-        Width = 25
+        Left = 290
+        Top = 25
+        Width = 48
         Height = 196
         Align = alRight
         BevelOuter = bvNone
@@ -1398,69 +1380,81 @@ object fr_main: Tfr_main
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 19
+          Width = 42
           Height = 25
+          Cursor = crHandPoint
           Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -12
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
+          ParentDoubleBuffered = True
           TabOrder = 0
           OnClick = btnExportCANClick
         end
       end
       object btnOptionCAN: TBitBtn
         Left = 2
-        Top = 213
-        Width = 241
-        Height = 25
+        Top = 221
+        Width = 336
+        Height = 48
+        Cursor = crHandPoint
         Align = alBottom
         Caption = 'Default'
-        Font.Charset = DEFAULT_CHARSET
+        Font.Charset = RUSSIAN_CHARSET
         Font.Color = clRed
-        Font.Height = -12
-        Font.Name = 'Segoe UI'
+        Font.Height = -21
+        Font.Name = 'Consolas'
         Font.Style = []
         ParentFont = False
         TabOrder = 1
         OnClick = btnOptionCANClick
       end
+      object edOptionCanName: TEdit
+        Left = 18
+        Top = 70
+        Width = 250
+        Height = 26
+        Color = clSkyBlue
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 2
+      end
+      object edOptionCanSpeed: TEdit
+        Left = 18
+        Top = 130
+        Width = 250
+        Height = 26
+        Color = clSkyBlue
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 3
+      end
     end
     object gbWIFI: TGroupBox
       AlignWithMargins = True
-      Left = 509
-      Top = 83
-      Width = 245
-      Height = 240
+      Left = 699
+      Top = 52
+      Width = 332
+      Height = 271
       Cursor = crHandPoint
       Align = alLeft
       Caption = 'WIFI'
       Color = clSkyBlue
       ParentBackground = False
       ParentColor = False
-      TabOrder = 4
-      object lbWIFI: TLabel
-        AlignWithMargins = True
-        Left = 12
-        Top = 20
-        Width = 203
-        Height = 190
-        Margins.Left = 10
-        Align = alClient
-        WordWrap = True
-        OnClick = btnOptionWIFIClick
-        ExplicitLeft = 9
-        ExplicitTop = 17
-      end
+      TabOrder = 3
       object Image2: TImage
         Left = 12
-        Top = 166
+        Top = 174
         Width = 43
         Height = 41
         Picture.Data = {
@@ -1788,10 +1782,36 @@ object fr_main: Tfr_main
         Transparent = True
         OnClick = btnOptionWIFIClick
       end
+      object Label18: TLabel
+        Left = 19
+        Top = 50
+        Width = 180
+        Height = 18
+        Caption = 'Access point SSID:'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label20: TLabel
+        Left = 19
+        Top = 110
+        Width = 120
+        Height = 18
+        Caption = 'Client SSID:'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
       object Panel3: TPanel
-        Left = 218
-        Top = 17
-        Width = 25
+        Left = 280
+        Top = 25
+        Width = 50
         Height = 196
         Align = alRight
         BevelOuter = bvNone
@@ -1800,64 +1820,82 @@ object fr_main: Tfr_main
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 19
+          Width = 44
           Height = 25
+          Cursor = crHandPoint
           Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
           ParentShowHint = False
-          ShowHint = True
+          ShowHint = False
           TabOrder = 0
           OnClick = btnExporWIFIClick
         end
       end
       object btnOptionWIFI: TBitBtn
         Left = 2
-        Top = 213
-        Width = 241
-        Height = 25
+        Top = 221
+        Width = 328
+        Height = 48
+        Cursor = crHandPoint
         Align = alBottom
         Caption = 'Default'
-        Font.Charset = DEFAULT_CHARSET
+        Font.Charset = RUSSIAN_CHARSET
         Font.Color = clRed
-        Font.Height = -12
-        Font.Name = 'Segoe UI'
+        Font.Height = -21
+        Font.Name = 'Consolas'
         Font.Style = []
         ParentFont = False
         TabOrder = 1
         OnClick = btnOptionWIFIClick
       end
+      object edOptionWIFIAccessSSID: TEdit
+        Left = 19
+        Top = 70
+        Width = 250
+        Height = 26
+        Color = clSkyBlue
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 2
+      end
+      object edOptionWIFIClientSSID: TEdit
+        Left = 19
+        Top = 130
+        Width = 250
+        Height = 26
+        Color = clSkyBlue
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 3
+      end
     end
     object gbServ: TGroupBox
       AlignWithMargins = True
-      Left = 760
-      Top = 83
-      Width = 245
-      Height = 240
+      Left = 1037
+      Top = 52
+      Width = 340
+      Height = 271
       Cursor = crHandPoint
       Align = alLeft
       Caption = 'Server'
       Color = clSkyBlue
       ParentBackground = False
       ParentColor = False
-      TabOrder = 5
-      object lbServ: TLabel
-        AlignWithMargins = True
-        Left = 12
-        Top = 20
-        Width = 203
-        Height = 190
-        Hint = #1069#1082#1089#1087#1086#1088#1090
-        Margins.Left = 10
-        Align = alClient
-        WordWrap = True
-        OnClick = btnOptionServClick
-        ExplicitWidth = 3
-        ExplicitHeight = 15
-      end
+      TabOrder = 4
       object Image3: TImage
         Left = 12
-        Top = 166
+        Top = 174
         Width = 43
         Height = 41
         Picture.Data = {
@@ -1983,10 +2021,36 @@ object fr_main: Tfr_main
         Transparent = True
         OnClick = btnOptionServClick
       end
+      object Label19: TLabel
+        Left = 24
+        Top = 50
+        Width = 80
+        Height = 18
+        Caption = 'Address:'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label21: TLabel
+        Left = 24
+        Top = 110
+        Width = 50
+        Height = 18
+        Caption = 'Port:'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
       object Panel4: TPanel
-        Left = 218
-        Top = 17
-        Width = 25
+        Left = 290
+        Top = 25
+        Width = 48
         Height = 196
         Align = alRight
         BevelOuter = bvNone
@@ -1995,8 +2059,9 @@ object fr_main: Tfr_main
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 19
+          Width = 42
           Height = 25
+          Cursor = crHandPoint
           Hint = #1069#1082#1089#1087#1086#1088#1090
           Align = alTop
           Caption = '...'
@@ -2008,60 +2073,88 @@ object fr_main: Tfr_main
       end
       object btnOptionServ: TBitBtn
         Left = 2
-        Top = 213
-        Width = 241
-        Height = 25
+        Top = 221
+        Width = 336
+        Height = 48
+        Cursor = crHandPoint
         Align = alBottom
         Caption = 'Default'
-        Font.Charset = DEFAULT_CHARSET
+        Font.Charset = RUSSIAN_CHARSET
         Font.Color = clRed
-        Font.Height = -12
-        Font.Name = 'Segoe UI'
+        Font.Height = -21
+        Font.Name = 'Consolas'
         Font.Style = []
         ParentFont = False
         TabOrder = 1
         OnClick = btnOptionServClick
+      end
+      object edOptionServerAddress: TEdit
+        Left = 24
+        Top = 70
+        Width = 250
+        Height = 26
+        Color = clSkyBlue
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 2
+      end
+      object edOptionServerPort: TEdit
+        Left = 24
+        Top = 130
+        Width = 250
+        Height = 26
+        Color = clSkyBlue
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Courier New'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 3
       end
     end
   end
   object btnFirmware: TBitBtn
     AlignWithMargins = True
     Left = 7
-    Top = 574
-    Width = 998
+    Top = 696
+    Width = 1371
     Height = 45
+    Cursor = crHandPoint
     Margins.Left = 7
     Margins.Right = 7
     Align = alTop
-    Caption = 'Firmware'
+    Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1090#1077#1088#1084#1080#1085#1072#1083
     ModalResult = 1
     TabOrder = 3
     OnClick = btnFirmwareClick
-    ExplicitLeft = 2
+    ExplicitWidth = 998
   end
   object plInfo: TPanel
     Left = 0
     Top = 30
-    Width = 1012
-    Height = 185
+    Width = 1385
+    Height = 241
     Align = alTop
     BevelOuter = bvNone
     DoubleBuffered = True
     ParentDoubleBuffered = False
     TabOrder = 4
-    object lbConfig: TLabel
-      Left = 0
-      Top = 0
-      Width = 3
-      Height = 185
-      Align = alLeft
-      ExplicitHeight = 15
-    end
+    ExplicitWidth = 1012
     object Image5: TImage
-      Left = 3
-      Top = 0
+      AlignWithMargins = True
+      Left = 15
+      Top = 180
       Width = 48
-      Height = 185
+      Height = 58
+      Margins.Left = 15
+      Margins.Top = 180
       Align = alLeft
       AutoSize = True
       Picture.Data = {
@@ -2100,32 +2193,193 @@ object fr_main: Tfr_main
         4EABDD31F05AC1F90000000049454E44AE426082}
       Proportional = True
       Transparent = True
-      OnClick = btnOptionHWClick
+      ExplicitHeight = 88
     end
-    object mmInfo: TMemo
-      AlignWithMargins = True
-      Left = 66
-      Top = 5
-      Width = 411
-      Height = 177
-      Margins.Left = 15
-      Margins.Top = 5
-      TabStop = False
-      Align = alLeft
-      BevelInner = bvNone
-      BevelOuter = bvNone
-      BorderStyle = bsNone
+    object Label9: TLabel
+      Left = 90
+      Top = 9
+      Width = 200
+      Height = 25
+      Alignment = taRightJustify
+      AutoSize = False
+      BiDiMode = bdLeftToRight
+      Caption = 'Prod date:'
+      ParentBiDiMode = False
+    end
+    object Label11: TLabel
+      Left = 90
+      Top = 83
+      Width = 200
+      Height = 23
+      Alignment = taRightJustify
+      BiDiMode = bdLeftToRight
+      Caption = 'MAC AP:'
+      ParentBiDiMode = False
+    end
+    object Label12: TLabel
+      Left = 90
+      Top = 120
+      Width = 200
+      Height = 23
+      Alignment = taRightJustify
+      BiDiMode = bdLeftToRight
+      Caption = 'SIM ID:'
+      ParentBiDiMode = False
+    end
+    object Label13: TLabel
+      Left = 90
+      Top = 157
+      Width = 200
+      Height = 23
+      Alignment = taRightJustify
+      BiDiMode = bdLeftToRight
+      Caption = 'SW:'
+      ParentBiDiMode = False
+    end
+    object Label14: TLabel
+      Left = 90
+      Top = 194
+      Width = 200
+      Height = 23
+      Alignment = taRightJustify
+      BiDiMode = bdLeftToRight
+      Caption = 'Code:'
+      ParentBiDiMode = False
+    end
+    object Label22: TLabel
+      Left = 603
+      Top = 8
+      Width = 182
+      Height = 23
+      Caption = 'Terminal name:'
+    end
+    object Label10: TLabel
+      Left = 90
+      Top = 46
+      Width = 200
+      Height = 23
+      Alignment = taRightJustify
+      AutoSize = False
+      BiDiMode = bdLeftToRight
+      Caption = 'MAC ST:'
+      ParentBiDiMode = False
+    end
+    object edInfoDataProd: TEdit
+      Left = 290
+      Top = 6
+      Width = 300
+      Height = 31
       Color = clSkyBlue
-      DoubleBuffered = True
-      EditMargins.Auto = True
-      HideSelection = False
-      ParentDoubleBuffered = False
       ReadOnly = True
       TabOrder = 0
-      WantReturns = False
-      WordWrap = False
-      StyleElements = []
-      ExplicitLeft = 61
+    end
+    object edInfoMacST: TEdit
+      Left = 290
+      Top = 43
+      Width = 300
+      Height = 31
+      Color = clSkyBlue
+      ReadOnly = True
+      TabOrder = 1
+    end
+    object edInfoMacAP: TEdit
+      Left = 290
+      Top = 80
+      Width = 300
+      Height = 31
+      Color = clSkyBlue
+      ReadOnly = True
+      TabOrder = 2
+    end
+    object edInfoSimID: TEdit
+      Left = 290
+      Top = 117
+      Width = 300
+      Height = 31
+      Color = clSkyBlue
+      ReadOnly = True
+      TabOrder = 3
+    end
+    object edInfoSW: TEdit
+      Left = 290
+      Top = 154
+      Width = 300
+      Height = 31
+      Color = clSkyBlue
+      ReadOnly = True
+      TabOrder = 4
+    end
+    object edInfoCode: TEdit
+      Left = 290
+      Top = 191
+      Width = 300
+      Height = 31
+      Color = clSkyBlue
+      ReadOnly = True
+      TabOrder = 5
+    end
+    object edInfoTerminalName: TEdit
+      Left = 785
+      Top = 6
+      Width = 482
+      Height = 31
+      Color = clSkyBlue
+      ReadOnly = True
+      TabOrder = 6
+    end
+  end
+  object gbName: TGroupBox
+    Left = 0
+    Top = 627
+    Width = 1385
+    Height = 66
+    Align = alTop
+    Caption = 'Terminal name'
+    TabOrder = 5
+    ExplicitWidth = 1012
+    object Label8: TLabel
+      AlignWithMargins = True
+      Left = 1152
+      Top = 31
+      Width = 65
+      Height = 30
+      Margins.Left = 15
+      Margins.Top = 6
+      Align = alRight
+      Caption = 'Type:'
+      ExplicitLeft = 799
+      ExplicitHeight = 23
+    end
+    object edTerminalName: TEdit
+      AlignWithMargins = True
+      Left = 12
+      Top = 28
+      Width = 460
+      Height = 33
+      Margins.Left = 10
+      Align = alLeft
+      MaxLength = 32
+      ReadOnly = True
+      TabOrder = 0
+      OnKeyPress = edTerminalNameKeyPress
+      ExplicitHeight = 31
+    end
+    object cbTypeTerminalName: TComboBox
+      AlignWithMargins = True
+      Left = 1223
+      Top = 28
+      Width = 150
+      Height = 31
+      Margins.Right = 10
+      Align = alRight
+      Style = csDropDownList
+      TabOrder = 1
+      OnChange = cbTypeTerminalNameChange
+      Items.Strings = (
+        'Default'
+        'Custom'
+        'Generator')
+      ExplicitLeft = 850
     end
   end
   object comPort: TCommPortDriver
@@ -2338,10 +2592,12 @@ object fr_main: Tfr_main
       000000000000}
   end
   object OpenDialog: TOpenDialog
+    FileName = 'Test'
     Left = 935
     Top = 50
   end
   object SaveDialog: TSaveDialog
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
     Title = 'SaveFile'
     Left = 970
     Top = 50

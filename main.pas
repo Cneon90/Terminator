@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, CPDrv, Vcl.StdCtrls, System.Actions,
   Vcl.ActnList, Vcl.ExtCtrls, System.Notification, terminal, IniFiles, Vcl.Menus,
   System.ImageList, Vcl.ImgList, Vcl.Buttons, SyncObjs, TerminalThread,
-  Vcl.Imaging.pngimage;
+  Vcl.Imaging.pngimage, Vcl.Grids;
 
 type
   Tfr_main = class(TForm)
@@ -42,12 +42,8 @@ type
     imgList: TImageList;
     plButtons: TPanel;
     btnLoadFromTerminal: TBitBtn;
-    gbName: TGroupBox;
-    edTerminalName: TEdit;
     btnSaveAllConfig: TBitBtn;
     btnLoadConfAll: TBitBtn;
-    cbTypeTerminalName: TComboBox;
-    Label8: TLabel;
     gbHW: TGroupBox;
     gbCAN: TGroupBox;
     gbWIFI: TGroupBox;
@@ -60,18 +56,12 @@ type
     actTerminalConnect: TAction;
     Panel2: TPanel;
     btnExportHW: TBitBtn;
-    lbHW: TLabel;
-    lbCan: TLabel;
     Panel1: TPanel;
     btnExportCAN: TBitBtn;
     Panel3: TPanel;
     btnExporWIFI: TBitBtn;
-    lbWIFI: TLabel;
-    lbServ: TLabel;
     Panel4: TPanel;
     btnExportSERV: TBitBtn;
-    mmInfo: TMemo;
-    lbConfig: TLabel;
     lbconfigAll: TLabel;
     btnOptionHW: TBitBtn;
     btnOptionCAN: TBitBtn;
@@ -85,6 +75,39 @@ type
     Image4: TImage;
     Image5: TImage;
     Image1: TImage;
+    gbName: TGroupBox;
+    Label8: TLabel;
+    edTerminalName: TEdit;
+    cbTypeTerminalName: TComboBox;
+    chbResetTerminal: TCheckBox;
+    Label9: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    edInfoDataProd: TEdit;
+    edInfoMacST: TEdit;
+    edInfoMacAP: TEdit;
+    edInfoSimID: TEdit;
+    edInfoSW: TEdit;
+    edInfoCode: TEdit;
+    Label15: TLabel;
+    edOptionHWCan: TEdit;
+    Label16: TLabel;
+    edOptionCanName: TEdit;
+    edOptionCanSpeed: TEdit;
+    Label17: TLabel;
+    Label18: TLabel;
+    edOptionWIFIAccessSSID: TEdit;
+    Label20: TLabel;
+    edOptionWIFIClientSSID: TEdit;
+    Label19: TLabel;
+    edOptionServerAddress: TEdit;
+    Label21: TLabel;
+    edOptionServerPort: TEdit;
+    Label22: TLabel;
+    edInfoTerminalName: TEdit;
+    Label10: TLabel;
     procedure comPortReceiveData(Sender: TObject; DataPtr: Pointer;
       DataSize: Cardinal);
     procedure FormCreate(Sender: TObject);
@@ -118,6 +141,7 @@ type
     procedure edNameClientKeyPress(Sender: TObject; var Key: Char);
     procedure edNameParkNumberKeyPress(Sender: TObject; var Key: Char);
     procedure edTerminalNameKeyPress(Sender: TObject; var Key: Char);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
 
@@ -125,6 +149,8 @@ type
     procedure buttonOptionColorRed;
     procedure OnTerminalDataReceived(const Data: TArray<Byte>);
     procedure OnConnect(connect:boolean);
+    procedure generatorName(isEdit:boolean);
+    procedure updateInfo(Terminalinfo:Tterminal);
   public
     { Public declarations }
     Terminal: Tterminal;                    // Данные Терминала
@@ -155,11 +181,14 @@ Const
 
 var
   fr_main: Tfr_main;
-  autoConnect : Boolean;       // Автоподключение (INI)
-  Terminal_Info : TStringList; // Буфер для хранения информации о терминале
+  autoConnect : Boolean;        // Автоподключение (INI)
+  TerminalInfo   : TStringList; // информации о терминале
+  TerminalInfoBuf: TStringList;
   TerminalHead : TTerminalThread;
   TerminalConnect : boolean;
   confugBuf : TterminalConfig;
+  DirBufferOpen:array[0..4] of String; //Путь для Диалоговых окон
+  DirBufferSave:array[0..4] of String; //Путь для Диалоговых окон
 
 implementation
 
@@ -168,6 +197,23 @@ implementation
 uses Unit1;
 
 {$I-}
+
+// Терминала,
+
+procedure Tfr_main.updateInfo(Terminalinfo:Tterminal);
+begin
+  //HW
+  edOptionHWCan.Text := Terminalinfo.getHWcanStatus;
+  //CAN
+  edOptionCanName.Text := Terminalinfo.getCANDriverName;
+  edOptionCanSpeed.Text := Terminalinfo.getCANSpeed;
+  //WIFI
+  edOptionWIFIAccessSSID.Text :=   Terminalinfo.getWifiNameAccessPoint;
+  edOptionWIFIClientSSID.Text :=  Terminalinfo.getWifiNameClientPoint;
+  //SERV
+  edOptionServerAddress.Text := Terminalinfo.getServerAdress;
+  edOptionServerPort.Text := IntToStr(Terminalinfo.getServerPort);
+end;
 
 function ContainsLatinLetters(const AText: string): Boolean;
 var
@@ -200,30 +246,26 @@ var
   len, lenBuf : String;
 begin
   //Заполняем информацию в буфер
-  Terminal_Info.Clear;
-  Terminal_Info.Add('Prod Date:=' + Terminal.getProdDate);
-  Terminal_Info.Add('MAC_ST:='    + Terminal.getMacST);
-  Terminal_Info.Add('SIM_ID:='    + Terminal.getSimID);
-  Terminal_Info.Add('MAC_AP:='    + Terminal.getMacAp);
-  Terminal_Info.Add('SW:='        + Terminal.getSW);
-  Terminal_Info.Add('Code:='      + Terminal.decodeCoding);
-
-  //Собираем выведенную Информацию
-  len:='';
-  for i:= 0 to mmInfo.Lines.Count-1 do
-    len := len + mmInfo.Lines[i];
-
-  //Собираем Информации в буфере
-  lenbuf:='';
-  for i:= 0 to  Terminal_Info.Count-1 do
-    lenbuf := lenbuf + Terminal_Info[i];
-
-  //Если буфер отличается от информации выведенной - синхронизируем
-  if len <> lenBuf then
-  begin
-    mmInfo.Lines := Terminal_Info;
-    lbTerminalID.Caption := 'ID:'+Terminal.getTerminalID;
-  end;
+  TerminalInfobuf.Clear;
+  TerminalInfobuf.Add(Terminal.getProdDate);
+  TerminalInfobuf.Add(Terminal.getMacST);
+  TerminalInfobuf.Add(Terminal.getSimID);
+  TerminalInfobuf.Add(Terminal.getMacAp);
+  TerminalInfobuf.Add(Terminal.getSW);
+  TerminalInfobuf.Add(Terminal.decodeCoding);
+  //Буфер отличается от выводимой информации
+  if Length(TerminalInfo.Text) <> Length(TerminalInfoBuf.Text) then
+    begin
+     TerminalInfo.Text    := TerminalInfoBuf.Text;
+     edInfoDataProd.Text  := TerminalInfo[0];
+     edInfoMacST.Text     := TerminalInfo[1];
+     edInfoSimID.Text     := TerminalInfo[2];
+     edInfoMacAP.Text     := TerminalInfo[3];
+     edInfoSW.Text        := TerminalInfo[4];
+     edInfoCode.Text      := Terminalinfo[5];
+     edInfoTerminalName.Text := terminal.getNameTerminal;
+     lbTerminalID.Caption := 'ID:'+Terminal.getTerminalID;
+    end;
 end;
 
 //Распечатать массив
@@ -292,9 +334,6 @@ end;
 procedure Tfr_main.actTerminalConnectExecute(Sender: TObject);
 begin
   spTerminal.Brush.Color := clGreen;
-  //Имя терминала при подключении
-  if cbTypeTerminalName.ItemIndex = 0 then
-    edTerminalName.Text := Terminal.getNameTerminal;
 end;
 
 //Отключение UART
@@ -320,14 +359,16 @@ begin
   Terminal.clearConfigInfo;
   spTerminal.Brush.Color := clRed;
   lbTerminalID.Caption := '-';
-  Terminal_Info.Clear;
-  Terminal_Info.Add('Prod Date:= 00.00.00');
-  Terminal_Info.Add('MAC_ST:= -:-:-:-:-:-');
-  Terminal_Info.Add('SIM_ID:= -:-:-:-:-:-');
-  Terminal_Info.Add('MAC_AP:= -:-:-:-:-:-');
-  Terminal_Info.Add('SW:= v0.00(00.00.00)');
-  Terminal_Info.Add('Code:= -');
-  mmInfo.Lines := Terminal_Info;
+
+  TerminalInfo.Clear;
+  TerminalInfobuf.Clear;
+  TerminalInfo.Text    := TerminalInfoBuf.Text;
+  edInfoDataProd.Text  := '00.00.00';
+  edInfoMacST.Text     := '-:-:-:-:-:-';
+  edInfoSimID.Text     := '-';
+  edInfoMacAP.Text     := '-:-:-:-:-:-';
+  edInfoSW.Text        := 'v0.00(00.00.00)';
+  edInfoCode.Text      := '-';
 end;
 
 // Чтение всей конфигурации
@@ -338,11 +379,11 @@ begin
     try
       Terminal.getTerminalConfig;
     finally
-          buttonOptionColorRed;
-          btnOptionHW.Caption := 'Terminal';
-          btnOptionCAN.Caption := 'Terminal';
-          btnOptionWIFI.Caption := 'Terminal';
-          btnOptionServ.Caption := 'Terminal';
+      buttonOptionColorRed;
+      btnOptionHW.Caption := 'Terminal';
+      btnOptionCAN.Caption := 'Terminal';
+      btnOptionWIFI.Caption := 'Terminal';
+      btnOptionServ.Caption := 'Terminal';
     end;
 end;
 
@@ -350,12 +391,13 @@ procedure Tfr_main.btnSaveAllConfigClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
+  if DirBufferSave[4] <> '' then SaveDialog.InitialDir := DirBufferSave[4];
   SaveDialog.Filter := 'all config|*.cfgt';
   SaveDialog.DefaultExt := '.cfgt';
-
   if SaveDialog.Execute then
   begin
     FileStream := TFileStream.Create(SaveDialog.FileName, fmCreate);
+    DirBufferSave[4] := ExtractFilePath(SaveDialog.FileName);
     try
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.TerminalName, Length(TerminalBuf.TermianlConfig.TerminalName));
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.ServerSyncTS, Length(TerminalBuf.TermianlConfig.ServerSyncTS));
@@ -424,25 +466,16 @@ var
   _config : Tbytes;
   i:integer;
 begin
-
   if not comport.Connect then
   begin
     sendMessage('Нет подключения');
     exit;
   end;
-
   if Trim(edTerminalName.Text) = '' then
   begin
     sendMessage('Имя терминала не может быть пустым');
     exit;
   end;
-
-  if ContainsLatinLetters(edTerminalName.Text) then
-  begin
-    sendMessage('Имя терминала содержит недопустимый символ');
-    exit;
-  end;
-
   SetLength(name,32);
   SetLength(_config, 380);
   case cbTypeTerminalName.ItemIndex of
@@ -455,25 +488,16 @@ begin
     end;
   2://Generate
     begin
-       if(Trim(edNameSN.Text )     = '') OR
-         (Trim(edNameModel.Text)   = '') OR
-         (Trim(edNameClient.Text)  = '') OR
-         (Trim(edNameParkNumber.Text ) = '')
-      then
-      begin
-        sendMessage('Заполните все поля');
-        exit;
-      end;
-
       name := getCustomName;
       for I := 0 to Length(name)-1 do
         TerminalBuf.TermianlConfig.TerminalName[i] := name[i];
     end;
   end;
 
+  if TerminalBuf.CanDriverNameBuf <> ''  then
+    TerminalBuf.setCanDriverName(TerminalBuf.CanDriverNameBuf);
   move(TerminalBuf.TermianlConfig,Terminal.TermianlConfig,sizeOf(Terminal.TermianlConfig));
   Terminal.firmware();
-
 end;
 
 procedure Tfr_main.btnLoadConfAllClick(Sender: TObject);
@@ -482,18 +506,17 @@ var
   buf : Tarray<byte>;
   FileStream: TFileStream;
 begin
+  if DirBufferOpen[4] <> '' then OpenDialog.InitialDir := DirBufferOpen[4];
   OpenDialog.Filter := 'all config|*.cfgt';
   if OpenDialog.Execute then
   begin
     SetLength(buf, 383);
-
     FileStream := TFileStream.Create(OpenDialog.FileName, fmOpenRead);
+    DirBufferOpen[4] := ExtractFilePath(OpenDialog.FileName);
     try
-
       buf[0] := $aa;
       buf[1] := CMD_CONFIG_READ; // Добавляем байт, указывающий что это конфиг
       buf[382] := $FF;
-
       FileStream.ReadBuffer(buf[2], 380);
       TerminalBuf.checkAnswer(buf);
       buttonOptionColorRed;
@@ -501,25 +524,8 @@ begin
       btnOptionCAN.Caption := 'Default';
       btnOptionWIFI.Caption := 'Default';
       btnOptionServ.Caption := 'Default';
-
-      //HW
-      lbconfigAll.Caption := 'Конфигурация загружена из файла '+ ExtractFileName(OpenDialog.FileName);
-      lbHw.Caption :=  'CAN: ' + TerminalBuf.getHWcanStatus;
-
-      //CAN
-      lbCan.Caption :=  'Speed: ' + TerminalBuf.getCANSpeed + ' кБит/с';
-
-       //WIFI
-       lbWIFI.Caption :='Access point' + #13 +
-                        'SSID:' + TerminalBuf.getWifiNameAccessPoint +#13+#13+
-                        'Client' + #13 +
-                        'SSID:' + TerminalBuf.getWifiNameClientPoint;
-
-       //SERV
-       lbServ.Caption :='Address:'+TerminalBuf.getServerAdress + #13+
-                        'Port:'+IntToStr(TerminalBuf.getServerPort)+#13;
-
-       edTerminalName.Text := TerminalBuf.getNameTerminalConfig;
+      lbconfigAll.Caption := 'Конфигурация загружена из файла ' + ExtractFileName(OpenDialog.FileName);
+      updateInfo(TerminalBuf);
     finally
       FileStream.Free;
       lbconfigAll.Color := clred;
@@ -532,11 +538,13 @@ procedure Tfr_main.btnExportHWClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
+  if DirBufferSave[0] <> '' then SaveDialog.InitialDir := DirBufferSave[0];
   SaveDialog.Filter := 'HW setting|*.hwcfg';
   SaveDialog.DefaultExt := '.hwcfg';
   if SaveDialog.Execute then
   begin
     FileStream := TFileStream.Create(SaveDialog.FileName, fmCreate);
+    DirBufferSave[0] := ExtractFilePath(SaveDialog.FileName);
     try
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.HWSetting1, Length(TerminalBuf.TermianlConfig.HWSetting1));
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.HWSetting2, Length(TerminalBuf.TermianlConfig.HWSetting2));
@@ -552,11 +560,14 @@ procedure Tfr_main.btnExportCANClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
+  if DirBufferSave[1] <> '' then SaveDialog.InitialDir := DirBufferSave[1];
+  if TerminalBuf.getCANDriverName <> '' then SaveDialog.FileName := TerminalBuf.getCANDriverName;
   SaveDialog.Filter := 'CAN DATA |*.cdf';
   SaveDialog.DefaultExt := '.cdf';
   if SaveDialog.Execute then
   begin
     FileStream := TFileStream.Create(SaveDialog.FileName, fmCreate);
+     DirBufferSave[1] := ExtractFilePath(SaveDialog.FileName);
     try
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.CANDriverData, Length(TerminalBuf.TermianlConfig.CANDriverData));
     finally
@@ -570,11 +581,13 @@ procedure Tfr_main.btnExporWIFIClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
+  if DirBufferSave[2] <> '' then SaveDialog.InitialDir := DirBufferSave[2];
   SaveDialog.Filter := 'wi-fi setting|*.tcwf';
   SaveDialog.DefaultExt := '.tcwf';
   if SaveDialog.Execute then
   begin
     FileStream := TFileStream.Create(SaveDialog.FileName, fmCreate);
+    DirBufferSave[2] := ExtractFilePath(SaveDialog.FileName);
     try
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.WIFICfg, Length(TerminalBuf.TermianlConfig.WIFICfg));
     finally
@@ -588,11 +601,13 @@ procedure Tfr_main.btnExportSERVClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
+  if DirBufferSave[3] <> '' then SaveDialog.InitialDir := DirBufferSave[3];
   SaveDialog.Filter := 'Server |*.tcsr';
   SaveDialog.DefaultExt := '.tcsr';
   if SaveDialog.Execute then
   begin
     FileStream := TFileStream.Create(SaveDialog.FileName, fmCreate);
+    DirBufferSave[3] := ExtractFilePath(SaveDialog.FileName);
     try
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.ServerAddress, Length(TerminalBuf.TermianlConfig.ServerAddress));
       FileStream.WriteBuffer(TerminalBuf.TermianlConfig.ServerPort, Length(TerminalBuf.TermianlConfig.ServerPort));
@@ -608,13 +623,16 @@ var
   FileStream: TFileStream;
   i : integer;
 begin
+  if DirBufferOpen[1] <> '' then OpenDialog.InitialDir := DirBufferOpen[1];
   OpenDialog.Filter := 'CAN DATA |*.cdf';
+  OpenDialog.DefaultExt := '.cdf';
   if OpenDialog.Execute then
   begin
     FileStream := TFileStream.Create(OpenDialog.FileName, fmOpenRead);
+    DirBufferOpen[1] := ExtractFilePath(OpenDialog.FileName);
     try
       FileStream.ReadBuffer(TerminalBuf.TermianlConfig.CANDriverData[0], 100); // Читаем байты из файла 100 байт в буфер
-      lbCan.Caption := 'Speed: ' + TerminalBuf.getCANSpeed + ' кБит/с';
+      updateInfo(TerminalBuf);
     finally
       FileStream.Free;
       btnOptionCAN.Font.Color := clBlack;
@@ -629,15 +647,17 @@ var
   FileStream: TFileStream;
   i : integer;
 begin
+  if DirBufferOpen[0] <> ' ' then OpenDialog.InitialDir := DirBufferOpen[0];
   OpenDialog.Filter := 'HW setting|*.hwcfg';
   if OpenDialog.Execute then
   begin
     FileStream := TFileStream.Create(OpenDialog.FileName, fmOpenRead);
+    DirBufferOpen[0] := ExtractFilePath(OpenDialog.FileName);
     try
       FileStream.ReadBuffer(TerminalBuf.TermianlConfig.HWSetting1[0], 4);
       FileStream.ReadBuffer(TerminalBuf.TermianlConfig.HWSetting2[0], 45);
       FileStream.ReadBuffer(TerminalBuf.TermianlConfig.HWSetting3[0], 20);
-      lbHw.Caption := 'CAN: ' + TerminalBuf.getHWcanStatus;
+      updateInfo(TerminalBuf);
     finally
       FileStream.Free;
       btnOptionHW.Font.Color := clBlack;
@@ -652,16 +672,17 @@ var
   FileStream: TFileStream;
   i : integer;
 begin
+  if DirBufferOpen[3] <> '' then OpenDialog.InitialDir := DirBufferOpen[3];
   OpenDialog.Filter:='Server|*.tcsr';
   if OpenDialog.Execute then
   begin
     FileStream := TFileStream.Create(OpenDialog.FileName, fmOpenRead);
+
     try
       FileStream.ReadBuffer(TerminalBuf.TermianlConfig.ServerAddress[0], 38);
       FileStream.ReadBuffer(TerminalBuf.TermianlConfig.ServerPort[0], 2);
-
-      lbServ.Caption := 'Address:'+TerminalBuf.getServerAdress + #13+
-                        'Port:'+IntToStr(TerminalBuf.getServerPort)+#13;
+      updateInfo(TerminalBuf);
+      DirBufferOpen[3] := ExtractFilePath(OpenDialog.FileName);
     finally
       FileStream.Free;
       btnOptionServ.Font.Color := clBlack;
@@ -676,16 +697,15 @@ var
   FileStream: TFileStream;
   i : integer;
 begin
+  if DirBufferOpen[2] <> '' then OpenDialog.InitialDir := DirBufferOpen[2];
   OpenDialog.Filter := 'wi-fi setting|*.tcwf';
   if OpenDialog.Execute then
   begin
     FileStream := TFileStream.Create(OpenDialog.FileName, fmOpenRead);
     try
       FileStream.ReadBuffer(TerminalBuf.TermianlConfig.WIFICfg[0], 115); // Читаем байты из файла 100 байт в буфер
-      lbWIFI.Caption := 'Access point' + #13 +
-                        'SSID:' + TerminalBuf.getWifiNameAccessPoint +#13+#13+
-                        'Client' + #13 +
-                        'SSID:' + TerminalBuf.getWifiNameClientPoint;
+      DirBufferOpen[2] := ExtractFilePath(OpenDialog.FileName);
+      updateInfo(TerminalBuf);
     finally
       FileStream.Free;
       btnOptionWIFI.Font.Color := clBlack;
@@ -726,13 +746,24 @@ begin
   getAvalibleComPorts;
 end;
 
+procedure Tfr_main.generatorName(isEdit:boolean);
+begin
+  edNameSN.Enabled:=isEdit;
+  edNameModel.Enabled:=isEdit;
+  edNameClient.Enabled:=isEdit;
+  edNameParkNumber.Enabled:=isEdit;
+end;
+
+//
 procedure Tfr_main.cbTypeTerminalNameChange(Sender: TObject);
 begin
-
+  generatorName(False);
   case cbTypeTerminalName.ItemIndex of
   0: edTerminalName.ReadOnly := True;
   1: edTerminalName.ReadOnly := false;
-  2:begin
+  2:
+    begin
+      generatorName(True);
       edTerminalName.ReadOnly := True;
       edTerminalName.Text := edNameModel.Text  +' '+
                              edNameSN.Text     +' '+
@@ -775,49 +806,63 @@ end;
 
 procedure Tfr_main.edNameClientKeyPress(Sender: TObject; var Key: Char);
 begin
-if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
-    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+  if key > chr(128) then key:=#0;
+end;
+
+//Берем последнии символы из все строки
+function lastSymbol(st : String; num : integer):String;
+var buf:string;
+    i:integer;
+begin
+  buf:= st;
+  if Length(st) > num then buf := Copy(st, Length(buf) - (num-1), num);
+  result:= buf;
+end;
+
+//Добиваем пробелами
+function PadRight(const Str: string; TotalWidth: Integer; PaddingChar: Char = ' '): string;
+var
+  PaddingCount: Integer;
+begin
+  PaddingCount := TotalWidth - Length(Str);
+  if PaddingCount > 0 then
+    Result := Str + StringOfChar(PaddingChar, PaddingCount)
+  else
+    Result := Str;
 end;
 
 procedure Tfr_main.edNameModelChange(Sender: TObject);
-var
-  serialBuf : String;
-  textBuf : String;
 begin
-
-  textBuf := edNameSN.Text;
-  if Length(textBuf) > 8 then serialBuf := Copy(textBuf, Length(textBuf) - 7, 8)
-                         else serialBuf := textBuf;
-
   if cbTypeTerminalName.ItemIndex = 2 then
-  edTerminalName.Text := edNameModel.Text  +' '+
-                         SerialBuf         +' '+
-                         edNameClient.Text +' '+
-                         edNameParkNumber.Text;
+  edTerminalName.Text := PadRight(edNameModel.Text,edNameModel.MaxLength)  +' '+
+                         PadRight(edNameClient.Text,edNameClient.MaxLength) +' '+
+                         PadRight(lastSymbol(edNameSN.Text, 8),8) +' '+
+                         PadRight(lastSymbol(edNameParkNumber.Text,3),3);
 end;
 
 procedure Tfr_main.edNameModelKeyPress(Sender: TObject; var Key: Char);
 begin
-if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
-    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+if key > chr(128) then key:=#0;
 end;
 
 procedure Tfr_main.edNameParkNumberKeyPress(Sender: TObject; var Key: Char);
 begin
-if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
-    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+  if key > chr(128) then key:=#0;
 end;
 
 procedure Tfr_main.edNameSNKeyPress(Sender: TObject; var Key: Char);
 begin
-if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
-    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+  if key > chr(128) then key:=#0;
 end;
 
 procedure Tfr_main.edTerminalNameKeyPress(Sender: TObject; var Key: Char);
 begin
-if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
-    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+  if key > chr(128) then key:=#0;
+end;
+
+procedure Tfr_main.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  SaveSettings;
 end;
 
 procedure Tfr_main.FormCreate(Sender: TObject);
@@ -826,7 +871,8 @@ begin
   TerminalBuf := Tterminal.Create();     // Буферный файл
   Terminal := Tterminal.Create(comport); // Терминал (Передача компонента)
 
-  Terminal_Info := TstringList.Create;   // Буфер для информации о терминале
+  TerminalInfo := TstringList.Create;   // информации о терминале
+  TerminalInfoBuf := TStringList.Create;// Буфер информации о терминале
   getAvalibleComPorts;                   // Доступные COM порты
   cbTypeTerminalName.ItemIndex := 0;
 
@@ -840,63 +886,13 @@ begin
 
 end;
 
-// Received
-procedure Tfr_main.OnTerminalDataReceived(const Data: TArray<Byte>);
-var
-  i: Integer;
-  HexString: string;
-begin
-  HexString := '';
-  for i := 0 to High(Data) do
-    HexString := HexString + IntToHex(Data[i], 2) + ' ';
-
-
-  Terminal.checkAnswer(data);
-   //Если информация о терминале
-  if Data[1] = CMD_TERMINAL_INFO  then printInfoTerminal;
-  if data[1] = $ED then sendMessage('Write Configuration: Successful');
-  if Data[1] = CMD_CONFIG_READ then
-  begin
-      move(Terminal.TermianlConfig,TerminalBuf.TermianlConfig,sizeOf(TerminalBuf.TermianlConfig));
-      //HW
-      lbconfigAll.Caption := 'Конфигурация загружена из Терминала!';
-      lbHw.Caption := 'CAN: ' + Terminal.getHWcanStatus;
-      //CAN
-      lbCan.Caption := 'File name: TERMINAL' + #13+
-      'Speed: ' + Terminal.getCANSpeed + ' кБит/с';
-       //WIFI
-      lbWIFI.Caption := 'Access point' + #13 +
-                        'SSID:' + Terminal.getWifiNameAccessPoint +#13+#13+
-                        'Client' + #13 +
-                        'SSID:' + Terminal.getWifiNameClientPoint;
-       //SERV
-       lbServ.Caption :='Address:'+Terminal.getServerAdress + #13+
-                        'Port:'+IntToStr(Terminal.getServerPort)+#13;
-
-       if cbTypeTerminalName.ItemIndex = 0 then edTerminalName.Text := Terminal.getNameTerminal;
-  end;
-
-  if (data[0]=$FF)AND(data[1]=$FF)AND(data[2]=$F0)AND(data[3]=$FE)
-    then actTerminalDisconnect.Execute; //терминал отключен
-
-  if (data[0]=$F0)AND(data[1]=$FE)AND(data[2]=$FF)AND(data[3]=$FF)
-    then actTerminalConnect.Execute;  //терминал Подключен
-
-  TThread.Queue(nil,
-    procedure
-    begin
-
-      fr_Terminal.mmTerminal.Lines.Add('Received data: ' + HexString);
-    end
-  );
-end;
-
 //Удаление объектов
 procedure Tfr_main.FormDestroy(Sender: TObject);
 begin
   Terminal.Free;
   TerminalBuf.Free;
-  Terminal_Info.Free;
+  TerminalInfo.Free;
+  TerminalInfoBuf.Free;
 end;
 
 //------users function ----------------------
@@ -950,6 +946,17 @@ begin
   IniFile := TIniFile.Create(iniPath);
   try
     autoConnect := IniFile.ReadBool('General', 'autoConnect', true);
+    chbResetTerminal.Checked := IniFile.ReadBool('General', 'ResetTertminal', true);
+    DirBufferOpen[0] := IniFile.ReadString('OpenDialog','HW','C:\');
+    DirBufferOpen[1] := IniFile.ReadString('OpenDialog','CAN','C:\');
+    DirBufferOpen[2] := IniFile.ReadString('OpenDialog','WIFI','C:\');
+    DirBufferOpen[3] := IniFile.ReadString('OpenDialog','SERVER','C:\');
+    DirBufferOpen[4] := IniFile.ReadString('OpenDialog','all','C:\');
+    DirBufferSave[0] := IniFile.ReadString('SaveDialog','HW','C:\');
+    DirBufferSave[1] := IniFile.ReadString('SaveDialog','CAN','C:\');
+    DirBufferSave[2] := IniFile.ReadString('SaveDialog','WIFI','C:\');
+    DirBufferSave[3] := IniFile.ReadString('SaveDialog','SERVER','C:\');
+    DirBufferSave[4] := IniFile.ReadString('SaveDialog','all','C:\');
   finally
     IniFile.Free;
   end;
@@ -965,9 +972,62 @@ begin
   IniFile := TIniFile.Create(iniPath);
   try
     IniFile.WriteBool('General', 'autoConnect', True);
+    iniFile.WriteBool('General', 'ResetTertminal', chbResetTerminal.Checked);
+    iniFile.WriteString('OpenDialog', 'HW', DirBufferOpen[0]);
+    iniFile.WriteString('OpenDialog', 'CAN', DirBufferOpen[1]);
+    iniFile.WriteString('OpenDialog', 'WIFI', DirBufferOpen[2]);
+    iniFile.WriteString('OpenDialog', 'SERVER', DirBufferOpen[3]);
+    iniFile.WriteString('OpenDialog', 'all', DirBufferOpen[4]);
+    iniFile.WriteString('SaveDialog', 'HW', DirBufferSave[0]);
+    iniFile.WriteString('SaveDialog', 'CAN', DirBufferSave[1]);
+    iniFile.WriteString('SaveDialog', 'WIFI', DirBufferSave[2]);
+    iniFile.WriteString('SaveDialog', 'SERVER', DirBufferSave[3]);
+    iniFile.WriteString('SaveDialog', 'all', DirBufferSave[4]);
   finally
     IniFile.Free;
   end;
+end;
+
+
+// Received
+procedure Tfr_main.OnTerminalDataReceived(const Data: TArray<Byte>);
+var
+  i: Integer;
+  HexString: string;
+begin
+  HexString := '';
+  for i := 0 to High(Data) do
+    HexString := HexString + IntToHex(Data[i], 2) + ' ';
+
+  Terminal.checkAnswer(data);
+   //Если информация о терминале
+  if Data[1] = CMD_TERMINAL_INFO then printInfoTerminal;
+  if data[1] = $ED then
+    begin
+      sendMessage('Write Configuration: Successful');
+      if (chbResetTerminal.Checked) then Terminal.resetTerminal;
+    end;
+
+
+  if Data[1] = CMD_CONFIG_READ then
+  begin
+      move(Terminal.TermianlConfig,TerminalBuf.TermianlConfig,sizeOf(TerminalBuf.TermianlConfig));
+      lbconfigAll.Caption := 'Конфигурация загружена из файла Терминала';
+      updateInfo(Terminal);
+  end;
+
+  if (data[0]=$FF)AND(data[1]=$FF)AND(data[2]=$F0)AND(data[3]=$FE)
+    then actTerminalDisconnect.Execute; //терминал отключен
+
+  if (data[0]=$F0)AND(data[1]=$FE)AND(data[2]=$FF)AND(data[3]=$FF)
+    then actTerminalConnect.Execute;  //терминал Подключен
+
+  TThread.Queue(nil,
+    procedure
+    begin
+      fr_Terminal.mmTerminal.Lines.Add('Received data: ' + HexString);
+    end
+  );
 end;
 
 
