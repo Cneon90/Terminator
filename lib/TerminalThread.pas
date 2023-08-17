@@ -81,11 +81,9 @@ end;
 
 //Поток
 procedure TTerminalThread.Execute;
-
 begin
   while not Terminated do
   begin
-
     DataPtr := @pingData[0];
     DataSize := SizeOf(pingData);
     CommPortReceiveData(nil,  DataPtr, DataSize);
@@ -94,7 +92,6 @@ begin
     except
       FCommPort.Disconnect;
     end;
-
     sleep(1000);
   end;
 end;

@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, CPDrv, Vcl.StdCtrls, System.Actions,
   Vcl.ActnList, Vcl.ExtCtrls, System.Notification, terminal, IniFiles, Vcl.Menus,
-  System.ImageList, Vcl.ImgList, Vcl.Buttons, SyncObjs, TerminalThread;
+  System.ImageList, Vcl.ImgList, Vcl.Buttons, SyncObjs, TerminalThread,
+  Vcl.Imaging.pngimage;
 
 type
   Tfr_main = class(TForm)
@@ -43,7 +44,7 @@ type
     btnLoadFromTerminal: TBitBtn;
     gbName: TGroupBox;
     edTerminalName: TEdit;
-    BitBtn2: TBitBtn;
+    btnSaveAllConfig: TBitBtn;
     btnLoadConfAll: TBitBtn;
     cbTypeTerminalName: TComboBox;
     Label8: TLabel;
@@ -58,17 +59,17 @@ type
     actTerminalDisconnect: TAction;
     actTerminalConnect: TAction;
     Panel2: TPanel;
-    BitBtn4: TBitBtn;
+    btnExportHW: TBitBtn;
     lbHW: TLabel;
     lbCan: TLabel;
     Panel1: TPanel;
-    BitBtn5: TBitBtn;
+    btnExportCAN: TBitBtn;
     Panel3: TPanel;
-    BitBtn6: TBitBtn;
+    btnExporWIFI: TBitBtn;
     lbWIFI: TLabel;
     lbServ: TLabel;
     Panel4: TPanel;
-    BitBtn7: TBitBtn;
+    btnExportSERV: TBitBtn;
     mmInfo: TMemo;
     lbConfig: TLabel;
     lbconfigAll: TLabel;
@@ -79,6 +80,11 @@ type
     comport : TCommPortDriver;
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Image1: TImage;
     procedure comPortReceiveData(Sender: TObject; DataPtr: Pointer;
       DataSize: Cardinal);
     procedure FormCreate(Sender: TObject);
@@ -100,13 +106,18 @@ type
     procedure btnOptionServClick(Sender: TObject);
     procedure btnOptionHWClick(Sender: TObject);
     procedure btnLoadConfAllClick(Sender: TObject);
-    procedure BitBtn2Click(Sender: TObject);
-    procedure BitBtn4Click(Sender: TObject);
-    procedure BitBtn5Click(Sender: TObject);
-    procedure BitBtn6Click(Sender: TObject);
-    procedure BitBtn7Click(Sender: TObject);
+    procedure btnSaveAllConfigClick(Sender: TObject);
+    procedure btnExportHWClick(Sender: TObject);
+    procedure btnExportCANClick(Sender: TObject);
+    procedure btnExporWIFIClick(Sender: TObject);
+    procedure btnExportSERVClick(Sender: TObject);
     procedure btnLoadFromTerminalClick(Sender: TObject);
     procedure btnFirmwareClick(Sender: TObject);
+    procedure edNameModelKeyPress(Sender: TObject; var Key: Char);
+    procedure edNameSNKeyPress(Sender: TObject; var Key: Char);
+    procedure edNameClientKeyPress(Sender: TObject; var Key: Char);
+    procedure edNameParkNumberKeyPress(Sender: TObject; var Key: Char);
+    procedure edTerminalNameKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
 
@@ -157,6 +168,21 @@ implementation
 uses Unit1;
 
 {$I-}
+
+function ContainsLatinLetters(const AText: string): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+
+  for i := 1 to Length(AText) do
+  begin
+    if not IsCharAlphaNumeric(AText[i]) then
+      Exit;
+  end;
+
+  Result := True;
+end;
 
 // Кнопки опций в красный цвет
 procedure Tfr_main.buttonOptionColorRed;
@@ -320,7 +346,7 @@ begin
     end;
 end;
 
-procedure Tfr_main.BitBtn2Click(Sender: TObject);
+procedure Tfr_main.btnSaveAllConfigClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
@@ -398,9 +424,22 @@ var
   _config : Tbytes;
   i:integer;
 begin
-  if edTerminalName.Text = '' then
+
+  if not comport.Connect then
+  begin
+    sendMessage('Нет подключения');
+    exit;
+  end;
+
+  if Trim(edTerminalName.Text) = '' then
   begin
     sendMessage('Имя терминала не может быть пустым');
+    exit;
+  end;
+
+  if ContainsLatinLetters(edTerminalName.Text) then
+  begin
+    sendMessage('Имя терминала содержит недопустимый символ');
     exit;
   end;
 
@@ -416,9 +455,19 @@ begin
     end;
   2://Generate
     begin
-    name := getCustomName;
-    for I := 0 to Length(name)-1 do
-      TerminalBuf.TermianlConfig.TerminalName[i] := name[i];
+       if(Trim(edNameSN.Text )     = '') OR
+         (Trim(edNameModel.Text)   = '') OR
+         (Trim(edNameClient.Text)  = '') OR
+         (Trim(edNameParkNumber.Text ) = '')
+      then
+      begin
+        sendMessage('Заполните все поля');
+        exit;
+      end;
+
+      name := getCustomName;
+      for I := 0 to Length(name)-1 do
+        TerminalBuf.TermianlConfig.TerminalName[i] := name[i];
     end;
   end;
 
@@ -479,7 +528,7 @@ begin
 end;
 
 //Сохранение из общего файла отдельно HW
-procedure Tfr_main.BitBtn4Click(Sender: TObject);
+procedure Tfr_main.btnExportHWClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
@@ -499,7 +548,7 @@ begin
 end;
 
 //Сохранение в отдельный файл из общей конфигурации
-procedure Tfr_main.BitBtn5Click(Sender: TObject);
+procedure Tfr_main.btnExportCANClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
@@ -517,7 +566,7 @@ begin
 end;
 
 // Сохранение из общего файла в WI-FI
-procedure Tfr_main.BitBtn6Click(Sender: TObject);
+procedure Tfr_main.btnExporWIFIClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
@@ -535,7 +584,7 @@ begin
 end;
 
 // Сохранение из общего файла в Serv
-procedure Tfr_main.BitBtn7Click(Sender: TObject);
+procedure Tfr_main.btnExportSERVClick(Sender: TObject);
 var
   FileStream: TFileStream;
 begin
@@ -724,6 +773,12 @@ begin
 end;
 
 
+procedure Tfr_main.edNameClientKeyPress(Sender: TObject; var Key: Char);
+begin
+if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
+    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+end;
+
 procedure Tfr_main.edNameModelChange(Sender: TObject);
 var
   serialBuf : String;
@@ -739,6 +794,30 @@ begin
                          SerialBuf         +' '+
                          edNameClient.Text +' '+
                          edNameParkNumber.Text;
+end;
+
+procedure Tfr_main.edNameModelKeyPress(Sender: TObject; var Key: Char);
+begin
+if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
+    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+end;
+
+procedure Tfr_main.edNameParkNumberKeyPress(Sender: TObject; var Key: Char);
+begin
+if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
+    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+end;
+
+procedure Tfr_main.edNameSNKeyPress(Sender: TObject; var Key: Char);
+begin
+if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
+    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
+end;
+
+procedure Tfr_main.edTerminalNameKeyPress(Sender: TObject; var Key: Char);
+begin
+if not (Key in ['a'..'z', 'A'..'Z','0'..'9', #8]) then // Разрешаем только английские буквы и Backspace
+    Key := #0; // Обнуляем символ, чтобы он не добавлялся к тексту
 end;
 
 procedure Tfr_main.FormCreate(Sender: TObject);
@@ -781,22 +860,20 @@ begin
       move(Terminal.TermianlConfig,TerminalBuf.TermianlConfig,sizeOf(TerminalBuf.TermianlConfig));
       //HW
       lbconfigAll.Caption := 'Конфигурация загружена из Терминала!';
-      lbHw.Caption := 'File name: TERMINAL'+ #13 +
-                      'CAN: ' + Terminal.getHWcanStatus;
+      lbHw.Caption := 'CAN: ' + Terminal.getHWcanStatus;
       //CAN
       lbCan.Caption := 'File name: TERMINAL' + #13+
       'Speed: ' + Terminal.getCANSpeed + ' кБит/с';
        //WIFI
-      lbWIFI.Caption := 'File name: TERMINAL'+#13+#13+
-                        'Access point' + #13 +
+      lbWIFI.Caption := 'Access point' + #13 +
                         'SSID:' + Terminal.getWifiNameAccessPoint +#13+#13+
                         'Client' + #13 +
                         'SSID:' + Terminal.getWifiNameClientPoint;
        //SERV
-       lbServ.Caption := 'File name: TERMINAL' + #13+
-                        'Address:'+Terminal.getServerAdress + #13+
+       lbServ.Caption :='Address:'+Terminal.getServerAdress + #13+
                         'Port:'+IntToStr(Terminal.getServerPort)+#13;
-       edTerminalName.Text := Terminal.getNameTerminal;
+
+       if cbTypeTerminalName.ItemIndex = 0 then edTerminalName.Text := Terminal.getNameTerminal;
   end;
 
   if (data[0]=$FF)AND(data[1]=$FF)AND(data[2]=$F0)AND(data[3]=$FE)
@@ -842,12 +919,12 @@ begin
       sendMessage('Система не обнаружила доступных COM портов');
     end;
     //Если доступен только один ком порт, выбираем его и пытаемся подключиться
-        if (comPortList.Count = 1)  then
-         begin
+   if (comPortList.Count = 1)  then
+   begin
       try
         cbComPorts.ItemIndex := 0; // выбираем первый ком порт,и пытаемся подключиться
-        comport.Connect;
-        actConnect.Execute;
+//        comport.Connect;
+//        actConnect.Execute;
       except
 
       end;

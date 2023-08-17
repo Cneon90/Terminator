@@ -159,21 +159,28 @@ begin
 end;
 
 //Собираем команду для отправки на терминал
-function Tterminal.makeCommad:Tarray<byte>;
-var _data:Tarray<byte>;
-    i,dataLength : integer;
+//function Tterminal.makeCommad:Tarray<byte>;
+//var _data:Tarray<byte>;
+//    i,dataLength : integer;
+//begin
+//   dataLength := Length(packageData);
+//   SetLength(_data,dataLength+3);
+//   _data[0] := CMD_HEAD_REQUST;
+//   _data[1] := packageCmd;
+//
+//   for i := 0 to dataLength-1 do
+//      _data[i+2] := packageData[i];
+//
+//
+//   _data[dataLength+2] := paсkageChecked;
+//
+//   result := _data;
+//end;
+
+function Tterminal.makeCommad: TArray<Byte>;
+var temp : Tarray<byte>;
 begin
-   dataLength := Length(packageData);
-   SetLength(_data,dataLength+3);
-   _data[0] := CMD_HEAD_REQUST;
-   _data[1] := packageCmd;
-
-   for i := 0 to dataLength-1 do
-      _data[i+2] := packageData[i];
-
-   _data[dataLength+2] := paсkageChecked;
-
-   result := _data;
+  Result := [CMD_HEAD_REQUST, packageCmd] + packageData + [paсkageChecked];
 end;
 
 //Получение проверочного байта
@@ -423,18 +430,15 @@ begin
   len := Length(TerminalInfo.MAC_ST);
   SetLength(mac, len);
   for i := 0 to len-1 do
-    mac[i] := TerminalInfo.MAC_ST[i];
+    mac[i] :=  TerminalInfo.MAC_ST[i];
 
   result := printformat(mac);
 end;
 
-
 //Получение SIM_ID
 function Tterminal.getSimID:String;
 var
-  st: String;
-  i, len:integer;
-  simId : Tarray<byte>;
+  SimIdWithoutLastByte: AnsiString;
 begin
   //Если байт запрета возвращаем -
   if TerminalInfo.GSM_ENB = $00 then
@@ -442,14 +446,8 @@ begin
       Result := '-';
       exit;
     end;
-  len := Length(TerminalInfo.SIM_ID);
-
-  SetLength(simId, len);
-  st := '';
-  for i := 0 to len-1 do
-    st := st + intTostr(TerminalInfo.SIM_ID[i])+':';
-
-  Result :=  st;
+  SetString(SimIdWithoutLastByte, PAnsiChar(@TerminalInfo.SIM_ID[0]), Length(TerminalInfo.SIM_ID) - 1);
+  result := SimIdWithoutLastByte;
 end;
 
 //Получение скорости CAN
