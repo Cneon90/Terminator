@@ -1,0 +1,31 @@
+unit lib_main;
+
+interface
+
+
+procedure CreateDSN(const DSNName, DriverName, Server, Database, UserName, Password: string);
+
+implementation
+
+procedure CreateDSN(const DSNName, DriverName, Server, Database, UserName, Password: string);
+var
+  Reg: TRegistry;
+begin
+  Reg := TRegistry.Create;
+  try
+    if Reg.OpenKey('SOFTWARE\ODBC\ODBC.INI\' + DSNName, True) then
+    begin
+      Reg.WriteString('Driver', DriverName);
+      Reg.WriteString('Server', Server);
+      Reg.WriteString('Database', Database);
+      Reg.WriteString('UID', UserName);
+      Reg.WriteString('PWD', Password);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
+
+
+end.

@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls;
 
 type
   Tfr_Terminal = class(TForm)
@@ -71,57 +71,13 @@ var
   i : integer;
 
 begin
-
-    st:=st+#13+'TerminalName'+fr_main.Terminal.getNameTerminalConfig;
-
-
-//  st:=st+#13+'TerminalName';
-//  for I := 0 to 31 do
-//    st := st + IntToHex(fr_main.Terminal.TerminalName[i], 2)+' ';
-//  st:=st+#13+'Sync';
-//
-//  for I := 0 to 3 do
-//    st := st + IntToHex(fr_main.Terminal.ServerSyncTS[i], 2)+' ';
-//  st:=st+#13+'HW Settings 1';
-//  for I := 0 to 3 do
-//    st := st + IntToHex(fr_main.Terminal.HWSetting1[i], 2)+' ';
-//
-//    st:=st+#13+'Can Driver Name:';
-//  for I := 0 to 15 do
-//    st := st + IntToHex(fr_main.Terminal.CANDriverName[i], 2)+' ';
-//
-//  st:=st+#13+'Can Driver TS:';
-//  for I := 0 to 3 do
-//    st := st + IntToHex(fr_main.Terminal.CANDriverTS[i], 2)+' ';
-//
-//  st:=st+#13+'Can Driver Data:';
-//  for I := 0 to 99 do
-//    st := st + IntToHex(fr_main.Terminal.CANDriverData[i], 2)+' ';
-//
-//  st:=st+#13+'HWSetting2:';
-//  for I := 0 to 44 do
-//    st := st + IntToHex(fr_main.Terminal.HWSetting2[i], 2)+' ';
-//
-//  st:=st+#13+'WiFi Cfg:';
-//  for I := 0 to 114 do
-//    st := st + IntToHex(fr_main.Terminal.WIFICfg[i], 2)+' ';
-//
-//  st:=st+#13+'Port:';
-//  for I := 0 to 1 do
-//    st := st + IntToHex(fr_main.Terminal.ServerPort[i], 2)+' ';
-
-//  st:=st+#13+'HW Settings 3:';
-//  for I := 0 to 19 do
-//    st := st + IntToHex(fr_main.Terminal.HWSetting3[i], 2)+' ';
-
-
-
- mmTerminal.Lines.Append(st);
+  st:=st+#13+'TerminalName'+fr_main.Terminal.getNameTerminalConfig;
+  mmTerminal.Lines.Append(st);
 end;
 
 procedure Tfr_Terminal.Button4Click(Sender: TObject);
 begin
- mmTerminal.Clear;
+  mmTerminal.Clear;
 end;
 
 end.

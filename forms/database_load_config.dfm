@@ -1,0 +1,89 @@
+object fr_load_config: Tfr_load_config
+  Left = 858
+  Top = 436
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1086#1083#1085#1086#1081' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1080' '#1080#1079' '#1041#1044
+  ClientHeight = 377
+  ClientWidth = 368
+  Color = clBtnFace
+  Font.Charset = RUSSIAN_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -21
+  Font.Name = 'Courier New'
+  Font.Style = [fsBold]
+  Position = poDesigned
+  OnShow = FormShow
+  TextHeight = 23
+  object plMain: TPanel
+    Left = 0
+    Top = 0
+    Width = 368
+    Height = 341
+    Align = alTop
+    TabOrder = 0
+    ExplicitWidth = 628
+    object Panel1: TPanel
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 360
+      Height = 333
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 0
+      ExplicitWidth = 356
+      object Label1: TLabel
+        AlignWithMargins = True
+        Left = 5
+        Top = 3
+        Width = 352
+        Height = 23
+        Margins.Left = 5
+        Align = alTop
+        Caption = #1042#1099#1073#1077#1088#1080#1090#1077' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1102':'
+        ExplicitWidth = 286
+      end
+      object lbAllConfig: TListBox
+        Left = 0
+        Top = 29
+        Width = 360
+        Height = 304
+        Align = alClient
+        ItemHeight = 23
+        TabOrder = 0
+        OnDblClick = btnOpenClick
+        ExplicitWidth = 356
+        ExplicitHeight = 300
+      end
+    end
+  end
+  object btnClose: TButton
+    AlignWithMargins = True
+    Left = 260
+    Top = 344
+    Width = 105
+    Height = 30
+    Align = alRight
+    Cancel = True
+    Caption = #1047#1072#1082#1088#1099#1090#1100
+    TabOrder = 1
+    OnClick = btnCloseClick
+    ExplicitLeft = 256
+    ExplicitTop = 347
+    ExplicitHeight = 32
+  end
+  object btnOpen: TButton
+    AlignWithMargins = True
+    Left = 140
+    Top = 344
+    Width = 114
+    Height = 30
+    Align = alRight
+    Caption = #1042#1099#1073#1088#1072#1090#1100
+    ModalResult = 1
+    TabOrder = 2
+    OnClick = btnOpenClick
+    ExplicitLeft = 136
+  end
+end

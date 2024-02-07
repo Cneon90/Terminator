@@ -2,9 +2,16 @@ unit Terminal;
 
 interface
 
-uses CPDrv, SysUtils, DateUtils;
+uses CPDrv, SysUtils, DateUtils, Vcl.Graphics;
 
 type
+
+  //Оператор мобильной связи
+  TGsmOperator = record
+    id : integer;
+    Name : String;
+    color: Tcolor;
+  end;
 
   // Информации о терминале
   TterminalInfo = record
@@ -15,18 +22,15 @@ type
      coding:   array[0..03]   of byte; // Опции (G|GC|GW|GWC)
      SW:       array[0..04]   of byte; // Версия прошивки
      name:     array[0..31]   of byte; // Название терминала
-     MAC_EN:byte;
+     MAC_EN:                     byte;
      MAC_AP:   array[0..05]   of byte; // MAC точки доступа
      MAC_ST:   array[0..05]   of byte; // MAC
-     GSM_ENB:byte;
+     GSM_ENB:                    byte;
      SIM_ID:   array[0..19]   of byte; // ID сим карты
      check:byte;
   end;
 
-  //Конфигурация терминала
-  TterminalConfig = record
-     head:byte;
-     answer: byte;
+  Tconfig = record //Просто конфигурация
      TerminalName: array[0..31]  of byte;  // Имя терминала
      ServerSyncTS: array[0..3]   of byte;  // TS синхронизация с сервером. Используется во время работы. При настройке должно задаваться 0
      HWSetting1:   array[0..3]   of byte;  // hardware настройка 1
@@ -38,6 +42,13 @@ type
      ServerAddress:array[0..37]  of byte;  // Адрес сервера
      ServerPort:   array[0..1]   of byte;  // Порт
      HWSetting3:   array[0..19]  of byte;  // hardware настройка 2
+  end;
+
+  //Конфигурация терминала с проверочными байтами
+  TterminalConfig = record
+     head:byte;
+     answer: byte;
+     config:Tconfig;
      check:byte;
   end;
 
@@ -51,8 +62,17 @@ type
     CMD_CONFIG_WRITE   = $ED;      // Записать конфигурацию
     CMD_TERMINAL_INFO  = $0F;      // Информация о терминале
 
+    SECTION_COUNT      = 4;
+    SECTION_HW         = 1;
+    SECTION_CAN        = 2;
+    SECTION_WIFI       = 3;
+    SECTION_Server     = 4;
+
   private
      FCommPort: TCommPortDriver;    // Поле для хранения ссылки на TCommPortDriver
+     IsEmptyConfig:Boolean;         // Заполнялась ли конфигурация
+     IsEmptyCompositeConfig: array[1..SECTION_COUNT]  of boolean;//Части конфигурации
+     procedure checkIsFull;
      function getSumData:byte;      // Сумма байтов данных packageData
      function paсkageChecked:byte;  // Получить проверочный байт
      function printformat(mac :Tarray<byte>; symbol :String =':'):String; //Форматирование
@@ -65,6 +85,7 @@ type
 
      //-------Конфигурация терминала -------------------------
      TermianlConfig : TterminalConfig;
+//     config : Tconfig;
 
      CanDriverNameBuf : String;
 
@@ -84,16 +105,36 @@ type
      function getMacST:String;                               // Получение форматированного MAC_ST
      function getSimID:String;                               // Получение SIM_ID
      function getCANSpeed:String;                            // Получение скорости CAN шины
+     function getWifiOperatingMode: boolean;
      function getWifiNameAccessPoint:String;                 // Получение названия точки доступа
-     function getWifiNameClientPoint:String;                 // Получение названия сети клиента 
+     function getWifiNameClientPoint:String;                 // Получение названия сети клиента
      function getServerAdress: String;                       // Получение Адреса сервера
      function getServerPort: word;                           // Получение Порт сервера
      function getHWcanStatus : String;                       // Получение информации о CAN из HW setting1
 
-     procedure setCanDriverName(name : String);// Установить имя драйвера
+     function getGsmOperator:TGsmOperator;
+     function getConfig380:Tbytes;
+
+     //---set----
+     function setHW(data:Tbytes): Boolean;                           overload;
+     function setHW(data:Tconfig):boolean;                           overload;
+
+     function setCAN(data:Tbytes): Boolean;
+
+     function setwifi(data:Tbytes): Boolean;                         overload;
+     function setwifi(data:Tconfig): Boolean;                        overload;
+
+     function setServ(data:Tbytes): Boolean;
+     function setWifiServ(data: Tbytes): Boolean;
+     //---set----
+     function setTerminalName(const Value: string):boolean;
+
 
      function stringToHex(strToConvert : String):TBytes;// Преобразование в hex
-
+     function IsEmptyConfiguration:boolean;                  // Заполнена конфигурация или нет
+     procedure setCompositeConfig(index:integer);
+     procedure setCanDriverName(name : String);// Установить имя драйвера
+     procedure loadConfig(newConfig:Tbytes);
      procedure ping;                                 // Проверка связи
      procedure info;                                 // Информация о терминале
      procedure clearInfo;                            // Очистка данных Информации
@@ -104,6 +145,13 @@ type
      procedure sendСonfirmation(_data:Tarray<byte>); // Отправка данных многократно
      procedure firmware;
      procedure resetTerminal;
+
+     function getWifiIPClientPoint:String;
+     function getWifiOperatingModeClient:boolean; //Ркжим работы wifi клиента
+     function getWifiMode:String;
+
+     function GetBit(const AByte: Byte; const ABitIndex: Integer): Boolean;
+     function getAccelerometr:String;
   end;
 
 implementation
@@ -113,6 +161,7 @@ begin
   FCommPort := ACommPort; // Присваиваем ссылку на TCommPortDriver полю FCommPort
 end;
 
+//Перезагрузка терминала
 procedure Tterminal.resetTerminal;
 begin
   packageCmd := $F0;
@@ -120,13 +169,14 @@ begin
   send(Self.makeCommad);
 end;
 
+//Установка имени драйвера
 procedure Tterminal.setCanDriverName(name : String);
 var _nameHex : Tbytes;
     _nameBuf : String;
     i:integer;
 begin
   //Заполняем пробелами все имя
-  FillChar(TermianlConfig.CANDriverName, SizeOf(TermianlConfig.CANDriverName), $20);
+  FillChar(TermianlConfig.config.CANDriverName, SizeOf(TermianlConfig.config.CANDriverName), $20);
 
   //Если имя больше обрезаем
    if Length(name) > 16 then
@@ -139,10 +189,9 @@ begin
 
   //Копируем
   for  i:= 0 to Length(_nameBuf)-1 do
-    TermianlConfig.CANDriverName[i] := _nameHex[i];
+    TermianlConfig.config.CANDriverName[i] := _nameHex[i];
 
-  TermianlConfig.CANDriverName[15] := 0;
-
+  TermianlConfig.config.CANDriverName[15] := 0;
 end;
 
 //Отправка сообщений с проверкой ответа в Терминал
@@ -282,12 +331,10 @@ begin
   send(self.makeCommad);
 end;
 
-
 //Обработка ответа
 function Tterminal.checkAnswer(_data:Tarray<byte>): Tarray<byte>;
 var i:integer;
 begin
-
   //Информации о терминале
   if _data[1] = CMD_TERMINAL_INFO then
     begin
@@ -303,16 +350,55 @@ begin
     end;
 end;
 
+//Загрузка конфигурации
+procedure Tterminal.loadConfig(newConfig:Tbytes);
+var seek : integer; //Пропустить байт
+begin
+  if Length(newConfig) < SizeOf(TermianlConfig.config) then
+    raise Exception.Create('Недостаточно байтов для заполнения структуры');
+
+  // Копируем байты в поля структуры
+  Move(newConfig[0],   TermianlConfig.config.TerminalName[0],  SizeOf(TermianlConfig.config.TerminalName));
+  seek:= SizeOf(TermianlConfig.config.TerminalName);
+
+  Move(newConfig[seek],  TermianlConfig.config.ServerSyncTS[0],  SizeOf(TermianlConfig.config.ServerSyncTS));
+  seek:= seek + SizeOf(TermianlConfig.config.ServerSyncTS);
+
+  Move(newConfig[seek],  TermianlConfig.config.HWSetting1[0],    SizeOf(TermianlConfig.config.HWSetting1));
+  seek:= seek + SizeOf(TermianlConfig.config.HWSetting1);
+
+  Move(newConfig[seek],  TermianlConfig.config.CANDriverName[0], SizeOf(TermianlConfig.config.CANDriverName));
+  seek:= seek + SizeOf(TermianlConfig.config.CANDriverName);
+
+  Move(newConfig[seek],  TermianlConfig.config.CANDriverTS[0],   SizeOf(TermianlConfig.config.CANDriverTS));
+  seek:= seek + SizeOf(TermianlConfig.config.CANDriverTS);
+
+  Move(newConfig[seek],  TermianlConfig.config.CANDriverData[0], SizeOf(TermianlConfig.config.CANDriverData));
+  seek:= seek + SizeOf(TermianlConfig.config.CANDriverData);
+
+  Move(newConfig[seek], TermianlConfig.config.HWSetting2[0],    SizeOf(TermianlConfig.config.HWSetting2));
+  seek:= seek + SizeOf(TermianlConfig.config.HWSetting2);
+
+  Move(newConfig[seek], TermianlConfig.config.WIFICfg[0],       SizeOf(TermianlConfig.config.WIFICfg));
+  seek:= seek + SizeOf(TermianlConfig.config.WIFICfg);
+
+  Move(newConfig[seek], TermianlConfig.config.ServerAddress[0], SizeOf(TermianlConfig.config.ServerAddress));
+  seek:= seek + SizeOf(TermianlConfig.config.ServerAddress);
+
+  Move(newConfig[seek], TermianlConfig.config.ServerPort[0],    SizeOf(TermianlConfig.config.ServerPort));
+  seek:= seek + SizeOf(TermianlConfig.config.ServerPort);
+
+  Move(newConfig[seek], TermianlConfig.config.HWSetting3[0],    SizeOf(TermianlConfig.config.HWSetting3));
+end;
+
 //----------Пос. обработка------------------------------------------------------
 
 
 // Получение названия из Информации о терминале
 function Tterminal.getNameTerminal:String;
 var
-  asciiString: string;
   temp:array[0..32] of byte;
 begin
-//  TerminalInfo.name[32] := 0; //Добавляем символ конца строки
   move(TerminalInfo.name[0], temp, 32);
   temp[32] := 0;
   result := PAnsiChar(@temp);
@@ -324,7 +410,7 @@ var
   asciiString: string;
   Temp:array[0..32] of byte;
 begin
-  move(TermianlConfig.TerminalName[0],Temp,32);
+  move(TermianlConfig.config.TerminalName[0],Temp,32);
   Temp[32] := 0; //Добавляем символ конца строки
   result := PAnsiChar(@Temp[0]);
 end;
@@ -334,7 +420,7 @@ function Tterminal.decodeCoding:String;
 var 
   i, x :integer;
 begin
-//  //Ищем заполненый байт
+  //Ищем заполненый байт
   for i := 0 to 3 do
     if TerminalInfo.coding[i] <> $0 then x:=i;
 
@@ -386,10 +472,27 @@ end;
 procedure Tterminal.clearInfo;
 var i:integer;
 begin
-   FillChar(terminalInfo, SizeOf(TterminalInfo), 0);
+  FillChar(terminalInfo, SizeOf(TterminalInfo), 0);
 end;
 
 //Очистить информацию о Конфигурации терминала
+//Проверям вся ли конфигурация заполнена
+procedure Tterminal.checkIsFull;
+var flag:boolean;
+    i:integer;
+begin
+    flag:=true;
+    for I := 1 to SECTION_COUNT do
+      if not IsEmptyCompositeConfig[i]  then
+        begin
+          flag:=false;
+          Break;
+        end;
+  // Если заполняя конфигурацию по частям, мы заполнили всю,
+  // тогда опускаем флаг пустой конфигурации
+  if flag = true then IsEmptyConfig := false;
+end;
+
 procedure Tterminal.clearConfigInfo;
 var i:integer;
 begin
@@ -397,12 +500,27 @@ begin
 end;
 
 //Получить имя драйвера CAN
+function Tterminal.getAccelerometr: String;
+var
+  bit_0:boolean;
+  bit_1:boolean;
+begin
+ bit_0 := GetBit(TermianlConfig.config.HWSetting3[4], 0);
+ bit_1 := GetBit(TermianlConfig.config.HWSetting3[4], 1);
+
+ if (bit_0 = false) and (bit_1 = false) then result := 'Отключен';
+ if (bit_0 = True)  and (bit_1 = false) then result := 'Внутренний';
+ if (bit_0 = False) and (bit_1 = True)  then result := 'Внешний';
+ if (bit_0 = True)  and (bit_1 = True)  then result := 'Внутренний с автопереключением на внешний';
+
+end;
+
 function Tterminal.getCANDriverName:String;
 var
   asciiString: string;
-  temp:array[0..17] of byte;
+  temp:array[0..16] of byte;
 begin
-  move(TermianlConfig.CANDriverName[0], temp, 16);
+  move(TermianlConfig.config.CANDriverName[0], temp, 16);
   result := PAnsiChar(@temp);
 end;
 
@@ -485,7 +603,7 @@ begin
       Result := '-';
       exit;
     end;
-  SetString(SimIdWithoutLastByte, PAnsiChar(@TerminalInfo.SIM_ID[0]), Length(TerminalInfo.SIM_ID) - 1);
+  SetString(SimIdWithoutLastByte, PAnsiChar(@TerminalInfo.SIM_ID[0]), Length(TerminalInfo.SIM_ID));
   result := SimIdWithoutLastByte;
 end;
 
@@ -496,7 +614,7 @@ var
 begin
   try
 // Конкатенируем два байта в одно 16-битное число
-  speedBits := ( TermianlConfig.CANDriverData[4] shl 8) or TermianlConfig.CANDriverData[5];
+  speedBits := (TermianlConfig.config.CANDriverData[4] shl 8) or TermianlConfig.config.CANDriverData[5];
   if speedBits <> 0 then result := floattostr(100000/speedBits);
   except
 
@@ -504,42 +622,63 @@ begin
 
 end;
 
+function Tterminal.getWifiOperatingMode: boolean;
+var Wifisetting:Byte;
+    WifiOff:boolean; // Отключен
+begin
+   // Mode: 0 - отключен, 1-точка доступа, 2-клиент
+   Wifisetting := TermianlConfig.config.WIFICfg[0]; //Режим работы wifi
+   WifiOff := GetBit(Wifisetting, 0);
+   result := WifiOff;
+end;
+
 // Получение названия точки доступа
 function Tterminal.getWifiNameAccessPoint:String;
 var
-  asciiString: string;
+  buff: string;
 begin
-  result := PAnsiChar(@TermianlConfig.WIFICfg[2]);
+  try
+    if getWifiOperatingMode then buff:='Disabled'
+                            else buff:= PAnsiChar(@TermianlConfig.config.WIFICfg[2]);
+     if buff <> '' then result := buff
+                   else result := '-';
+  except
+    result:='';
+  end;
 end;
 
 // Получение названия точки доступа Клиент сети
 function Tterminal.getWifiNameClientPoint:String;
-var
-  asciiString: string;
+var buf:String;
 begin
-  result := PAnsiChar(@TermianlConfig.WIFICfg[48]);
+  try
+    buf := PAnsiChar(@TermianlConfig.config.WIFICfg[48]);
+    result := Copy(buf, 1, 16);
+  except
+    result:='';
+  end;
 end;
 
 // Получение адреса поделючения сервера
 function Tterminal.getServerAdress: String;
-var
-  asciiString: string;
+var buff : TBytes;
 begin
-  result := PAnsiChar(@TermianlConfig.ServerAddress[0]);
+  SetLength(buff, 40);
+  move(TermianlConfig.config.ServerAddress[0], buff[0], 38);
+  buff[39] := 0;
+  result := PAnsiChar(@buff[0]);
 end;
 
 //Получение порта подключения сервера
 function Tterminal.getServerPort: Word;
-var
-  asciiString: string;
 begin
-  result :=  (TermianlConfig.ServerPort[0] shl 8) or TermianlConfig.ServerPort[1]
+  result := (TermianlConfig.config.ServerPort[0] shl 8) or TermianlConfig.config.ServerPort[1]
 end;
 
 // Получение статуса CAN
 function Tterminal.getHWcanStatus : String;
 begin
-  case TermianlConfig.HWSetting1[3] of
+  case TermianlConfig.config.HWSetting1[3] of
     $00: result:= 'Отключен';
     $01: result:= 'Базовый';
     $02: result:= 'Внешний файл';
@@ -565,6 +704,262 @@ begin
 
   Result := hexResult;
 end;
+
+//Получение оператора мобильной связи
+function Tterminal.getGsmOperator:TGsmOperator;
+var buf:String;
+begin
+
+
+  if pos('G', decodeCoding) = 0  then //Если нет модема
+  begin
+    result.Name := 'БЕЗ GSM МОДУЛЯ';
+    result.id := -1;
+    result.color := clblack;
+    exit;
+  end;
+
+  if getSimID = '-' then
+  begin
+    result.Name := 'Определение оператора связи...';
+    result.id := -1;
+    result.color := clred;
+    exit;
+  end;
+
+  buf:=copy(getSimID,0,7); //Берем первые 7 символов simId
+  result.color := clblack;
+
+  if buf = '8970101' then
+  begin
+      result.Name := 'МТС (Россия)';
+      result.id := 0;
+  end else
+
+  if buf = '8970199' then
+  begin
+      result.Name := 'Билайн (Россия)';
+      result.id := 1;
+  end else
+
+  if buf = '8970102' then
+  begin
+      result.Name := 'Мегафон (Россия)';
+      result.id := 2;
+  end else
+
+  if buf = '8999701' then
+  begin
+      result.Name := 'Билайн (Казахстан)';
+      result.id := 3;
+  end else
+
+  if buf = '8937501' then
+  begin
+      result.Name := 'Велком (Беларусь)';
+      result.id := 4;
+  end else
+
+  if buf = '8999302' then
+  begin
+      result.Name := 'TM CELL (Туркменистан)';
+      result.id := 5;
+  end else
+
+  if buf = '8937204' then
+  begin
+      result.Name := 'M2M Express (Россия)';
+      result.id := 6;
+  end else
+
+  if buf = '8999807' then
+  begin
+      result.Name := 'UMS (Узбекистан)';
+      result.id := 7;
+  end else
+
+  if buf = '8999893' then
+  begin
+      result.Name := 'UCELL (Узбекистан)';
+      result.id := 8;
+  end else
+  begin //Неизвестный оператор
+      result.Name := 'НЕИЗВЕСТНЫЙ ОПЕРАТОР СВЯЗИ';
+      result.id := -1;
+      result.color := clred;
+  end;
+end;
+
+
+function Tterminal.getConfig380:Tbytes;
+var buf:Tbytes;
+begin
+
+end;
+
+
+//Возвращаем состояние IsEmptyConfig
+function Tterminal.IsEmptyConfiguration:boolean;
+begin
+ result := IsEmptyConfig;
+end;
+
+//Отмечаем какая часть конфигурации заполнена,
+procedure Tterminal.setCompositeConfig(index:integer);
+begin
+ IsEmptyCompositeConfig[index] := true;
+ checkIsFull;
+end;
+
+function Tterminal.setHW(data: Tconfig): boolean;
+begin
+  TermianlConfig.config.HWSetting1 := data.HWSetting1;
+  TermianlConfig.config.HWSetting2 := data.HWSetting2;
+  TermianlConfig.config.HWSetting3 := data.HWSetting3;
+  result:=True;
+end;
+
+//--------------SET-----------------------------------
+
+
+//Установка HW из массива (69 байт)
+function Tterminal.setHW(data:Tbytes): Boolean;
+begin
+  result:=false;
+  if Length(data) <> 69 then exit;
+
+  move(data[0],TermianlConfig.config.HWSetting1[0],4);
+  move(data[4],TermianlConfig.config.HWSetting2[0],45);
+  move(data[49],TermianlConfig.config.HWSetting3[0],20);
+  result:=true;
+end;
+
+
+
+//Установка CAN драйвера (имя файла 16, метка времени 4, данные драйвера 100)
+function Tterminal.setCAN(data:Tbytes): Boolean;
+begin
+  result:=false;
+  if Length(data) <> 120 then exit;
+
+  move(data[0],TermianlConfig.config.CANDriverName[0],16);
+  move(data[16],TermianlConfig.config.CANDriverTS[0],4);
+  move(data[20],TermianlConfig.config.CANDriverData[0],100);
+  result:=true;
+end;
+
+//Установка wifi
+function Tterminal.setWifi(data:Tbytes): Boolean;
+begin
+  result := false;
+  if Length(data) <> 115 then exit;
+
+  move(data[0], TermianlConfig.config.WIFICfg[0], 115);
+  result:=true;
+end;
+
+function Tterminal.setwifi(data: Tconfig): Boolean;
+begin
+  TermianlConfig.config.WIFICfg := data.WIFICfg;
+end;
+
+
+//Установка Server
+function Tterminal.setServ(data:Tbytes): Boolean;
+begin
+  result := false;
+  if Length(data) <> 40 then exit;
+
+  move(data[0],TermianlConfig.config.ServerAddress[0], 38);
+  move(data[38],TermianlConfig.config.ServerPort[0],2);
+  result:=true;
+end;
+
+function Tterminal.setWifiServ(data: Tbytes): Boolean;
+begin
+  result := false;
+  if Length(data) <> 155 then exit;
+
+  move(data[0], TermianlConfig.config.WIFICfg[0], 115);
+  setCompositeConfig(SECTION_WIFI);
+  move(data[115],  TermianlConfig.config.ServerAddress[0],38);
+  move(data[115+38], TermianlConfig.config.ServerPort[0],2);
+  setCompositeConfig(SECTION_Server);
+  result := false;
+end;
+//--------------SET-----------------------------------
+
+//Получение бита из байта
+function Tterminal.GetBit(const AByte: Byte; const ABitIndex: Integer): Boolean;
+begin
+  Result := (AByte and (1 shl ABitIndex)) <> 0;
+end;
+
+// Получения байта настройки wifi клиента
+function Tterminal.getWifiOperatingModeClient: boolean;
+var Wifisetting:Byte;
+    Dynamics:boolean; // Отключен
+begin
+   // Mode: 0 - отключен, 1-точка доступа, 2-клиент
+   Wifisetting := TermianlConfig.config.WIFICfg[47]; //Режим работы wifi
+   Dynamics := GetBit(Wifisetting, 2);
+   result := Dynamics;
+end;
+
+
+function Tterminal.getWifiIPClientPoint:String;
+var
+  buff: string;
+begin
+  if getWifiOperatingModeClient
+    then
+    buff:= Format('%d.%d.%d.%d', [TermianlConfig.config.WIFICfg[81],
+                                    TermianlConfig.config.WIFICfg[82],
+                                    TermianlConfig.config.WIFICfg[83],
+                                    TermianlConfig.config.WIFICfg[84]])
+    else buff := 'Dynamic';
+
+  result := buff;
+end;
+
+
+function Tterminal.getWifiMode: String;
+var Wifisetting:Byte;     //Байт насстройки wifi
+    bit_0:boolean;   // бит 0
+    bit_1:boolean;   // бит 1
+begin
+   // Mode: 0 - отключен, 1-точка доступа, 2-клиент
+   Wifisetting := TermianlConfig.config.WIFICfg[0]; //Режим работы wifi
+   bit_0 := GetBit(Wifisetting, 0);
+   bit_1 := GetBit(Wifisetting, 1);
+          //0           0    - отключен
+   if not bit_0 and not bit_1 then result:='Отключен';
+          //0           1    - клиент сети
+   if not bit_0 and     bit_1 then result:='Клиент сети';
+          //1           0    - точка доступа
+   if     bit_0 and not bit_1 then result:='Точка доступа WIFI';
+          //1           1    - смешанный
+   if     bit_0 and     bit_1 then result:='Смешанный';
+end;
+
+
+function Tterminal.setTerminalName(const Value: string): boolean;
+var
+  Index: Integer;
+begin
+  result := false;
+  if Length(Value) > 32 then exit;
+
+  // Записываем каждый символ строки в массив
+  for Index := 1 to Length(Value) do
+    TermianlConfig.config.TerminalName[Index - 1] := Ord(Value[Index]);
+
+  // Дополняем оставшиеся элементы массива нулевыми значениями
+  for Index := Length(Value) to High(TermianlConfig.config.TerminalName) do
+    TermianlConfig.config.TerminalName [Index] := 0;
+end;
+
+
 
 
 end.

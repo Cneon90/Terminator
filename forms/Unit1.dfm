@@ -3,8 +3,8 @@ object fr_Terminal: Tfr_Terminal
   Top = 0
   BorderStyle = bsSingle
   Caption = 'Terminal'
-  ClientHeight = 429
-  ClientWidth = 649
+  ClientHeight = 427
+  ClientWidth = 641
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,25 +15,25 @@ object fr_Terminal: Tfr_Terminal
   object mmTerminal: TMemo
     Left = 0
     Top = 41
-    Width = 649
-    Height = 388
+    Width = 641
+    Height = 386
     Align = alClient
     DoubleBuffered = True
     ParentDoubleBuffered = False
     ScrollBars = ssBoth
     TabOrder = 0
-    ExplicitWidth = 645
-    ExplicitHeight = 387
+    ExplicitWidth = 635
+    ExplicitHeight = 380
   end
   object plButtons: TPanel
     Left = 0
     Top = 0
-    Width = 649
+    Width = 641
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 645
+    ExplicitWidth = 635
     object btnExit: TButton
       Left = 570
       Top = 9
@@ -102,7 +102,7 @@ object fr_Terminal: Tfr_Terminal
     end
     object btnPing: TButton
       Left = 8
-      Top = 9
+      Top = 10
       Width = 75
       Height = 25
       Caption = 'Ping'

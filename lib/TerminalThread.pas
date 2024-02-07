@@ -21,7 +21,7 @@ type
     procedure Execute; override;
 
   public
-   TerminateEvent: TEvent;
+    TerminateEvent: TEvent;
     FCommPort: TCommPortDriver;
     FTerminal: Tterminal;
     FDataReceivedCallback: TDataReceivedCallback;
@@ -99,7 +99,7 @@ begin
     DataSize := SizeOf(pingData);
     CommPortReceiveData(nil,  DataPtr, DataSize);
     try
-      if FCommPort.Connected then  FTerminal.info;
+      if FCommPort.Connected then FTerminal.info;
     except
       FCommPort.Disconnect;
     end;
