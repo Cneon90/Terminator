@@ -1,0 +1,13 @@
+unit BaseEdit;
+
+interface
+
+  type
+
+  TBasement = class
+
+  end;
+
+implementation
+
+end.

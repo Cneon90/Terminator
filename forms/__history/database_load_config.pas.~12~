@@ -1,0 +1,65 @@
+unit database_load_config;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
+  Vcl.DBCtrls;
+
+type
+  Tfr_load_config = class(TForm)
+    plMain: TPanel;
+    btnClose: TButton;
+    btnOpen: TButton;
+    Panel1: TPanel;
+    Label1: TLabel;
+    lbAllConfig: TListBox;
+    procedure btnCloseClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnOpenClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    configList: TStringList;
+    returnedData: string;
+  end;
+
+var
+  fr_load_config: Tfr_load_config;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tfr_load_config.btnCloseClick(Sender: TObject);
+begin
+  close;
+end;
+
+procedure Tfr_load_config.btnOpenClick(Sender: TObject);
+var
+  selectedIndex: Integer;
+begin
+  if lbAllConfig.ItemIndex <> -1 then
+  begin
+    SelectedIndex := lbAllConfig.ItemIndex;
+    returnedData := lbAllConfig.Items[SelectedIndex];
+  end;
+end;
+
+procedure Tfr_load_config.FormShow(Sender: TObject);
+var i:integer;
+begin
+if Assigned(ConfigList) then
+  begin
+    // »спользуем ConfigList дл€ обработки переданных данных
+    for I := 0 to ConfigList.Count - 1 do
+    begin
+      lbAllConfig.Items.Add(ConfigList[I]);
+    end;
+  end;
+end;
+
+end.

@@ -1,0 +1,15 @@
+unit SERVEREdit;
+
+interface
+
+  type
+
+    TServerEdit = class
+      private
+
+      public
+    end;
+
+implementation
+
+end.

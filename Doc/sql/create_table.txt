@@ -1,0 +1,33 @@
+use terminal_config;
+
+CREATE TABLE tr_hw (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    data VARBINARY(70),
+    creation_date DATETIME,
+    active BOOLEAN
+);
+
+CREATE TABLE tr_can (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    data VARBINARY(121),
+    creation_date DATETIME,
+    active BOOLEAN
+);
+
+CREATE TABLE tr_wifi (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    data VARBINARY(116),
+    creation_date DATETIME,
+    active BOOLEAN
+);
+
+CREATE TABLE tr_server (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    data VARBINARY(41),
+    creation_date DATETIME,
+    active BOOLEAN
+);

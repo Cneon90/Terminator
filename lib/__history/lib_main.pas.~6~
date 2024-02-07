@@ -1,0 +1,76 @@
+unit lib_main;
+
+interface
+  uses Registry, Winapi.Windows, ShlObj;
+
+procedure CreateDSN(const DSNName, DriverName, Server, Database, UserName, Password: string);
+
+implementation
+
+const
+{ Reserved Key Handles. }
+
+  {$EXTERNALSYM HKEY_CLASSES_ROOT}
+  HKEY_CLASSES_ROOT     = DWORD($80000000);
+  {$EXTERNALSYM HKEY_CURRENT_USER}
+  HKEY_CURRENT_USER     = DWORD($80000001);
+  {$EXTERNALSYM HKEY_LOCAL_MACHINE}
+  HKEY_LOCAL_MACHINE    = DWORD($80000002);
+  {$EXTERNALSYM HKEY_USERS}
+  HKEY_USERS            = DWORD($80000003);
+  {$EXTERNALSYM HKEY_PERFORMANCE_DATA}
+  HKEY_PERFORMANCE_DATA = DWORD($80000004);
+  {$EXTERNALSYM HKEY_CURRENT_CONFIG}
+  HKEY_CURRENT_CONFIG   = DWORD($80000005);
+  {$EXTERNALSYM HKEY_DYN_DATA}
+  HKEY_DYN_DATA         = DWORD($80000006);
+
+procedure CreateDSN(const DSNName, DriverName, Server, Database, UserName, Password: string);
+var
+  Reg: TRegistry;
+begin
+  Reg := TRegistry.Create;
+  try
+    if Reg.OpenKey('SOFTWARE\ODBC\ODBC.INI\' + DSNName, True) then
+    begin
+      Reg.WriteString('Driver', DriverName);
+      Reg.WriteString('Server', Server);
+      Reg.WriteString('Database', Database);
+      Reg.WriteString('UID', UserName);
+      Reg.WriteString('PWD', Password);
+      Reg.CloseKey;
+    end;
+  finally
+    Reg.Free;
+  end;
+end;
+
+
+procedure Associate;
+var s:string;
+    Reg: TRegistry;
+begin
+  Reg:=TRegistry.Create; // создаем
+  Reg.RootKey := HKEY_CLASSES_ROOT; // указываем корневую ветку
+
+  Reg.OpenKey('.dev\OpenWithProgids\', true);
+  Reg.WriteString('TestApplication.dev', '');
+
+  Reg.OpenKey('\TestApplication.dev\DefaultIcon\', true);
+//  s:=Application.ExeName+',0';
+  Reg.WriteString('', s);
+
+  Reg.OpenKey('\TestApplication.dev\Shell\Open\', true);
+  Reg.WriteString('', 'Открыть в TestApplication');
+
+  Reg.OpenKey('command\', true);
+//  s:='"'+Application.ExeName+'" "%1"';
+  Reg.WriteString('', s);
+
+  Reg.Free;
+
+  SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, nil, nil);
+end;
+
+
+end.
