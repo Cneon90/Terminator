@@ -13,7 +13,12 @@ uses
   Vcl.BaseImageCollection, Vcl.ImageCollection, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.CustomizeDlg, System.Win.TaskbarCore, Vcl.Taskbar,
   database_select_config, IdURI, Vcl.DBGrids, fr_HWEdit, HWEdit, fr_SERVEREdit
-  ,lib_main, association, fr_WIFIEDIT
+  ,lib_main, association, fr_WIFIEDIT, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MySQL,
+  FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
+  FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
+  FireDAC.Comp.DataSet
   ;
 
 

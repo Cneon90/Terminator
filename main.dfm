@@ -1264,6 +1264,7 @@ object fr_main: Tfr_main
     DoubleBuffered = True
     ParentDoubleBuffered = False
     TabOrder = 5
+    ExplicitTop = 31
     object Label9: TLabel
       Left = 45
       Top = 9
@@ -1706,10 +1707,9 @@ object fr_main: Tfr_main
       'Provider=MSDASQL.1;Persist Security Info=False;Data Source=Mysql' +
       '12'
     LoginPrompt = False
-    Provider = 'MSDASQL.1'
     AfterConnect = dbConnectionAfterConnect
     AfterDisconnect = dbConnectionAfterDisconnect
-    Left = 115
+    Left = 120
     Top = 120
   end
   object imgList16: TImageList

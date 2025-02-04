@@ -359,22 +359,27 @@ begin
 //  move(FWificfg.app_name[0], buff[0], len);
 //  buff[len+1] := 0;
 //  result := PAnsiChar(@buff[0]);
-  result := PAnsiChar(@FWificfg.app_name[0]);
+//  result := PAnsiChar(@FWificfg.app_name[0]);
+
+  result := Copy(string(PAnsiChar(@FWificfg.app_name[0])), 1, 16);
 end;
 
 function TWifiEdit.getCLName: String;
 begin
-  result := PAnsiChar(@FWificfg.cl_name[0]);
+//  result := PAnsiChar(@FWificfg.cl_name[0]);
+  result := Copy(string(PAnsiChar(@FWificfg.cl_name[0])), 1, 16);
 end;
 
 function TWifiEdit.getCLPassword: String;
 begin
-  result := PAnsiChar(@FWificfg.cl_password[0]);
+//  result := PAnsiChar(@FWificfg.cl_password[0]);
+ result := Copy(string(PAnsiChar(@FWificfg.cl_password[0])), 1, 16);
 end;
 
 function TWifiEdit.getAppPassword: String;
 begin
-  result := PAnsiChar(@FWificfg.app_password[0]);
+//  result := PAnsiChar(@FWificfg.app_password[0]);
+  result := Copy(string(PAnsiChar(@FWificfg.app_password[0])), 1, 16);
 end;
 
 
