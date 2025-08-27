@@ -13,29 +13,35 @@ File_10=TSourceModule,'C:\Users\kk\Documents\Embarcadero\Studio\Projects\Termina
 
 [Modules]
 Module0=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_settings.pas
-Module1=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_HWEdit.pas
-Module2=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\WIFIEdit.pas
+Module1=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\database_load_config.pas
+Module2=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\database_setting.pas
 Module3=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.pas
-Module4=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_SERVEREdit.pas
-Module5=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_WIFIEdit.pas
-Module6=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas
-Module7=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\HWEdit.pas
-Count=8
+Module4=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\Unit1.pas
+Module5=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\WIFIEdit.pas
+Module6=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_WIFIEdit.pas
+Module7=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas
+Module8=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_HWEdit.pas
+Module9=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_SERVEREdit.pas
+Module10=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\HWEdit.pas
+Count=11
 EditWindowCount=1
 
 [C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_settings.pas]
 ModuleType=TSourceModule
 
-[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_HWEdit.pas]
+[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\database_load_config.pas]
 ModuleType=TSourceModule
 
-[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\WIFIEdit.pas]
+[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\database_setting.pas]
 ModuleType=TSourceModule
 
 [C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.pas]
 ModuleType=TSourceModule
 
-[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_SERVEREdit.pas]
+[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\Unit1.pas]
+ModuleType=TSourceModule
+
+[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\WIFIEdit.pas]
 ModuleType=TSourceModule
 
 [C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_WIFIEdit.pas]
@@ -44,11 +50,17 @@ ModuleType=TSourceModule
 [C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas]
 ModuleType=TSourceModule
 
+[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_HWEdit.pas]
+ModuleType=TSourceModule
+
+[C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_SERVEREdit.pas]
+ModuleType=TSourceModule
+
 [C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\HWEdit.pas]
 ModuleType=TSourceModule
 
 [EditWindow0]
-ViewCount=8
+ViewCount=11
 CurrentEditView=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_settings.pas
 View0=0
 View1=1
@@ -58,6 +70,9 @@ View4=4
 View5=5
 View6=6
 View7=7
+View8=8
+View9=9
+View10=10
 PercentageSizes=1
 Create=1
 Visible=1
@@ -90,15 +105,48 @@ BottomMiddelPanelData=0000080001020200000009000000446F636B5369746530100000004772
 [View0]
 CustomEditViewType=TEditView
 Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.pas
-CursorX=31
-CursorY=369
-TopLine=346
+CursorX=1
+CursorY=2002
+TopLine=1980
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\main.pas
+
+[View1]
+CustomEditViewType=TEditView
+Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\Unit1.pas
+CursorX=1
+CursorY=1
+TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=Borland.FormDesignerView
 
-[View1]
+[View2]
+CustomEditViewType=TEditView
+Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\database_setting.pas
+CursorX=1
+CursorY=1
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=Borland.FormDesignerView
+
+[View3]
+CustomEditViewType=TEditView
+Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\forms\database_load_config.pas
+CursorX=1
+CursorY=1
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=Borland.FormDesignerView
+
+[View4]
 CustomEditViewType=TEditView
 Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_HWEdit.pas
 CursorX=1
@@ -109,18 +157,18 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_HWEdit.pas
 
-[View2]
+[View5]
 CustomEditViewType=TEditView
 Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_settings.pas
-CursorX=25
-CursorY=203
-TopLine=183
+CursorX=1
+CursorY=201
+TopLine=191
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_settings.pas
 
-[View3]
+[View6]
 CustomEditViewType=TEditView
 Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\HWEdit.pas
 CursorX=64
@@ -131,40 +179,40 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\HWEdit.pas
 
-[View4]
+[View7]
 CustomEditViewType=TEditView
 Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas
-CursorX=13
-CursorY=675
-TopLine=653
+CursorX=1
+CursorY=534
+TopLine=513
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas
 
-[View5]
+[View8]
+CustomEditViewType=TEditView
+Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_WIFIEdit.pas
+CursorX=1
+CursorY=292
+TopLine=253
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_WIFIEdit.pas
+
+[View9]
 CustomEditViewType=TEditView
 Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\WIFIEdit.pas
-CursorX=1
-CursorY=1
-TopLine=1
+CursorX=45
+CursorY=187
+TopLine=521
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\Settings\WIFIEdit.pas
 
-[View6]
-CustomEditViewType=TEditView
-Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_WIFIEdit.pas
-CursorX=1
-CursorY=292
-TopLine=289
-LeftCol=1
-Elisions=
-Bookmarks=
-EditViewName=Borland.FormDesignerView
-
-[View7]
+[View10]
 CustomEditViewType=TEditView
 Module=C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_SERVEREdit.pas
 CursorX=32
@@ -201,9 +249,7 @@ Dockable=1
 StayOnTop=0
 
 [Breakpoints]
-Count=2
-Breakpoint0='C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_settings.pas',216,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint1='C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_settings.pas',224,'',0,1,'',1,0,0,'',1,'','','',0,''
+Count=0
 
 [EmbarcaderoWin32Debugger_AddressBreakpoints]
 Count=0
@@ -302,16 +348,11 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=1896
 ClientHeight=4874
-TBDockHeight=8721
+TBDockHeight=5194
 LRDockWidth=1896
 Dockable=1
 StayOnTop=0
 SplitPos=111
-
-[PropInspDesignerSelection]
-ArrangeBy=Name
-SelectedItem=Caption,
-ExpandedItems=Anchors=0,BorderIcons=0,Constraints=0
 
 [frmDesignPreview]
 PercentageSizes=1
@@ -322,11 +363,11 @@ State=0
 Left=0
 Top=0
 Width=2000
-Height=8450
+Height=2907
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2000
-ClientHeight=8450
+ClientHeight=2907
 TBDockHeight=5959
 LRDockWidth=2510
 Dockable=1
@@ -508,11 +549,11 @@ State=0
 Left=0
 Top=0
 Width=2000
-Height=8450
+Height=0
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2000
-ClientHeight=8450
+ClientHeight=0
 TBDockHeight=4884
 LRDockWidth=7151
 Dockable=1
@@ -543,8 +584,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-2248
-Top=-345
+Left=-380
+Top=-397
 Width=1849
 Height=3140
 MaxLeft=-1
@@ -648,11 +689,11 @@ State=0
 Left=0
 Top=0
 Width=2000
-Height=8450
+Height=0
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2000
-ClientHeight=8450
+ClientHeight=0
 TBDockHeight=4884
 LRDockWidth=5307
 Dockable=1
@@ -744,7 +785,7 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=2000
 ClientHeight=4545
-TBDockHeight=8721
+TBDockHeight=4603
 LRDockWidth=2000
 Dockable=1
 StayOnTop=0
@@ -768,7 +809,7 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=1896
 ClientHeight=3498
-TBDockHeight=8721
+TBDockHeight=3556
 LRDockWidth=1896
 Dockable=1
 StayOnTop=0
@@ -792,7 +833,7 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=2000
 ClientHeight=3828
-TBDockHeight=8721
+TBDockHeight=4147
 LRDockWidth=2000
 Dockable=1
 StayOnTop=0

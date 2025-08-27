@@ -1,0 +1,69 @@
+unit TempCard;
+
+interface
+
+  uses SysUtils, DateUtils;
+
+type
+
+  TTempCard = class
+    private
+      FCardCode    : Cardinal;
+      FOperatorID  : Cardinal;
+      FRole        : Byte;
+      FSpeed       : Byte;
+      FIGNTime     : Word;
+      FWorkTime    : Word;
+    public
+
+       procedure setCardCode(_cardCode : Cardinal);
+       function  getCardCode(): Cardinal;
+       procedure ParseData(const Data: TArray<Byte>);
+
+       procedure setSpeed(_speed : Byte);
+       function getSpeed : Byte;
+  end;
+
+implementation
+
+{ TTempCard }
+
+function TTempCard.getCardCode: Cardinal;
+begin
+  result := FCardCode;
+end;
+
+function TTempCard.getSpeed: Byte;
+begin
+  result := FSpeed;
+end;
+
+procedure TTempCard.ParseData(const Data: TArray<Byte>);
+begin
+  if Length(Data) < 14 then
+    raise Exception.Create('Недостаточно данных для парсинга');
+
+  // Извлекаем данные из массива
+  Move(Data[0],  FCardCode,   SizeOf(FCardCode));
+  Move(Data[4],  FOperatorID, SizeOf(FOperatorID));
+  Move(Data[8],  FRole,       SizeOf(FRole));
+  Move(Data[9],  FSpeed,      SizeOf(FSpeed));
+  Move(Data[10], FIGNTime,    SizeOf(FIGNTime));
+  Move(Data[12], FWorkTime,   SizeOf(FWorkTime));
+
+end;
+
+procedure TTempCard.setCardCode(_cardCode: Cardinal);
+begin
+  FCardCode := _cardCode;
+end;
+
+
+
+
+procedure TTempCard.setSpeed(_speed: Byte);
+begin
+  FSpeed := _speed;
+end;
+
+end.

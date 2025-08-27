@@ -1,0 +1,77 @@
+unit fr_TempCard;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.WinXCtrls,
+  Vcl.ComCtrls, Vcl.StdCtrls, TempCard;
+
+type
+  TfrTempCard = class(TForm)
+    plCardCode: TPanel;
+    lbCardCode: TLabel;
+    edCardCode: TEdit;
+    checkAdmin: TCheckBox;
+    plOperatorID: TPanel;
+    lbOperatorID: TLabel;
+    edOperatorID: TEdit;
+    checkDriver: TCheckBox;
+    plSpeed: TPanel;
+    plIGNTime: TPanel;
+    plWorkTime: TPanel;
+    lbSpeed: TLabel;
+    lbIGNTime: TLabel;
+    lbWorkTime: TLabel;
+    TrackSpeed: TTrackBar;
+    TrackIGNTime: TTrackBar;
+    TracWorkTime: TTrackBar;
+    lbSpeedVal: TLabel;
+    lbIGNTimeVal: TLabel;
+    lbWorkTimeVal: TLabel;
+    checkMech: TCheckBox;
+    checkPNR: TCheckBox;
+    procedure TrackSpeedChange(Sender: TObject);
+    procedure TrackIGNTimeChange(Sender: TObject);
+    procedure TracWorkTimeChange(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+
+    procedure setTempCard(var tempCard : TTempCard);
+  end;
+
+var
+  frTempCard: TfrTempCard;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrTempCard.setTempCard(var tempCard: TTempCard);
+begin
+  edCardCode.Text := TempCard.getCardCodeStr();
+  edOperatorID.Text := IntToStr(tempCard.getOperatorID);
+end;
+
+procedure TfrTempCard.TrackIGNTimeChange(Sender: TObject);
+begin
+  lbIGNTimeVal.Caption := IntToStr(TrackIGNTime.Position) + ' min';
+end;
+
+procedure TfrTempCard.TrackSpeedChange(Sender: TObject);
+var
+  speedF : single;
+begin
+  speedF := TrackSpeed.Position / 10;
+
+  lbSpeedVal.Caption := Format('%.1f km/h', [speedF]);
+end;
+
+procedure TfrTempCard.TracWorkTimeChange(Sender: TObject);
+begin
+  lbWorkTimeVal.Caption := IntToStr(TracWorkTime.Position) + ' min';
+end;
+
+end.

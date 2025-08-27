@@ -21,7 +21,12 @@ uses
   association in 'Association\association.pas',
   fr_SERVEREdit in 'HWEdit\fr_SERVEREdit.pas' {frServerEdit},
   fr_WIFIEdit in 'HWEdit\fr_WIFIEdit.pas' {frWifiEdit},
-  WIFIEdit in 'Settings\WIFIEdit.pas';
+  WIFIEdit in 'Settings\WIFIEdit.pas',
+  fr_Debug in 'forms\fr_Debug.pas' {frDebug},
+  TempCard in 'Models\TempCard.pas',
+  chekSum in 'lib\chekSum.pas',
+  TempCardController in 'Controllers\TempCardController.pas',
+  fr_TempCard in 'forms\fr_TempCard.pas' {frTempCard};
 
 {$R *.res}
 
@@ -40,5 +45,7 @@ begin
   Application.CreateForm(TfrSettings, frSettings);
   Application.CreateForm(TfrServerEdit, frServerEdit);
   Application.CreateForm(TfrWifiEdit, frWifiEdit);
+  Application.CreateForm(TfrDebug, frDebug);
+  Application.CreateForm(TfrTempCard, frTempCard);
   Application.Run;
 end.

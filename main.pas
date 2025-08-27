@@ -13,10 +13,7 @@ uses
   Vcl.BaseImageCollection, Vcl.ImageCollection, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.CustomizeDlg, System.Win.TaskbarCore, Vcl.Taskbar,
   database_select_config, IdURI, Vcl.DBGrids, fr_HWEdit, HWEdit, fr_SERVEREdit
-  ,lib_main, association, fr_WIFIEDIT
-  ;
-
-
+  ,lib_main, association, fr_WIFIEDIT, fr_Debug, chekSum, fr_TempCard;
 
 type
 
@@ -189,6 +186,10 @@ type
     Label23: TLabel;
     vImgTerm: TVirtualImageList;
     ADOQuerydata: TBlobField;
+    btnCardTempAdd: TButton;
+    CheckTempCard: TCheckBox;
+    edCardCode: TEdit;
+    OpenDialogTempCard: TOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure actConnectExecute(Sender: TObject);
     procedure actDisconnectExecute(Sender: TObject);
@@ -270,6 +271,9 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ViServerClick(Sender: TObject);
     procedure ViWifiClick(Sender: TObject);
+    procedure btnDebugClick(Sender: TObject);
+    procedure edCardCodeClick(Sender: TObject);
+    procedure btnCardTempAddClick(Sender: TObject);
   private
     { Private declarations }
     FlagTerminalConfig:boolean;                                                 // Флаг запроса конфигурации терминала
@@ -328,6 +332,7 @@ Const
   CMD_CONFIG_READ    = $EC;  // Прочитать конфигурацию
   CMD_CONFIG_WRITE   = $ED;  // Записать конфигурацию
   CMD_TERMINAL_INFO  = $0F;  // Информация о терминале
+  CMD_TEMP_CARD_READ = $10; // Получить временную карту
 
   //Длина секций имени терминала
   SERIAL_LENGH = 7;
@@ -949,6 +954,11 @@ begin
   lbconfigAll.Caption := 'Конфигурация "'+dbRead.name+'" загружена из базы данных ';
 end;
 
+procedure Tfr_main.btnDebugClick(Sender: TObject);
+begin
+
+end;
+
 // Чтение всей конфигурации из терминала
 procedure Tfr_main.btnLoadFromTerminalClick(Sender: TObject);
 begin
@@ -993,6 +1003,7 @@ end;
 
 procedure Tfr_main.Button1Click(Sender: TObject);
 begin
+
 
 end;
 
@@ -1229,6 +1240,48 @@ begin
   Clipboard.AsText := Terminal.getTerminalID;
 end;
 
+procedure Tfr_main.btnCardTempAddClick(Sender: TObject);
+var
+  FileStream  : TFileStream;
+  cardTempBuf : Tarray<byte>;
+  crcbuf      : Tarray<byte>;
+  ChecksumCalc: Word;
+  ChecksumFile: Word;
+//  h1  : byte;
+//  h2  : byte;
+  FormattedString: string;
+
+begin
+  if OpenDialogTempCard.Execute() then
+  begin
+    SetLength(cardTempBuf, 14);
+    SetLength(crcbuf, 2);
+
+    FileStream := TFileStream.Create(OpenDialogTempCard.FileName, fmOpenRead);
+    FileStream.ReadBuffer(cardTempBuf[0],   14);
+    FileStream.ReadBuffer(crcbuf[0], 2);
+
+    Move(crcbuf[0], ChecksumFile,   SizeOf(ChecksumFile));
+
+    ChecksumCalc := CalculateCRC16(cardTempBuf, Length(cardTempBuf));
+
+//    h1 := ChecksumCalc shr 8;
+//    h2 := ChecksumCalc and $FF; // Получаем младший байт
+
+    if ChecksumCalc <> ChecksumFile then
+    begin
+      ShowMessage('ALARM');
+      Exit;
+    end;
+
+
+    Terminal.TempCard.ParseData(cardTempBuf);
+    frTempCard.setTempCard(Terminal.TempCard);
+    edCardCode.Text := Terminal.TempCard.getCardCodeStr();
+  end;
+
+end;
+
 procedure Tfr_main.btnExportCANClick(Sender: TObject);
 var
   FileStream: TFileStream;
@@ -1248,7 +1301,7 @@ begin
       if SaveDialog.FilterIndex = 2 then //Если .tccn 120 байт (16 - имя, 4 - время, 100 - данные)
       begin
         FileStream.WriteBuffer(TerminalBuf.TermianlConfig.config.CANDriverName, Length(TerminalBuf.TermianlConfig.config.CANDriverName));
-        FileStream.WriteBuffer(TerminalBuf.TermianlConfig.config.CANDriverTS, Length(TerminalBuf.TermianlConfig.config.CANDriverTS));
+        FileStream.WriteBuffer(TerminalBuf.TermianlConfig.config.CANDriverTS,   Length(TerminalBuf.TermianlConfig.config.CANDriverTS));
         FileStream.WriteBuffer(TerminalBuf.TermianlConfig.config.CANDriverData, Length(TerminalBuf.TermianlConfig.config.CANDriverData));
       end;
     finally
@@ -1452,6 +1505,11 @@ begin
   mmConnect.Enabled := true;
 end;
 
+procedure Tfr_main.edCardCodeClick(Sender: TObject);
+begin
+  frTempCard.ShowModal();
+end;
+
 procedure Tfr_main.edNameClientKeyPress(Sender: TObject; var Key: Char);
 begin
   if key > chr(128) then key:=#0;
@@ -1526,6 +1584,7 @@ procedure Tfr_main.FormCreate(Sender: TObject);
 var assoc     : TAssociation;
     assocHW : TAssocData;
 begin
+  FormatSettings.DecimalSeparator := '.';
   FlagTerminalConfig := true;
 
   TerminalBuf := Tterminal.Create();     // Буферный файл
@@ -1717,6 +1776,8 @@ procedure Tfr_main.OnTerminalDataReceived(const Data: TArray<Byte>);
 var
   i: Integer;
   HexString: string;
+  FCardTempRow : TArray<Byte>;
+  temp : byte;
 begin
   HexString := '';
   for i := 0 to High(Data) do
@@ -1750,6 +1811,12 @@ begin
     btnLoadFromTerminal.Enabled := true;
   end;
 
+  if Data[1] = CMD_TEMP_CARD_READ then
+  begin
+    FCardTempRow := Copy(Data, 2, Length(Data) - 2); // Данные временной карты
+    Terminal.TempCard.ParseData(FCardTempRow);
+  end;
+
   if waitFirmware then
   begin
     Terminal.firmware();
@@ -1767,6 +1834,9 @@ begin
       fr_Terminal.mmTerminal.Lines.Add('Received data: ' + HexString);
     end
   );
+
+
+
 end;
 
 //----------------------------------db---------------------------------------

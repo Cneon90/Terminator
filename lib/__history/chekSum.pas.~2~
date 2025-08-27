@@ -1,0 +1,33 @@
+unit chekSum;
+
+interface
+  function CalculateCRC16(const Data: array of Byte; Length: Integer): Word;
+
+
+implementation
+
+function CalculateCRC16(const Data: array of Byte; Length: Integer): Word;
+const
+  CRC_POLYNOM = $A001; // Полином для CRC-16
+var
+  usCRC16: Word;
+  p: Integer;
+  c: Integer;
+  ucTemp: Byte;
+begin
+  usCRC16 := $FFFF; // Начальное значение
+  for p := 0 to Length - 1 do
+  begin
+    usCRC16 := usCRC16 xor Data[p]; // XOR с текущим байтом
+    for c := 0 to 7 do // Обработка каждого бита
+    begin
+      ucTemp := usCRC16 and $0001; // Получаем младший бит
+      usCRC16 := usCRC16 shr 1; // Сдвигаем вправо
+      if ucTemp <> 0 then
+        usCRC16 := usCRC16 xor CRC_POLYNOM; // Если бит был равен 1, то XOR с полиномом
+    end;
+  end;
+  Result := usCRC16; // Возвращаем рассчитанное CRC16
+end;
+
+end.

@@ -2,7 +2,7 @@ unit Terminal;
 
 interface
 
-uses CPDrv, SysUtils, DateUtils, Vcl.Graphics;
+uses CPDrv, SysUtils, DateUtils, Vcl.Graphics, TempCard;
 
 type
 
@@ -52,6 +52,8 @@ type
      check:byte;
   end;
 
+
+
   Tterminal = class
   const
     ATTEMPT_AMOUNT     = 5;        // Количество попыток отправки сообщения
@@ -88,6 +90,8 @@ type
 //     config : Tconfig;
 
      CanDriverNameBuf : String;
+
+     TempCard : TTempCard;
 
      constructor Create(ACommPort: TCommPortDriver=nil);     // Конструктор класса с параметром
 
@@ -143,6 +147,7 @@ type
      procedure getTerminalConfig;                    // Получить конфигурацию
      procedure send(_data:Tarray<byte>);             // Отправка данных
      procedure sendСonfirmation(_data:Tarray<byte>); // Отправка данных многократно
+     procedure TempCardWrite;
      procedure firmware;
      procedure resetTerminal;
 
@@ -152,6 +157,8 @@ type
 
      function GetBit(const AByte: Byte; const ABitIndex: Integer): Boolean;
      function getAccelerometr:String;
+
+     procedure TempCardRequest();
   end;
 
 implementation
@@ -159,6 +166,7 @@ implementation
 constructor Tterminal.Create(ACommPort: TCommPortDriver = nil);
 begin
   FCommPort := ACommPort; // Присваиваем ссылку на TCommPortDriver полю FCommPort
+  TempCard := TTempCard.Create; // Создание экземпляра TTempCard
 end;
 
 //Перезагрузка терминала
@@ -229,6 +237,39 @@ begin
   begin
     FCommPort.SendData(_data,Length(_data));
   end;
+end;
+
+procedure Tterminal.TempCardRequest;
+begin
+//  packageCmd  := $11;
+  packageCmd  := $10;
+  packageData := [];
+  send(Self.makeCommad);
+end;
+
+procedure Tterminal.TempCardWrite;
+begin
+  packageCmd  := $11;
+  packageData := [
+                  $AC, $00, $00, $00,  // Card Code
+                  $AC, $00, $00, $00,  // Operator ID
+                  $00,                 // Role
+                  $AC,                 // Speed
+                  $14, $46,            // IGN time
+                  $D0, $89,            // Work Time
+                  $29, $4b             // CRC
+                 ];
+
+//  packageData := [
+//                  $00, $00, $00, $00,  // Card Code
+//                  $00, $00, $00, $00,  // Operator ID
+//                  $00,                 // Role
+//                  $00,                 // Speed
+//                  $00, $00,            // IGN time
+//                  $00, $00,            // Work Time
+//                  $ab, $01             // CRC
+//                 ];
+  send(Self.makeCommad);
 end;
 
 //Получение суммы всех данных

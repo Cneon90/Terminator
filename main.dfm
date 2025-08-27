@@ -1528,6 +1528,40 @@ object fr_main: Tfr_main
         ExplicitHeight = 23
       end
     end
+    object btnCardTempAdd: TButton
+      Left = 1235
+      Top = 55
+      Width = 47
+      Height = 31
+      Cursor = crHandPoint
+      Caption = '...'
+      TabOrder = 12
+      OnClick = btnCardTempAddClick
+    end
+    object CheckTempCard: TCheckBox
+      Left = 800
+      Top = 62
+      Width = 213
+      Height = 17
+      Cursor = crHandPoint
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1072#1088#1090#1091
+      TabOrder = 13
+    end
+    object edCardCode: TEdit
+      Left = 1007
+      Top = 55
+      Width = 222
+      Height = 31
+      Cursor = crHandPoint
+      AutoSelect = False
+      AutoSize = False
+      MaxLength = 10
+      NumbersOnly = True
+      CanUndoSelText = True
+      ReadOnly = True
+      TabOrder = 14
+      OnClick = edCardCodeClick
+    end
   end
   object comPort: TCommPortDriver
     Port = pnCustom
@@ -23546,5 +23580,12 @@ object fr_main: Tfr_main
     Height = 30
     Left = 742
     Top = 74
+  end
+  object OpenDialogTempCard: TOpenDialog
+    DefaultExt = '*.tcd'
+    Filter = 'tcd|*.tcd|all|*.*'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
+    Left = 1295
+    Top = 35
   end
 end
