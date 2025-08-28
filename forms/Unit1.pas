@@ -10,14 +10,15 @@ type
   Tfr_Terminal = class(TForm)
     mmTerminal: TMemo;
     plButtons: TPanel;
+    Panel1: TPanel;
     btnExit: TButton;
-    Button1: TButton;
-    Button4: TButton;
     btnGetName: TButton;
     btnInfo: TButton;
-    btnWrite: TButton;
-    btnRead: TButton;
     btnPing: TButton;
+    btnRead: TButton;
+    btnWrite: TButton;
+    Button1: TButton;
+    Button4: TButton;
     procedure btnExitClick(Sender: TObject);
     procedure btnPingClick(Sender: TObject);
     procedure btnReadClick(Sender: TObject);

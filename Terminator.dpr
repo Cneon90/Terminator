@@ -46,6 +46,5 @@ begin
   Application.CreateForm(TfrServerEdit, frServerEdit);
   Application.CreateForm(TfrWifiEdit, frWifiEdit);
   Application.CreateForm(TfrDebug, frDebug);
-  Application.CreateForm(TfrTempCard, frTempCard);
   Application.Run;
 end.

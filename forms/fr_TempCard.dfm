@@ -4,54 +4,64 @@ object frTempCard: TfrTempCard
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'TEMP CARD'
-  ClientHeight = 148
-  ClientWidth = 585
+  ClientHeight = 150
+  ClientWidth = 528
   Color = clBtnFace
   Font.Charset = RUSSIAN_CHARSET
   Font.Color = clWindowText
-  Font.Height = -21
+  Font.Height = -19
   Font.Name = 'Consolas'
   Font.Style = [fsBold]
   Position = poScreenCenter
   Scaled = False
-  TextHeight = 24
+  TextHeight = 22
   object plCardCode: TPanel
     Left = 0
     Top = 0
-    Width = 585
+    Width = 528
     Height = 30
     Align = alTop
     BevelOuter = bvNone
+    Enabled = False
     FullRepaint = False
     TabOrder = 0
-    ExplicitWidth = 510
+    ExplicitWidth = 585
     object lbCardCode: TLabel
       AlignWithMargins = True
-      Left = 3
+      Left = 0
       Top = 3
-      Width = 143
+      Width = 120
       Height = 24
+      Margins.Left = 0
+      Margins.Right = 0
       Align = alLeft
       Alignment = taRightJustify
       AutoSize = False
       Caption = 'CARD CODE:'
       Layout = tlCenter
+      ExplicitLeft = 3
     end
     object edCardCode: TEdit
       AlignWithMargins = True
-      Left = 152
-      Top = 3
-      Width = 201
-      Height = 24
+      Left = 120
+      Top = 0
+      Width = 210
+      Height = 30
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Bottom = 0
       Align = alLeft
+      AutoSelect = False
       AutoSize = False
+      CanUndoSelText = True
       TabOrder = 0
     end
     object checkAdmin: TCheckBox
-      Left = 470
+      Left = 428
       Top = 0
-      Width = 115
+      Width = 100
       Height = 30
+      Cursor = crHandPoint
       Align = alRight
       Caption = 'ADMIN'
       TabOrder = 1
@@ -61,40 +71,47 @@ object frTempCard: TfrTempCard
   object plOperatorID: TPanel
     Left = 0
     Top = 30
-    Width = 585
+    Width = 528
     Height = 30
     Align = alTop
     BevelOuter = bvNone
+    Enabled = False
     TabOrder = 1
-    ExplicitTop = 33
-    ExplicitWidth = 510
+    ExplicitWidth = 585
     object lbOperatorID: TLabel
       AlignWithMargins = True
-      Left = 3
+      Left = 0
       Top = 3
-      Width = 143
+      Width = 120
       Height = 24
+      Margins.Left = 0
+      Margins.Right = 0
       Align = alLeft
       Alignment = taRightJustify
       AutoSize = False
       Caption = 'OPERATOR ID:'
       Layout = tlCenter
+      ExplicitLeft = 3
     end
     object edOperatorID: TEdit
       AlignWithMargins = True
-      Left = 152
-      Top = 3
-      Width = 201
-      Height = 24
+      Left = 120
+      Top = 0
+      Width = 210
+      Height = 30
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Bottom = 0
       Align = alLeft
       AutoSize = False
       TabOrder = 0
     end
     object checkDriver: TCheckBox
-      Left = 470
+      Left = 428
       Top = 0
-      Width = 115
+      Width = 100
       Height = 30
+      Cursor = crHandPoint
       Align = alRight
       Caption = 'DRIVER'
       TabOrder = 1
@@ -104,48 +121,73 @@ object frTempCard: TfrTempCard
   object plSpeed: TPanel
     Left = 0
     Top = 60
-    Width = 585
+    Width = 528
     Height = 30
     Align = alTop
     BevelOuter = bvNone
+    Enabled = False
     TabOrder = 2
-    ExplicitWidth = 510
+    ExplicitWidth = 585
     object lbSpeed: TLabel
       AlignWithMargins = True
-      Left = 3
+      Left = 0
       Top = 3
-      Width = 143
+      Width = 120
       Height = 24
+      Margins.Left = 0
+      Margins.Right = 0
       Align = alLeft
       Alignment = taRightJustify
       AutoSize = False
       Caption = 'SPEED:'
       Layout = tlCenter
+      ExplicitLeft = 3
     end
     object lbSpeedVal: TLabel
-      Left = 359
-      Top = 0
-      Width = 72
-      Height = 30
+      AlignWithMargins = True
+      Left = 336
+      Top = 3
+      Width = 40
+      Height = 24
       Align = alLeft
-      Caption = '0 km/h'
-      ExplicitHeight = 24
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Layout = tlCenter
+      ExplicitLeft = 369
+    end
+    object Label1: TLabel
+      AlignWithMargins = True
+      Left = 382
+      Top = 3
+      Width = 40
+      Height = 24
+      Align = alLeft
+      AutoSize = False
+      Caption = 'km/h'
+      Layout = tlCenter
+      ExplicitLeft = 415
+      ExplicitHeight = 22
     end
     object TrackSpeed: TTrackBar
-      Left = 149
-      Top = 0
+      AlignWithMargins = True
+      Left = 120
+      Top = 3
       Width = 210
-      Height = 30
+      Height = 24
+      Cursor = crHandPoint
+      Margins.Left = 0
       Align = alLeft
       Max = 255
       TabOrder = 0
       OnChange = TrackSpeedChange
     end
     object checkMech: TCheckBox
-      Left = 470
+      Left = 428
       Top = 0
-      Width = 115
+      Width = 100
       Height = 30
+      Cursor = crHandPoint
       Align = alRight
       Caption = 'MECHANIC'
       TabOrder = 1
@@ -155,50 +197,73 @@ object frTempCard: TfrTempCard
   object plIGNTime: TPanel
     Left = 0
     Top = 90
-    Width = 585
+    Width = 528
     Height = 30
     Align = alTop
     BevelOuter = bvNone
+    Enabled = False
     TabOrder = 3
-    ExplicitLeft = -8
-    ExplicitTop = 84
-    ExplicitWidth = 510
+    ExplicitWidth = 585
     object lbIGNTime: TLabel
       AlignWithMargins = True
-      Left = 3
+      Left = 0
       Top = 3
-      Width = 143
+      Width = 120
       Height = 24
+      Margins.Left = 0
+      Margins.Right = 0
       Align = alLeft
       Alignment = taRightJustify
       AutoSize = False
       Caption = 'IGN TIME:'
       Layout = tlCenter
+      ExplicitLeft = 3
     end
     object lbIGNTimeVal: TLabel
-      Left = 359
-      Top = 0
-      Width = 60
-      Height = 30
+      AlignWithMargins = True
+      Left = 336
+      Top = 3
+      Width = 40
+      Height = 24
       Align = alLeft
-      Caption = '0 min'
-      ExplicitHeight = 24
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Layout = tlCenter
+      ExplicitLeft = 369
+    end
+    object Label2: TLabel
+      AlignWithMargins = True
+      Left = 382
+      Top = 3
+      Width = 30
+      Height = 24
+      Align = alLeft
+      AutoSize = False
+      Caption = 'min'
+      Layout = tlCenter
+      ExplicitLeft = 415
+      ExplicitHeight = 22
     end
     object TrackIGNTime: TTrackBar
-      Left = 149
-      Top = 0
+      AlignWithMargins = True
+      Left = 120
+      Top = 3
       Width = 210
-      Height = 30
+      Height = 24
+      Cursor = crHandPoint
+      Margins.Left = 0
       Align = alLeft
       Max = 1092
       TabOrder = 0
       OnChange = TrackIGNTimeChange
     end
     object checkPNR: TCheckBox
-      Left = 470
+      Left = 428
       Top = 0
-      Width = 115
+      Width = 100
       Height = 30
+      Cursor = crHandPoint
       Align = alRight
       Caption = 'PNR'
       TabOrder = 1
@@ -208,38 +273,63 @@ object frTempCard: TfrTempCard
   object plWorkTime: TPanel
     Left = 0
     Top = 120
-    Width = 585
+    Width = 528
     Height = 30
     Align = alTop
     BevelOuter = bvNone
+    Enabled = False
     TabOrder = 4
-    ExplicitWidth = 510
+    ExplicitTop = 123
+    ExplicitWidth = 563
     object lbWorkTime: TLabel
       AlignWithMargins = True
-      Left = 3
+      Left = 0
       Top = 3
-      Width = 143
+      Width = 120
       Height = 24
+      Margins.Left = 0
+      Margins.Right = 0
       Align = alLeft
       Alignment = taRightJustify
       AutoSize = False
       Caption = 'WORK TIME:'
       Layout = tlCenter
+      ExplicitLeft = 3
     end
     object lbWorkTimeVal: TLabel
-      Left = 359
-      Top = 0
-      Width = 60
-      Height = 30
+      AlignWithMargins = True
+      Left = 336
+      Top = 3
+      Width = 40
+      Height = 24
       Align = alLeft
-      Caption = '0 min'
-      ExplicitHeight = 24
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Layout = tlCenter
+      ExplicitLeft = 369
+    end
+    object Label3: TLabel
+      AlignWithMargins = True
+      Left = 382
+      Top = 3
+      Width = 30
+      Height = 24
+      Align = alLeft
+      AutoSize = False
+      Caption = 'min'
+      Layout = tlCenter
+      ExplicitLeft = 415
+      ExplicitHeight = 22
     end
     object TrackWorkTime: TTrackBar
-      Left = 149
-      Top = 0
+      AlignWithMargins = True
+      Left = 120
+      Top = 3
       Width = 210
-      Height = 30
+      Height = 24
+      Cursor = crHandPoint
+      Margins.Left = 0
       Align = alLeft
       Max = 1092
       TabOrder = 0

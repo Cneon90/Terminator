@@ -1,0 +1,305 @@
+object frTempCard: TfrTempCard
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'TEMP CARD'
+  ClientHeight = 154
+  ClientWidth = 563
+  Color = clBtnFace
+  Font.Charset = RUSSIAN_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -19
+  Font.Name = 'Consolas'
+  Font.Style = [fsBold]
+  Position = poScreenCenter
+  Scaled = False
+  TextHeight = 22
+  object plCardCode: TPanel
+    Left = 0
+    Top = 0
+    Width = 563
+    Height = 30
+    Align = alTop
+    BevelOuter = bvNone
+    Enabled = False
+    FullRepaint = False
+    TabOrder = 0
+    ExplicitWidth = 585
+    object lbCardCode: TLabel
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 150
+      Height = 24
+      Align = alLeft
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = 'CARD CODE:'
+      Layout = tlCenter
+    end
+    object edCardCode: TEdit
+      AlignWithMargins = True
+      Left = 159
+      Top = 0
+      Width = 201
+      Height = 30
+      Margins.Top = 0
+      Margins.Bottom = 0
+      Align = alLeft
+      AutoSelect = False
+      AutoSize = False
+      CanUndoSelText = True
+      TabOrder = 0
+      ExplicitTop = 3
+      ExplicitHeight = 25
+    end
+    object checkAdmin: TCheckBox
+      Left = 463
+      Top = 0
+      Width = 100
+      Height = 30
+      Align = alRight
+      Caption = 'ADMIN'
+      TabOrder = 1
+    end
+  end
+  object plOperatorID: TPanel
+    Left = 0
+    Top = 30
+    Width = 563
+    Height = 30
+    Align = alTop
+    BevelOuter = bvNone
+    Enabled = False
+    TabOrder = 1
+    ExplicitWidth = 585
+    object lbOperatorID: TLabel
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 150
+      Height = 24
+      Align = alLeft
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = 'OPERATOR ID:'
+      Layout = tlCenter
+    end
+    object edOperatorID: TEdit
+      AlignWithMargins = True
+      Left = 159
+      Top = 0
+      Width = 201
+      Height = 30
+      Margins.Top = 0
+      Margins.Bottom = 0
+      Align = alLeft
+      AutoSize = False
+      TabOrder = 0
+      ExplicitTop = 3
+      ExplicitHeight = 25
+    end
+    object checkDriver: TCheckBox
+      Left = 463
+      Top = 0
+      Width = 100
+      Height = 30
+      Align = alRight
+      Caption = 'DRIVER'
+      TabOrder = 1
+    end
+  end
+  object plSpeed: TPanel
+    Left = 0
+    Top = 60
+    Width = 563
+    Height = 30
+    Align = alTop
+    BevelOuter = bvNone
+    Enabled = False
+    TabOrder = 2
+    ExplicitWidth = 585
+    object lbSpeed: TLabel
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 150
+      Height = 24
+      Align = alLeft
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = 'SPEED:'
+      Layout = tlCenter
+    end
+    object lbSpeedVal: TLabel
+      AlignWithMargins = True
+      Left = 369
+      Top = 3
+      Width = 40
+      Height = 24
+      Align = alLeft
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Layout = tlCenter
+    end
+    object Label1: TLabel
+      AlignWithMargins = True
+      Left = 415
+      Top = 3
+      Width = 40
+      Height = 24
+      Align = alLeft
+      AutoSize = False
+      Caption = 'km/h'
+      Layout = tlCenter
+      ExplicitHeight = 22
+    end
+    object TrackSpeed: TTrackBar
+      Left = 156
+      Top = 0
+      Width = 210
+      Height = 30
+      Align = alLeft
+      Max = 255
+      TabOrder = 0
+      OnChange = TrackSpeedChange
+      ExplicitLeft = 149
+    end
+    object checkMech: TCheckBox
+      Left = 463
+      Top = 0
+      Width = 100
+      Height = 30
+      Align = alRight
+      Caption = 'MECHANIC'
+      TabOrder = 1
+    end
+  end
+  object plIGNTime: TPanel
+    Left = 0
+    Top = 90
+    Width = 563
+    Height = 30
+    Align = alTop
+    BevelOuter = bvNone
+    Enabled = False
+    TabOrder = 3
+    ExplicitWidth = 585
+    object lbIGNTime: TLabel
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 150
+      Height = 24
+      Align = alLeft
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = 'IGN TIME:'
+      Layout = tlCenter
+    end
+    object lbIGNTimeVal: TLabel
+      AlignWithMargins = True
+      Left = 369
+      Top = 3
+      Width = 40
+      Height = 24
+      Align = alLeft
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Layout = tlCenter
+    end
+    object Label2: TLabel
+      AlignWithMargins = True
+      Left = 415
+      Top = 3
+      Width = 30
+      Height = 24
+      Align = alLeft
+      AutoSize = False
+      Caption = 'min'
+      Layout = tlCenter
+      ExplicitHeight = 22
+    end
+    object TrackIGNTime: TTrackBar
+      Left = 156
+      Top = 0
+      Width = 210
+      Height = 30
+      Align = alLeft
+      Max = 1092
+      TabOrder = 0
+      OnChange = TrackIGNTimeChange
+      ExplicitLeft = 149
+    end
+    object checkPNR: TCheckBox
+      Left = 463
+      Top = 0
+      Width = 100
+      Height = 30
+      Align = alRight
+      Caption = 'PNR'
+      TabOrder = 1
+    end
+  end
+  object plWorkTime: TPanel
+    Left = 0
+    Top = 120
+    Width = 563
+    Height = 30
+    Align = alTop
+    BevelOuter = bvNone
+    Enabled = False
+    TabOrder = 4
+    ExplicitTop = 123
+    object lbWorkTime: TLabel
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 150
+      Height = 24
+      Align = alLeft
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = 'WORK TIME:'
+      Layout = tlCenter
+    end
+    object lbWorkTimeVal: TLabel
+      AlignWithMargins = True
+      Left = 369
+      Top = 3
+      Width = 40
+      Height = 24
+      Align = alLeft
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Layout = tlCenter
+    end
+    object Label3: TLabel
+      AlignWithMargins = True
+      Left = 415
+      Top = 3
+      Width = 30
+      Height = 24
+      Align = alLeft
+      AutoSize = False
+      Caption = 'min'
+      Layout = tlCenter
+      ExplicitHeight = 22
+    end
+    object TrackWorkTime: TTrackBar
+      Left = 156
+      Top = 0
+      Width = 210
+      Height = 30
+      Align = alLeft
+      Max = 1092
+      TabOrder = 0
+      OnChange = TrackWorkTimeChange
+      ExplicitLeft = 149
+    end
+  end
+end

@@ -147,7 +147,7 @@ type
      procedure getTerminalConfig;                    // Получить конфигурацию
      procedure send(_data:Tarray<byte>);             // Отправка данных
      procedure sendСonfirmation(_data:Tarray<byte>); // Отправка данных многократно
-     procedure TempCardWrite;
+     procedure TempCardWrite(TempCardData:TArray<byte>);
      procedure firmware;
      procedure resetTerminal;
 
@@ -247,18 +247,20 @@ begin
   send(Self.makeCommad);
 end;
 
-procedure Tterminal.TempCardWrite;
+procedure Tterminal.TempCardWrite(TempCardData:TArray<byte>);
 begin
   packageCmd  := $11;
-  packageData := [
-                  $AC, $00, $00, $00,  // Card Code
-                  $AC, $00, $00, $00,  // Operator ID
-                  $00,                 // Role
-                  $AC,                 // Speed
-                  $14, $46,            // IGN time
-                  $D0, $89,            // Work Time
-                  $29, $4b             // CRC
-                 ];
+  packageData := TempCardData;
+
+//  [
+//                  $AC, $00, $00, $00,  // Card Code
+//                  $AC, $00, $00, $00,  // Operator ID
+//                  $00,                 // Role
+//                  $AC,                 // Speed
+//                  $14, $46,            // IGN time
+//                  $D0, $89,            // Work Time
+//                  $29, $4b             // CRC
+//                 ];
 
 //  packageData := [
 //                  $00, $00, $00, $00,  // Card Code

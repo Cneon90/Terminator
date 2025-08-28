@@ -18,6 +18,8 @@ type
       function FormatWithLeadingZeros(Number: Cardinal; NumDigits: Integer): String;
     public
 
+       TempCardDataRow:TArray<byte>;
+
        //Card code
        procedure setCardCode(_cardCode : Cardinal);
        function  getCardCode(): Cardinal;
@@ -33,9 +35,6 @@ type
        // Work time
        function getWorkTime(): Word;
 
-
-
-       
        procedure ParseData(const Data: TArray<Byte>);
 
        // ROLE
@@ -43,6 +42,8 @@ type
        function getIsDriver() : boolean;
        function getIsMechan() : boolean;
        function getIsPNR() : boolean;
+
+       function verification(tempCardRow : TArray<Byte>) : boolean;
 
   end;
 
@@ -131,11 +132,25 @@ begin
 end;
 
 
-
-
 procedure TTempCard.setSpeed(_speed: Byte);
 begin
   FSpeed := _speed;
+end;
+
+//
+function TTempCard.verification(tempCardRow: TArray<Byte>): boolean;
+var
+  LengthSame: Boolean;
+begin
+  // Сравниваем длины массивов
+  LengthSame := Length(TempCardDataRow) = Length(tempCardRow);
+
+  // Если длины не равны, возвращаем false
+  if not LengthSame then
+    Exit(False);
+
+  // Сравниваем содержимое массивов
+  Result := CompareMem(@TempCardDataRow[0], @tempCardRow[0], Length(TempCardDataRow));
 end;
 
 function TTempCard.FormatWithLeadingZeros(Number: Cardinal; NumDigits: Integer) : String;

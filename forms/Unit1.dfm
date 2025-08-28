@@ -1,10 +1,9 @@
 object fr_Terminal: Tfr_Terminal
   Left = 0
   Top = 0
-  BorderStyle = bsSingle
   Caption = 'Terminal'
-  ClientHeight = 427
-  ClientWidth = 641
+  ClientHeight = 450
+  ClientWidth = 775
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,100 +14,152 @@ object fr_Terminal: Tfr_Terminal
   object mmTerminal: TMemo
     Left = 0
     Top = 41
-    Width = 641
-    Height = 386
+    Width = 775
+    Height = 409
     Align = alClient
     DoubleBuffered = True
     ParentDoubleBuffered = False
     ScrollBars = ssBoth
     TabOrder = 0
-    ExplicitWidth = 635
-    ExplicitHeight = 380
+    ExplicitWidth = 641
+    ExplicitHeight = 386
   end
   object plButtons: TPanel
     Left = 0
     Top = 0
-    Width = 641
+    Width = 775
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 635
-    object btnExit: TButton
-      Left = 570
-      Top = 9
-      Width = 75
-      Height = 25
-      Caption = 'Exit'
+    ExplicitWidth = 641
+    object Panel1: TPanel
+      Left = 0
+      Top = 0
+      Width = 775
+      Height = 40
+      Align = alTop
       TabOrder = 0
-      OnClick = btnExitClick
-    end
-    object Button1: TButton
-      Left = 475
-      Top = 9
-      Width = 75
-      Height = 25
-      Caption = 'Print'
-      TabOrder = 1
-      OnClick = Button1Click
-    end
-    object Button4: TButton
-      Left = 413
-      Top = 9
-      Width = 50
-      Height = 25
-      Caption = 'Clear'
-      TabOrder = 2
-      OnClick = Button4Click
-    end
-    object btnGetName: TButton
-      Left = 332
-      Top = 9
-      Width = 75
-      Height = 25
-      Caption = 'GetName'
-      Enabled = False
-      TabOrder = 3
-      OnClick = btnGetNameClick
-    end
-    object btnInfo: TButton
-      Left = 251
-      Top = 9
-      Width = 75
-      Height = 25
-      Caption = 'INFO'
-      Enabled = False
-      TabOrder = 4
-      OnClick = btnInfoClick
-    end
-    object btnWrite: TButton
-      Left = 170
-      Top = 9
-      Width = 75
-      Height = 25
-      Caption = 'Write'
-      Enabled = False
-      TabOrder = 5
-    end
-    object btnRead: TButton
-      Left = 89
-      Top = 9
-      Width = 75
-      Height = 25
-      Caption = 'Read'
-      Enabled = False
-      TabOrder = 6
-      OnClick = btnReadClick
-    end
-    object btnPing: TButton
-      Left = 8
-      Top = 10
-      Width = 75
-      Height = 25
-      Caption = 'Ping'
-      Enabled = False
-      TabOrder = 7
-      OnClick = btnPingClick
+      object btnExit: TButton
+        AlignWithMargins = True
+        Left = 696
+        Top = 4
+        Width = 75
+        Height = 32
+        Align = alRight
+        Caption = 'Exit'
+        TabOrder = 0
+        OnClick = btnExitClick
+        ExplicitLeft = 705
+        ExplicitTop = 1
+        ExplicitHeight = 38
+      end
+      object btnGetName: TButton
+        AlignWithMargins = True
+        Left = 328
+        Top = 4
+        Width = 75
+        Height = 32
+        Align = alLeft
+        Anchors = []
+        Caption = 'GetName'
+        Enabled = False
+        TabOrder = 1
+        OnClick = btnGetNameClick
+        ExplicitLeft = 110
+        ExplicitTop = 14
+        ExplicitHeight = 25
+      end
+      object btnInfo: TButton
+        AlignWithMargins = True
+        Left = 85
+        Top = 4
+        Width = 75
+        Height = 32
+        Align = alLeft
+        Anchors = []
+        Caption = 'INFO'
+        Enabled = False
+        TabOrder = 2
+        OnClick = btnInfoClick
+        ExplicitLeft = 61
+        ExplicitTop = 3
+      end
+      object btnPing: TButton
+        AlignWithMargins = True
+        Left = 4
+        Top = 4
+        Width = 75
+        Height = 32
+        Align = alLeft
+        Anchors = []
+        Caption = 'Ping'
+        Enabled = False
+        TabOrder = 3
+        OnClick = btnPingClick
+        ExplicitLeft = 8
+        ExplicitTop = 10
+        ExplicitHeight = 25
+      end
+      object btnRead: TButton
+        AlignWithMargins = True
+        Left = 166
+        Top = 4
+        Width = 75
+        Height = 32
+        Align = alLeft
+        Anchors = []
+        Caption = 'Read'
+        Enabled = False
+        TabOrder = 4
+        OnClick = btnReadClick
+        ExplicitLeft = 89
+        ExplicitTop = 9
+        ExplicitHeight = 25
+      end
+      object btnWrite: TButton
+        AlignWithMargins = True
+        Left = 247
+        Top = 4
+        Width = 75
+        Height = 32
+        Align = alLeft
+        Anchors = []
+        Caption = 'Write'
+        Enabled = False
+        TabOrder = 5
+        ExplicitLeft = 220
+        ExplicitTop = 3
+      end
+      object Button1: TButton
+        AlignWithMargins = True
+        Left = 409
+        Top = 4
+        Width = 75
+        Height = 32
+        Align = alLeft
+        Anchors = []
+        Caption = 'Print'
+        TabOrder = 6
+        OnClick = Button1Click
+        ExplicitLeft = 110
+        ExplicitTop = 16
+        ExplicitHeight = 25
+      end
+      object Button4: TButton
+        AlignWithMargins = True
+        Left = 490
+        Top = 4
+        Width = 75
+        Height = 32
+        Align = alLeft
+        Anchors = []
+        Caption = 'Clear'
+        TabOrder = 7
+        OnClick = Button4Click
+        ExplicitLeft = 519
+        ExplicitTop = 3
+      end
     end
   end
 end

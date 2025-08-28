@@ -186,10 +186,15 @@ type
     Label23: TLabel;
     vImgTerm: TVirtualImageList;
     ADOQuerydata: TBlobField;
-    btnCardTempAdd: TButton;
-    CheckTempCard: TCheckBox;
-    edCardCode: TEdit;
     OpenDialogTempCard: TOpenDialog;
+    ImageCollectionTempCard: TImageCollection;
+    gbCardTemp: TGroupBox;
+    CheckTempCard: TCheckBox;
+    btnCardTempAdd: TButton;
+    imgTempCard: TVirtualImage;
+    edCardCode: TEdit;
+    viTempCard: TVirtualImage;
+    lbCardCode: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actConnectExecute(Sender: TObject);
     procedure actDisconnectExecute(Sender: TObject);
@@ -272,11 +277,22 @@ type
     procedure ViServerClick(Sender: TObject);
     procedure ViWifiClick(Sender: TObject);
     procedure btnDebugClick(Sender: TObject);
-    procedure edCardCodeClick(Sender: TObject);
     procedure btnCardTempAddClick(Sender: TObject);
+    procedure plCardCodeClick(Sender: TObject);
+    procedure CheckTempCardClick(Sender: TObject);
+    procedure viTempCardMouseLeave(Sender: TObject);
+    procedure viTempCardMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure viTempCardClick(Sender: TObject);
   private
     { Private declarations }
     FlagTerminalConfig:boolean;                                                 // Флаг запроса конфигурации терминала
+    FlagTempCard : boolean;
+
+    FTempCardDefault : TArray<byte>;
+
+    procedure TempCardDefaultInit();
+
     procedure printInfoTerminal;
     procedure buttonOption(color:Tcolor; text:String);
     procedure OnTerminalDataReceived(const Data: TArray<Byte>);
@@ -284,6 +300,7 @@ type
     procedure updateInfo(Terminalinfo:Tterminal);
     procedure showMenuButton(actFile: Taction; actDb:Taction);
     procedure parserBuffer(Text: String);
+    procedure setTempCard(Data : TArray<byte>);
     function LoadConfigFromDB(TableName:String; caption:String; DataSize: integer): TdbReadRec;
 
   public
@@ -467,6 +484,29 @@ begin
   ViServer.ImageIndex := 14;
 end;
 
+procedure Tfr_main.viTempCardClick(Sender: TObject);
+begin
+  btnCardTempAdd.SetFocus();
+  frTempCard.ShowModal();
+end;
+
+procedure Tfr_main.viTempCardMouseLeave(Sender: TObject);
+begin
+//  viTempCard.ImageIndex := 2;
+
+  if CheckTempCard.Checked then  viTempCard.ImageIndex := 2
+                           else  viTempCard.ImageIndex := 4;
+end;
+
+procedure Tfr_main.viTempCardMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+//  viTempCard.ImageIndex := 3;
+
+  if CheckTempCard.Checked then  viTempCard.ImageIndex := 3
+                           else  viTempCard.ImageIndex := 4;
+end;
+
 procedure Tfr_main.ViWifiClick(Sender: TObject);
 var EditModal : TfrWifiEdit;
 begin
@@ -608,6 +648,36 @@ begin
   finally
     Notification.Free;
   end;
+end;
+
+// _tempCardDataRow - 16 byte card
+procedure Tfr_main.setTempCard(Data: TArray<Byte>);
+var
+  cardTempBuf : Tarray<byte>;
+  crcbuf      : Tarray<byte>;
+  ChecksumCalc: Word;
+  ChecksumData: Word;
+begin
+    SetLength(cardTempBuf, 14);
+    SetLength(crcbuf,      2);
+
+    cardTempBuf := Copy(Data, 0,   14);
+    crcbuf      := Copy(Data, 14, 2); // Данные временной карты
+
+    ChecksumCalc := CalculateCRC16(cardTempBuf, 14);
+    ChecksumData := (Word(crcbuf[1]) shl 8) or Word(crcbuf[0]);
+
+    if ChecksumCalc <> ChecksumData then
+    begin
+      imgTempCard.ImageIndex := 0;
+      Exit;
+    end;
+
+    // set forms
+    Terminal.TempCard.TempCardDataRow := Data;
+    Terminal.TempCard.ParseData(Data);
+    frTempCard.setTempCard(Terminal.TempCard);
+    edCardCode.Text := Terminal.TempCard.getCardCodeStr();
 end;
 
 procedure Tfr_main.showfrTerminalExecute(Sender: TObject);
@@ -964,7 +1034,9 @@ procedure Tfr_main.btnLoadFromTerminalClick(Sender: TObject);
 begin
   try
     FlagTerminalConfig := false;
+//    FlagTempCard := false;
     btnLoadFromTerminal.Enabled := false;
+
   finally
     buttonOption(clred, 'Terminal');
   end;
@@ -1003,7 +1075,6 @@ end;
 
 procedure Tfr_main.Button1Click(Sender: TObject);
 begin
-
 
 end;
 
@@ -1179,6 +1250,14 @@ begin
     TerminalBuf.setCanDriverName(TerminalBuf.CanDriverNameBuf);
   move(TerminalBuf.TermianlConfig,Terminal.TermianlConfig,sizeOf(Terminal.TermianlConfig));
 
+  imgTempCard.ImageIndex := -1;
+  if CheckTempCard.Checked then
+  begin
+      FlagTempCard := false; // Для запроса с терминала
+      Terminal.TempCardWrite(Terminal.TempCard.TempCardDataRow);
+  end;
+
+
   waitFirmware := True;
   btnFirmware.Enabled := false;
   Terminal.firmware();   
@@ -1242,42 +1321,19 @@ end;
 
 procedure Tfr_main.btnCardTempAddClick(Sender: TObject);
 var
-  FileStream  : TFileStream;
+  TempCardFileStream  : TFileStream;
   cardTempBuf : Tarray<byte>;
-  crcbuf      : Tarray<byte>;
-  ChecksumCalc: Word;
-  ChecksumFile: Word;
-//  h1  : byte;
-//  h2  : byte;
-  FormattedString: string;
 
 begin
   if OpenDialogTempCard.Execute() then
   begin
-    SetLength(cardTempBuf, 14);
-    SetLength(crcbuf, 2);
+    imgTempCard.ImageIndex := -1;
+    SetLength(cardTempBuf, 16);
 
-    FileStream := TFileStream.Create(OpenDialogTempCard.FileName, fmOpenRead);
-    FileStream.ReadBuffer(cardTempBuf[0],   14);
-    FileStream.ReadBuffer(crcbuf[0], 2);
-
-    Move(crcbuf[0], ChecksumFile,   SizeOf(ChecksumFile));
-
-    ChecksumCalc := CalculateCRC16(cardTempBuf, Length(cardTempBuf));
-
-//    h1 := ChecksumCalc shr 8;
-//    h2 := ChecksumCalc and $FF; // Получаем младший байт
-
-    if ChecksumCalc <> ChecksumFile then
-    begin
-      ShowMessage('ALARM');
-      Exit;
-    end;
-
-
-    Terminal.TempCard.ParseData(cardTempBuf);
-    frTempCard.setTempCard(Terminal.TempCard);
-    edCardCode.Text := Terminal.TempCard.getCardCodeStr();
+    TempCardFileStream := TFileStream.Create(OpenDialogTempCard.FileName, fmOpenRead);
+    TempCardFileStream.ReadBuffer(cardTempBuf[0],   16);
+    TempCardFileStream.Position := 0;
+    setTempCard(cardTempBuf);
   end;
 
 end;
@@ -1396,6 +1452,20 @@ begin
                        else actConnect.Execute;
 end;
 
+procedure Tfr_main.TempCardDefaultInit;
+begin
+  SetLength(FTempCardDefault, 16);
+  FTempCardDefault := [
+      $00, $00, $00, $00, // Card ID
+      $00, $CA, $9A, $3B, // Operator ID
+      $0E, // Role
+      $00, // SPEED
+      $10, $0E, // IGN TIME
+      $84, $03, // Work time
+      $C1, $58  // CRC
+  ];
+end;
+
 //Обновляем список доступных компортов
 procedure Tfr_main.trmAvailableComportsTimer(Sender: TObject);
 begin
@@ -1452,6 +1522,18 @@ begin
 
 end;
 
+procedure Tfr_main.CheckTempCardClick(Sender: TObject);
+begin
+  imgTempCard.ImageIndex := -1;
+  lbCardCode.Enabled := CheckTempCard.Checked;
+  edCardCode.Enabled := CheckTempCard.Checked;
+  viTempCard.Enabled := CheckTempCard.Checked;
+
+  if CheckTempCard.Checked then  viTempCard.ImageIndex := 2
+                           else  viTempCard.ImageIndex := 4;
+
+end;
+
 procedure Tfr_main.Database1Click(Sender: TObject);
 begin
   fr_database.Show;
@@ -1503,11 +1585,6 @@ begin
   mmDisconnect.Enabled := false;
   btnExportFromDb.Enabled := false;
   mmConnect.Enabled := true;
-end;
-
-procedure Tfr_main.edCardCodeClick(Sender: TObject);
-begin
-  frTempCard.ShowModal();
 end;
 
 procedure Tfr_main.edNameClientKeyPress(Sender: TObject; var Key: Char);
@@ -1576,6 +1653,9 @@ begin
   CanClose := false;
   if MessageDlg('Вы уверены, что хотите закрыть приложение?', TMsgDlgType.mtInformation, [mbyes, mbno], 0) = mryes then
   begin
+    TerminalHead.Terminate;
+    TerminalHead.WaitFor;
+    TerminalHead.Free;
     CanClose := true;
   end;
 end;
@@ -1585,11 +1665,18 @@ var assoc     : TAssociation;
     assocHW : TAssocData;
 begin
   FormatSettings.DecimalSeparator := '.';
-  FlagTerminalConfig := true;
 
-  TerminalBuf := Tterminal.Create();     // Буферный файл
-  Terminal := Tterminal.Create(comport); // Терминал (Передача компонента)
-  TerminalInfo := TstringList.Create;    // информации о терминале
+  TempCardDefaultInit();
+
+  FlagTerminalConfig := true;
+  FlagTempCard := true;
+
+  // forms create
+  frTempCard := TfrTempCard.Create(nil);
+
+  TerminalBuf     := Tterminal.Create();     // Буферный файл
+  Terminal        := Tterminal.Create(comport); // Терминал (Передача компонента)
+  TerminalInfo    := TStringList.Create;    // информации о терминале
   TerminalInfoBuf := TStringList.Create; // Буфер информации о терминале
   getAvalibleComPorts;                   // Доступные COM порты
   LoadSettings;                          // Загрузка ini
@@ -1701,12 +1788,32 @@ var
   IniFile: TIniFile;
   iniPath : string;
   passwordDecode : string;
+  cardTempBuf : Tarray<byte>;
+  tempStream : TMemoryStream;
+  iCardBytes : integer;
 begin
   iniPath := ExtractFilePath(Application.ExeName) + 'settings.ini';
   IniFile := TIniFile.Create(iniPath);
   try
     startConnect.Checked := IniFile.ReadBool('General', 'autoConnect', true);
     chbResetTerminal.Checked        := IniFile.ReadBool('General', 'ResetTertminal', true);
+//    CheckTempCard.Checked           := IniFile.ReadBool('TempCard', 'TemCardCheck', true);
+
+    SetLength(cardTempBuf, 16);
+    tempStream := TMemoryStream.Create;
+    iCardBytes := iniFile.ReadBinaryStream('TempCard', 'TempCardBlank', tempStream);
+    if iCardBytes = 16  then
+    begin
+      // Устанавливаем позицию потока на начало перед чтением
+      tempStream.Position := 0;
+      tempStream.ReadBuffer(cardTempBuf, 16);
+      setTempCard(cardTempBuf);
+    end else
+    begin
+      setTempCard(FTempCardDefault);
+    end;
+
+
     DirBufferOpen[OPEN_DIALOG_HW]   := IniFile.ReadString('OpenDialog', 'HW','C:\');
     DirBufferOpen[OPEN_DIALOG_CAN]  := IniFile.ReadString('OpenDialog', 'CAN','C:\');
     DirBufferOpen[OPEN_DIALOG_WIFI] := IniFile.ReadString('OpenDialog', 'WIFI','C:\');
@@ -1725,8 +1832,11 @@ begin
     dbName     := IniFile.ReadString('db', 'name', 'terminal_config');
     dbLogin    := IniFile.ReadString('db', 'login','root');
     dbPathDllDB := IniFile.ReadString('db','dll', 'C:\Program Files (x86)\MySQL\Connector ODBC 8.0\myodbc8w.dll');
-    passwordDecode := IniFile.ReadString('db', 'password','password');
+    passwordDecode := IniFile.ReadString('db', 'password','');
+    if passwordDecode <> '' then
     dbPassword := TNetEncoding.Base64.Decode(passwordDecode);
+
+
   finally
     IniFile.Free;
   end;
@@ -1744,6 +1854,19 @@ begin
   try
     IniFile.WriteBool('General', 'autoConnect', startConnect.Checked);
     iniFile.WriteBool('General', 'ResetTertminal', chbResetTerminal.Checked);
+
+    iniFile.WriteBool('TempCard', 'TemCardCheck', CheckTempCard.Checked);
+
+    // Если не существует секции с ключом, сохраним по умолчанию
+    if IniFile.ValueExists('TempCard', 'TempCardBlank') = false then
+    begin
+      var tempStream : TMemoryStream;
+      tempStream := TMemoryStream.Create;
+      tempStream.WriteData(FTempCardDefault , 16);
+      tempStream.Position := 0;
+      iniFile.WriteBinaryStream('TempCard', 'TempCardBlank', tempStream);
+    end;
+
     iniFile.WriteString('OpenDialog', 'HW', DirBufferOpen[OPEN_DIALOG_HW]);
     iniFile.WriteString('OpenDialog', 'CAN', DirBufferOpen[OPEN_DIALOG_CAN]);
     iniFile.WriteString('OpenDialog', 'WIFI', DirBufferOpen[OPEN_DIALOG_WIFI]);
@@ -1787,6 +1910,9 @@ begin
 
   if FlagTerminalConfig = false then Terminal.getTerminalConfig;
 
+  if FlagTempCard = false then Terminal.TempCardRequest;
+
+
    //Если информация о терминале
   if Data[1] = CMD_TERMINAL_INFO then
   begin
@@ -1813,8 +1939,22 @@ begin
 
   if Data[1] = CMD_TEMP_CARD_READ then
   begin
-    FCardTempRow := Copy(Data, 2, Length(Data) - 2); // Данные временной карты
-    Terminal.TempCard.ParseData(FCardTempRow);
+    FlagTempCard := true;
+    FCardTempRow := Copy(Data, 2, 16); // Данные временной карты
+
+    if Terminal.TempCard.verification(FCardTempRow) = true then
+    begin
+      imgTempCard.ImageIndex := 1;
+    end
+    else
+    begin
+      imgTempCard.ImageIndex := 0;
+//      MessageDlg('Ошибка записи временной карты', TMsgDlgType.mtError, [mbOk], 0 );
+    end;
+
+//    setTempCard(FCardTempRow);
+//    Terminal.TempCard.ParseData(FCardTempRow);
+//    plCardCode.Caption := Terminal.TempCard.getCardCodeStr();
   end;
 
   if waitFirmware then
@@ -2158,6 +2298,11 @@ begin
   msg.Free;
 end;
 
+
+procedure Tfr_main.plCardCodeClick(Sender: TObject);
+begin
+
+end;
 
 // Получение типа записи
 function Tfr_main.getType(TableName: String): TTableType;
