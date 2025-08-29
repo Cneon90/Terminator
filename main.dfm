@@ -24,6 +24,7 @@ object fr_main: Tfr_main
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  OnKeyPress = FormKeyPress
   OnShow = FormShow
   TextHeight = 23
   object plConnect: TPanel
@@ -401,6 +402,7 @@ object fr_main: Tfr_main
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
+        TabStop = False
         OnClick = btnLoadFromTerminalClick
       end
       object btnSaveAllConfig: TBitBtn
@@ -418,6 +420,7 @@ object fr_main: Tfr_main
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
+        TabStop = False
         StyleName = 'Carbon'
         OnClick = btnSaveAllConfigClick
       end
@@ -437,7 +440,9 @@ object fr_main: Tfr_main
         ParentShowHint = False
         ShowHint = True
         TabOrder = 2
+        TabStop = False
         OnClick = btnLoadConfAllClick
+        OnKeyDown = btnLoadConfAllKeyDown
       end
       object btnDbLoadConfAll: TBitBtn
         AlignWithMargins = True
@@ -455,6 +460,7 @@ object fr_main: Tfr_main
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
+        TabStop = False
         OnClick = btnDbLoadConfAllClick
       end
       object btnExportFromDb: TBitBtn
@@ -472,6 +478,7 @@ object fr_main: Tfr_main
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
+        TabStop = False
         OnClick = btnExportFromDbClick
       end
     end
@@ -1264,8 +1271,7 @@ object fr_main: Tfr_main
     DoubleBuffered = True
     ParentDoubleBuffered = False
     TabOrder = 5
-    ExplicitLeft = 8
-    ExplicitTop = 45
+    ExplicitTop = 31
     object Label9: TLabel
       Left = 45
       Top = 9
@@ -1422,7 +1428,7 @@ object fr_main: Tfr_main
     object edInfoTerminalName: TEdit
       Left = 800
       Top = 6
-      Width = 482
+      Width = 400
       Height = 31
       Color = clSkyBlue
       ReadOnly = True
@@ -1531,28 +1537,31 @@ object fr_main: Tfr_main
       end
     end
     object gbCardTemp: TGroupBox
-      Left = 941
-      Top = 38
-      Width = 341
-      Height = 142
+      Left = 800
+      Top = 36
+      Width = 400
+      Height = 84
       Caption = 'TEMP CARD'
       TabOrder = 12
       object imgTempCard: TVirtualImage
-        Left = 249
-        Top = 27
+        Left = 237
+        Top = 20
         Width = 22
-        Height = 25
+        Height = 21
         ImageCollection = ImageCollectionTempCard
         ImageWidth = 0
         ImageHeight = 0
         ImageIndex = -1
       end
       object viTempCard: TVirtualImage
-        Left = 249
-        Top = 57
+        AlignWithMargins = True
+        Left = 324
+        Top = 17
         Width = 80
-        Height = 76
+        Height = 59
         Cursor = crHandPoint
+        Margins.Top = 0
+        Margins.Bottom = 2
         DragCursor = crHandPoint
         ImageCollection = ImageCollectionTempCard
         ImageWidth = 0
@@ -1565,22 +1574,22 @@ object fr_main: Tfr_main
         OnMouseMove = viTempCardMouseMove
       end
       object lbCardCode: TLabel
-        Left = 19
-        Top = 61
-        Width = 100
-        Height = 18
+        Left = 15
+        Top = 48
+        Width = 110
+        Height = 22
         Caption = 'CARD CODE:'
         Enabled = False
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
-        Font.Height = -16
+        Font.Height = -19
         Font.Name = 'Courier New'
         Font.Style = [fsBold]
         ParentFont = False
       end
       object CheckTempCard: TCheckBox
-        Left = 19
-        Top = 30
+        Left = 12
+        Top = 21
         Width = 224
         Height = 21
         Cursor = crHandPoint
@@ -1594,13 +1603,14 @@ object fr_main: Tfr_main
         TabOrder = 0
         OnClick = CheckTempCardClick
       end
-      object btnCardTempAdd: TButton
-        Left = 284
-        Top = 20
+      object btnTempCardAdd: TButton
+        Left = 273
+        Top = 35
         Width = 45
-        Height = 35
+        Height = 41
         Cursor = crHandPoint
         Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1088#1077#1084#1077#1085#1085#1091#1102' '#1082#1072#1088#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
+        Enabled = False
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
         Font.Height = -8
@@ -1615,12 +1625,12 @@ object fr_main: Tfr_main
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
-        OnClick = btnCardTempAddClick
+        OnClick = btnTempCardAddClick
       end
       object edCardCode: TEdit
-        Left = 19
-        Top = 79
-        Width = 224
+        Left = 122
+        Top = 45
+        Width = 137
         Height = 31
         Enabled = False
         Font.Charset = RUSSIAN_CHARSET
@@ -1633,6 +1643,7 @@ object fr_main: Tfr_main
         ParentFont = False
         TabOrder = 2
         Text = '0000000000'
+        OnChange = edCardCodeChange
       end
     end
   end
@@ -23658,8 +23669,8 @@ object fr_main: Tfr_main
     DefaultExt = '*.tcd'
     Filter = 'tcd|*.tcd|all|*.*'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
-    Left = 1295
-    Top = 35
+    Left = 1015
+    Top = 65526
   end
   object ImageCollectionTempCard: TImageCollection
     Images = <

@@ -2,7 +2,9 @@ unit TempCard;
 
 interface
 
-  uses SysUtils, DateUtils;
+  uses SysUtils, DateUtils, chekSum;
+
+
 
 type
 
@@ -15,10 +17,11 @@ type
       FIGNTime     : Word;
       FWorkTime    : Word;
 
+
       function FormatWithLeadingZeros(Number: Cardinal; NumDigits: Integer): String;
     public
 
-       TempCardDataRow:TArray<byte>;
+
 
        //Card code
        procedure setCardCode(_cardCode : Cardinal);
@@ -36,6 +39,9 @@ type
        function getWorkTime(): Word;
 
        procedure ParseData(const Data: TArray<Byte>);
+       function ToData: TArray<Byte>;
+       function BuildCard() : TArray<byte>;
+
 
        // ROLE
        function getIsAdmin() : boolean;
@@ -43,7 +49,7 @@ type
        function getIsMechan() : boolean;
        function getIsPNR() : boolean;
 
-       function verification(tempCardRow : TArray<Byte>) : boolean;
+       function TempCardVerification(tempCardRow : TArray<Byte>) : boolean;
 
   end;
 
@@ -126,6 +132,24 @@ begin
 
 end;
 
+function TTempCard.ToData: TArray<Byte>;
+var
+  Data: TArray<Byte>;
+begin
+  // Устанавливаем размер массива данных
+  SetLength(Data, 14);
+
+  // Копируем данные из полей класса в массив
+  Move(FCardCode, Data[0], SizeOf(FCardCode));
+  Move(FOperatorID, Data[4], SizeOf(FOperatorID));
+  Move(FRole, Data[8], SizeOf(FRole));
+  Move(FSpeed, Data[9], SizeOf(FSpeed));
+  Move(FIGNTime, Data[10], SizeOf(FIGNTime));
+  Move(FWorkTime, Data[12], SizeOf(FWorkTime));
+
+  Result := Data; // Возвращаем массив данных
+end;
+
 procedure TTempCard.setCardCode(_cardCode: Cardinal);
 begin
   FCardCode := _cardCode;
@@ -138,11 +162,14 @@ begin
 end;
 
 //
-function TTempCard.verification(tempCardRow: TArray<Byte>): boolean;
+function TTempCard.TempCardVerification(tempCardRow: TArray<Byte>): boolean;
 var
   LengthSame: Boolean;
+  TempCardDataRow:TArray<byte>;
+
 begin
   // Сравниваем длины массивов
+  TempCardDataRow := BuildCard;
   LengthSame := Length(TempCardDataRow) = Length(tempCardRow);
 
   // Если длины не равны, возвращаем false
@@ -151,6 +178,25 @@ begin
 
   // Сравниваем содержимое массивов
   Result := CompareMem(@TempCardDataRow[0], @tempCardRow[0], Length(TempCardDataRow));
+end;
+
+// Build row data card + crc
+function TTempCard.BuildCard: TArray<byte>;
+var
+  Data: TArray<Byte>;
+  ChecksumCalc : Word;
+begin
+  Data := ToData;
+  SetLength(Data, 16);
+
+  ChecksumCalc := CalculateCRC16(Data, 14);
+
+  // Записываем контрольную сумму в массив
+  Data[14] := Lo(ChecksumCalc); // Младший байт
+  Data[15] := Hi(ChecksumCalc); // Старший байт
+
+
+  result := Data;
 end;
 
 function TTempCard.FormatWithLeadingZeros(Number: Cardinal; NumDigits: Integer) : String;

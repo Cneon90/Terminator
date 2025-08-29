@@ -190,7 +190,7 @@ type
     ImageCollectionTempCard: TImageCollection;
     gbCardTemp: TGroupBox;
     CheckTempCard: TCheckBox;
-    btnCardTempAdd: TButton;
+    btnTempCardAdd: TButton;
     imgTempCard: TVirtualImage;
     edCardCode: TEdit;
     viTempCard: TVirtualImage;
@@ -277,17 +277,25 @@ type
     procedure ViServerClick(Sender: TObject);
     procedure ViWifiClick(Sender: TObject);
     procedure btnDebugClick(Sender: TObject);
-    procedure btnCardTempAddClick(Sender: TObject);
+    procedure btnTempCardAddClick(Sender: TObject);
     procedure plCardCodeClick(Sender: TObject);
     procedure CheckTempCardClick(Sender: TObject);
     procedure viTempCardMouseLeave(Sender: TObject);
     procedure viTempCardMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure viTempCardClick(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure btnLoadConfAllKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edCardCodeChange(Sender: TObject);
   private
     { Private declarations }
     FlagTerminalConfig:boolean;                                                 // Флаг запроса конфигурации терминала
     FlagTempCard : boolean;
+
+    TempCardEdit : boolean;
+
+    FCardText : String;
 
     FTempCardDefault : TArray<byte>;
 
@@ -356,6 +364,8 @@ Const
   CLIENT_LENGH = 7;
   MODEL_LENGH  = 9;
   PARK_LENGH   = 2;
+
+  CARD_LENGTH  = 10;
 
   //Названия таблиц
   TB_HW         = 'hw';
@@ -486,7 +496,9 @@ end;
 
 procedure Tfr_main.viTempCardClick(Sender: TObject);
 begin
-  btnCardTempAdd.SetFocus();
+//  btnCardTempAdd.SetFocus();
+
+  frTempCard.setTempCard(Terminal.TempCard);
   frTempCard.ShowModal();
 end;
 
@@ -674,7 +686,7 @@ begin
     end;
 
     // set forms
-    Terminal.TempCard.TempCardDataRow := Data;
+//    Terminal.TempCard.TempCardDataRow := Data;
     Terminal.TempCard.ParseData(Data);
     frTempCard.setTempCard(Terminal.TempCard);
     edCardCode.Text := Terminal.TempCard.getCardCodeStr();
@@ -1076,6 +1088,7 @@ end;
 procedure Tfr_main.Button1Click(Sender: TObject);
 begin
 
+
 end;
 
 //Сохранение в базу CAN
@@ -1253,8 +1266,16 @@ begin
   imgTempCard.ImageIndex := -1;
   if CheckTempCard.Checked then
   begin
+      var st : String;
+      st :=  edCardCode.Text ;
+      if st.IsEmpty then
+      begin
+        edCardCode.Text := '0000000000';
+
+      end;
+
       FlagTempCard := false; // Для запроса с терминала
-      Terminal.TempCardWrite(Terminal.TempCard.TempCardDataRow);
+      Terminal.TempCardWrite(Terminal.TempCard.BuildCard());
   end;
 
 
@@ -1290,6 +1311,12 @@ begin
   end;
 end;
 
+procedure Tfr_main.btnLoadConfAllKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+
+end;
+
 //Сохранение из общего файла отдельно HW
 procedure Tfr_main.btnExportHWClick(Sender: TObject);
 var
@@ -1319,7 +1346,7 @@ begin
   Clipboard.AsText := Terminal.getTerminalID;
 end;
 
-procedure Tfr_main.btnCardTempAddClick(Sender: TObject);
+procedure Tfr_main.btnTempCardAddClick(Sender: TObject);
 var
   TempCardFileStream  : TFileStream;
   cardTempBuf : Tarray<byte>;
@@ -1529,9 +1556,11 @@ begin
   edCardCode.Enabled := CheckTempCard.Checked;
   viTempCard.Enabled := CheckTempCard.Checked;
 
+  if TempCardEdit then
+  btnTempCardAdd.Enabled := CheckTempCard.Checked;
+
   if CheckTempCard.Checked then  viTempCard.ImageIndex := 2
                            else  viTempCard.ImageIndex := 4;
-
 end;
 
 procedure Tfr_main.Database1Click(Sender: TObject);
@@ -1585,6 +1614,17 @@ begin
   mmDisconnect.Enabled := false;
   btnExportFromDb.Enabled := false;
   mmConnect.Enabled := true;
+end;
+
+procedure Tfr_main.edCardCodeChange(Sender: TObject);
+var
+  TempCardNum : Cardinal;
+begin
+  imgTempCard.ImageIndex := -1;
+  // Проверяем, что edCardCode.Text содержит корректное значение
+  if TryStrToInt(edCardCode.Text, Integer(TempCardNum))
+  then Terminal.TempCard.setCardCode(TempCardNum)  // Если преобразование прошло успешно, устанавливаем значение
+  else edCardCode.Text := '';
 end;
 
 procedure Tfr_main.edNameClientKeyPress(Sender: TObject; var Key: Char);
@@ -1650,14 +1690,14 @@ end;
 
 procedure Tfr_main.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  CanClose := false;
-  if MessageDlg('Вы уверены, что хотите закрыть приложение?', TMsgDlgType.mtInformation, [mbyes, mbno], 0) = mryes then
-  begin
+//  CanClose := false;
+//  if MessageDlg('Вы уверены, что хотите закрыть приложение?', TMsgDlgType.mtInformation, [mbyes, mbno], 0) = mryes then
+//  begin
     TerminalHead.Terminate;
     TerminalHead.WaitFor;
     TerminalHead.Free;
     CanClose := true;
-  end;
+//  end;
 end;
 
 procedure Tfr_main.FormCreate(Sender: TObject);
@@ -1665,6 +1705,7 @@ var assoc     : TAssociation;
     assocHW : TAssocData;
 begin
   FormatSettings.DecimalSeparator := '.';
+  edCardCode.MaxLength := CARD_LENGTH;
 
   TempCardDefaultInit();
 
@@ -1726,8 +1767,9 @@ end;
 
 procedure Tfr_main.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
-var isSuccess:boolean;
+//var isSuccess:boolean;
 begin
+
   //ctrl+v вставка буфера
   if (Shift = [ssCtrl]) and (Key = Ord('V')) then
   begin
@@ -1740,6 +1782,52 @@ begin
       end;
     Key := 0; // Устанавливаем Key в 0, чтобы предотвратить стандартное действие клавиши
   end;
+
+// if(edCardCode.Enabled) then edCardCode.SetFocus();
+
+end;
+
+procedure Tfr_main.FormKeyPress(Sender: TObject; var Key: Char);
+var
+  cardNumbr : String;
+  TempCardNum : Cardinal;
+    ActiveCtrl: TControl;
+begin
+
+   // Получаем компонент, который имеет фокус
+  ActiveCtrl := Self.ActiveControl;
+  if Assigned(ActiveCtrl) then
+  begin
+    if (ActiveCtrl is TButton) OR (ActiveCtrl is TBitBtn)  then
+    begin
+      edCardCode.SetFocus();
+    end;
+  end;
+
+  if CheckTempCard.Checked = false then Exit();
+
+  if( ord(Key) = 13 ) then // press Enter
+  begin
+    if( Length(FCardText) >= CARD_LENGTH) // detect enter card
+    then
+      begin
+        cardNumbr := FCardText.Substring(Length(FCardText)-CARD_LENGTH, CARD_LENGTH);
+
+        if TryStrToInt(cardNumbr, Integer(TempCardNum)) then
+        begin
+        // if IsNumeric(cardNumbr) then  // All symbols are numbers.
+        //begin
+        edCardCode.Text := cardNumbr;
+        //edCardCode.SetFocus();
+        Terminal.TempCard.setCardCode(TempCardNum);
+        end;
+      end;
+
+    FCardText := '';
+    Exit();
+  end;
+
+  FCardText := FCardText + Key;
 end;
 
 procedure Tfr_main.FormShow(Sender: TObject);
@@ -1813,6 +1901,7 @@ begin
       setTempCard(FTempCardDefault);
     end;
 
+    TempCardEdit := IniFile.ReadBool('TempCard', 'TempCardEdit', false );
 
     DirBufferOpen[OPEN_DIALOG_HW]   := IniFile.ReadString('OpenDialog', 'HW','C:\');
     DirBufferOpen[OPEN_DIALOG_CAN]  := IniFile.ReadString('OpenDialog', 'CAN','C:\');
@@ -1942,7 +2031,7 @@ begin
     FlagTempCard := true;
     FCardTempRow := Copy(Data, 2, 16); // Данные временной карты
 
-    if Terminal.TempCard.verification(FCardTempRow) = true then
+    if Terminal.TempCard.TempCardVerification(FCardTempRow) = true then
     begin
       imgTempCard.ImageIndex := 1;
     end

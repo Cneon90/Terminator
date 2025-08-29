@@ -14,6 +14,7 @@ object frTempCard: TfrTempCard
   Font.Style = [fsBold]
   Position = poScreenCenter
   Scaled = False
+  StyleName = 'Glow'
   TextHeight = 22
   object plCardCode: TPanel
     Left = 0
@@ -25,7 +26,6 @@ object frTempCard: TfrTempCard
     Enabled = False
     FullRepaint = False
     TabOrder = 0
-    ExplicitWidth = 585
     object lbCardCode: TLabel
       AlignWithMargins = True
       Left = 0
@@ -65,7 +65,6 @@ object frTempCard: TfrTempCard
       Align = alRight
       Caption = 'ADMIN'
       TabOrder = 1
-      ExplicitLeft = 463
     end
   end
   object plOperatorID: TPanel
@@ -77,7 +76,6 @@ object frTempCard: TfrTempCard
     BevelOuter = bvNone
     Enabled = False
     TabOrder = 1
-    ExplicitWidth = 585
     object lbOperatorID: TLabel
       AlignWithMargins = True
       Left = 0
@@ -115,7 +113,6 @@ object frTempCard: TfrTempCard
       Align = alRight
       Caption = 'DRIVER'
       TabOrder = 1
-      ExplicitLeft = 463
     end
   end
   object plSpeed: TPanel
@@ -127,7 +124,6 @@ object frTempCard: TfrTempCard
     BevelOuter = bvNone
     Enabled = False
     TabOrder = 2
-    ExplicitWidth = 585
     object lbSpeed: TLabel
       AlignWithMargins = True
       Left = 0
@@ -191,7 +187,6 @@ object frTempCard: TfrTempCard
       Align = alRight
       Caption = 'MECHANIC'
       TabOrder = 1
-      ExplicitLeft = 463
     end
   end
   object plIGNTime: TPanel
@@ -203,7 +198,6 @@ object frTempCard: TfrTempCard
     BevelOuter = bvNone
     Enabled = False
     TabOrder = 3
-    ExplicitWidth = 585
     object lbIGNTime: TLabel
       AlignWithMargins = True
       Left = 0
@@ -267,7 +261,6 @@ object frTempCard: TfrTempCard
       Align = alRight
       Caption = 'PNR'
       TabOrder = 1
-      ExplicitLeft = 463
     end
   end
   object plWorkTime: TPanel
@@ -279,8 +272,6 @@ object frTempCard: TfrTempCard
     BevelOuter = bvNone
     Enabled = False
     TabOrder = 4
-    ExplicitTop = 123
-    ExplicitWidth = 563
     object lbWorkTime: TLabel
       AlignWithMargins = True
       Left = 0

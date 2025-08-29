@@ -6,10 +6,27 @@ interface
 procedure CreateDSN(const DSNName, DriverName, Server, Database, UserName, Password: string);
 function StructuresEqual(const Struct1, Struct2: TConfig): Boolean;
 
+function IsNumeric(const S: String): Boolean;
+
 implementation
 
 //const
 { Reserved Key Handles. }
+
+function IsNumeric(const S: String): Boolean;
+var
+  i: Integer;
+begin
+  Result := True; // Предполагаем, что строка числовая до тех пор, пока не будет найден символ, который это опровергнет
+  for i := 1 to Length(S) do
+  begin
+    if not (S[i] in ['0'..'9']) then
+    begin
+      Result := False;
+      Break;
+    end;
+  end;
+end;
 
 function StructuresEqual(const Struct1, Struct2: TConfig): Boolean;
 begin
