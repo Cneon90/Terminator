@@ -4,7 +4,7 @@
         <ProjectVersion>20.1</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -113,10 +113,11 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>Terminator_Icon5.ico</Icon_MainIcon>
         <VerInfo_Build>1</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=Technovizor;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Technovizor;FileDescription=$(MSBuildProjectName);FileVersion=1.0.2.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <UWP_DelphiLogo44>icon\img\Icon_src.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>icon\img\Icon_src.png</UWP_DelphiLogo150>
         <DCC_RangeChecking>true</DCC_RangeChecking>
+        <VerInfo_Release>2</VerInfo_Release>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

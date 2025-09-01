@@ -4,7 +4,7 @@ object fr_main: Tfr_main
   Margins.Left = 15
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'Terminator'
+  Caption = 'Terminator  1.0.2.1'
   ClientHeight = 738
   ClientWidth = 1378
   Color = clGrayText
@@ -1271,7 +1271,6 @@ object fr_main: Tfr_main
     DoubleBuffered = True
     ParentDoubleBuffered = False
     TabOrder = 5
-    ExplicitTop = 31
     object Label9: TLabel
       Left = 45
       Top = 9
@@ -1347,6 +1346,7 @@ object fr_main: Tfr_main
       Top = 175
       Width = 55
       Height = 63
+      Hint = 'version 1.0.1.2'
       Margins.Left = 15
       Margins.Top = 175
       Align = alLeft
@@ -1355,6 +1355,8 @@ object fr_main: Tfr_main
       ImageHeight = 0
       ImageIndex = 9
       ImageName = 'Infobox_info_icon_white.svg'
+      ParentShowHint = False
+      ShowHint = True
       ExplicitLeft = 3
       ExplicitTop = 200
       ExplicitHeight = 38
@@ -1428,7 +1430,7 @@ object fr_main: Tfr_main
     object edInfoTerminalName: TEdit
       Left = 800
       Top = 6
-      Width = 400
+      Width = 435
       Height = 31
       Color = clSkyBlue
       ReadOnly = True
@@ -1539,7 +1541,7 @@ object fr_main: Tfr_main
     object gbCardTemp: TGroupBox
       Left = 800
       Top = 36
-      Width = 400
+      Width = 435
       Height = 84
       Caption = 'TEMP CARD'
       TabOrder = 12
@@ -1555,7 +1557,7 @@ object fr_main: Tfr_main
       end
       object viTempCard: TVirtualImage
         AlignWithMargins = True
-        Left = 324
+        Left = 354
         Top = 17
         Width = 80
         Height = 59
@@ -1606,7 +1608,7 @@ object fr_main: Tfr_main
       object btnTempCardAdd: TButton
         Left = 273
         Top = 35
-        Width = 45
+        Width = 43
         Height = 41
         Cursor = crHandPoint
         Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1088#1077#1084#1077#1085#1085#1091#1102' '#1082#1072#1088#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
