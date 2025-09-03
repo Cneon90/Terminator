@@ -1,52 +1,44 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\database_select_config.pas',0,1,1,1,1,0,0,,
-File_1=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Forms.pas',0,1,9813,1,9839,0,0,{{2051,4},{2067,15},{'TScrollWindow'}}{{2161,4},{2265,15},{'TMainMenuBarStyleHook'}},
-File_2=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.StdCtrls.pas',0,1,5800,1,5816,0,0,{{1775,4},{1793,15},{'TScrollWindow'}},
-File_3=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\Settings\HWEdit.pas',0,1,787,55,1072,0,0,,
-File_4=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Controls.pas',0,1,8016,1,8037,0,0,,
-File_5=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_SERVEREdit.pas',0,1,102,1,145,0,0,,
-File_6=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\fr_Debug.pas',0,1,1,10,18,0,0,,
-File_7=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\TerminalThread.pas',0,1,70,43,90,0,0,,
-File_8=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.VirtualImage.pas',0,1,203,1,224,0,0,,
-File_9=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\Unit1.pas',0,1,16,1,35,0,0,,
-File_10=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\RTL\SYS\System.pas',0,1,1,1,12,0,0,,
-File_11=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\Association\association.pas',0,1,49,1,1,0,0,,
-File_12=TSourceModule,'c:\program files (x86)\embarcadero\studio\22.0\source\rtl\win\Winapi.Windows.pas',0,1,23890,1,41999,0,0,,
-File_13=TSourceModule,'C:\Users\kk\Documents\Embarcadero\Studio\Projects\Terminator\lib\lib_main.pas',0,1,1,101,31,0,0,,
-File_14=TSourceModule,'c:\program files (x86)\embarcadero\studio\22.0\SOURCE\RTL\SYS\System.SysUtils.pas',0,1,269,16,291,0,0,,
+File_0=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\decode.pas',0,1,1,1,1,0,0,,
+File_1=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\lib_main.pas',0,1,1,19,9,0,0,,
+File_2=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\Models\TempCard.pas',0,1,219,14,243,0,0,,
+File_3=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\database_select_config.pas',0,1,1,1,1,0,0,,
+File_4=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Forms.pas',0,1,9813,1,9839,0,0,{{2051,4}
+File_5=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.StdCtrls.pas',0,1,5800,1,5816,0,0,{{1775,4}
+File_6=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\Settings\HWEdit.pas',0,1,787,55,1072,0,0,,
+File_7=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.Controls.pas',0,1,8016,1,8037,0,0,,
+File_8=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\HWEdit\fr_SERVEREdit.pas',0,1,102,1,145,0,0,,
+File_9=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\fr_Debug.pas',0,1,1,10,18,0,0,,
+File_10=TSourceModule,'c:\program files (x86)\embarcadero\studio\23.0\SOURCE\VCL\Vcl.VirtualImage.pas',0,1,203,1,224,0,0,,
+File_11=TSourceModule,'C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\Unit1.pas',0,1,16,1,35,0,0,,
 
 [Modules]
-Module0=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\fr_TempCard.pas
-Module1=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\Models\TempCard.pas
+Module0=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\main.pas
+Module1=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\fr_TempCard.pas
 Module2=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas
-Module3=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\lib_main.pas
-Module4=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\decode.pas
-Count=5
+Module3=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\TerminalThread.pas
+Count=4
 EditWindowCount=1
 
-[C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\fr_TempCard.pas]
+[C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\main.pas]
 ModuleType=TSourceModule
 
-[C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\Models\TempCard.pas]
+[C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\fr_TempCard.pas]
 ModuleType=TSourceModule
 
 [C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas]
 ModuleType=TSourceModule
 
-[C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\lib_main.pas]
-ModuleType=TSourceModule
-
-[C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\decode.pas]
+[C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\TerminalThread.pas]
 ModuleType=TSourceModule
 
 [EditWindow0]
-ViewCount=5
-CurrentEditView=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\forms\fr_TempCard.pas
+ViewCount=4
+CurrentEditView=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\main.pas
 View0=0
 View1=1
 View2=2
 View3=3
-View4=4
 PercentageSizes=1
 Create=1
 Visible=1
@@ -78,7 +70,7 @@ BottomPanelClients=MessageView,DockSite1
 BottomPanelData=0000080001020100000009000000446F636B5369746531DE440000000000000239060000000000000100000000DE4400000F0000004D65737361676556696577466F726DFFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
-BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965773C29000000000000024B0600000000000001000000003C29000009000000446F636B5369746530FFFFFFFF
+BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779F1D00000000000002F206000000000000FFFFFFFF
 
 [View0]
 CustomEditViewType=TEditView
@@ -93,47 +85,36 @@ EditViewName=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\
 
 [View1]
 CustomEditViewType=TEditView
-Module=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\Models\TempCard.pas
-CursorX=14
-CursorY=243
-TopLine=219
-LeftCol=1
-Elisions=
-Bookmarks=
-EditViewName=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\Models\TempCard.pas
-
-[View2]
-CustomEditViewType=TEditView
 Module=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas
-CursorX=27
-CursorY=938
+CursorX=16
+CursorY=922
 TopLine=917
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\Terminal.pas
 
+[View2]
+CustomEditViewType=TEditView
+Module=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\main.pas
+CursorX=62
+CursorY=1491
+TopLine=1479
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=Borland.FormDesignerView
+
 [View3]
 CustomEditViewType=TEditView
-Module=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\lib_main.pas
-CursorX=19
-CursorY=9
-TopLine=1
+Module=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\TerminalThread.pas
+CursorX=14
+CursorY=108
+TopLine=67
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\lib_main.pas
-
-[View4]
-CustomEditViewType=TEditView
-Module=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\decode.pas
-CursorX=1
-CursorY=1
-TopLine=1
-LeftCol=1
-Elisions=
-Bookmarks=
-EditViewName=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\decode.pas
+EditViewName=C:\Users\Hawksoft\Documents\Embarcadero\Studio\Projects\Terminator\lib\TerminalThread.pas
 
 [Watches]
 Count=1
@@ -269,6 +250,11 @@ Dockable=1
 StayOnTop=0
 SplitPos=111
 
+[PropInspDesignerSelection]
+ArrangeBy=Name
+SelectedItem=Action,
+ExpandedItems=Anchors=0,BorderIcons=0,Constraints=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0
+
 [frmDesignPreview]
 PercentageSizes=1
 Create=1
@@ -398,12 +384,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=5938
-Height=1135
+Width=2339
+Height=1212
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=5938
-ClientHeight=1135
+ClientWidth=2339
+ClientHeight=1212
 TBDockHeight=2500
 LRDockWidth=3401
 Dockable=1
@@ -436,12 +422,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=5938
-Height=1135
+Width=2339
+Height=1212
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=5938
-ClientHeight=1135
+ClientWidth=2339
+ClientHeight=1212
 TBDockHeight=3212
 LRDockWidth=2823
 Dockable=1
@@ -455,12 +441,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=5938
-Height=1135
+Width=2339
+Height=1212
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=5938
-ClientHeight=1135
+ClientWidth=2339
+ClientHeight=1212
 TBDockHeight=1154
 LRDockWidth=3677
 Dockable=1
@@ -587,15 +573,15 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=0
-Top=28
-Width=5938
-Height=1404
+Left=8
+Top=8
+Width=2339
+Height=1481
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=5938
-ClientHeight=1404
-TBDockHeight=1404
+ClientWidth=2339
+ClientHeight=1481
+TBDockHeight=1481
 LRDockWidth=2339
 Dockable=1
 StayOnTop=0
@@ -611,7 +597,7 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=0
+Left=952
 Top=28
 Width=3823
 Height=1423
