@@ -9,6 +9,14 @@ interface
 type
 
   TTempCard = class
+    const
+      DRIVER_BIT_NUM = 0;
+      ADMIN_BIT_NUM  = 1;
+      MECH_BIT_NUM   = 2;
+      PNR_BIT_NUM    = 3;
+
+
+
     private
       FCardCode    : Cardinal;
       FOperatorID  : Cardinal;
@@ -24,18 +32,25 @@ type
 
 
        //Card code
-       procedure setCardCode(_cardCode : Cardinal);
+       procedure setCardCode(_cardCode : Cardinal); overload;
+       function  setCardCode(id: String) : boolean; overload;
        function  getCardCode(): Cardinal;
        function  getCardCodeStr():String;
 
+
+
        // Operator id
-       function getOperatorID() : Cardinal; 
+       function  getOperatorID() : Cardinal;
+       procedure setOperatorID(id : Cardinal);          overload;
+       function  setOperatorID(id : String) : boolean;  overload;
        // Speed
        procedure setSpeed(_speed : Byte);
-       function getSpeed : Byte; 
-       // IGN TIME 
-       function getIGNTime(): word; 
+       function getSpeed : Byte;
+       // IGN TIME
+       procedure setIGNTime(IGNMin : word);
+       function getIGNTime(): word;
        // Work time
+       procedure setWorkTime(workMin : word);
        function getWorkTime(): Word;
 
        procedure ParseData(const Data: TArray<Byte>);
@@ -44,12 +59,20 @@ type
 
 
        // ROLE
+       procedure setAdmin(role: boolean);
+       procedure setDriver(role: boolean);
+       procedure setMechan(role:boolean);
+       procedure setPNR(role:boolean);
+
        function getIsAdmin() : boolean;
        function getIsDriver() : boolean;
        function getIsMechan() : boolean;
        function getIsPNR() : boolean;
 
+
+
        function TempCardVerification(tempCardRow : TArray<Byte>) : boolean;
+
 
   end;
 
@@ -66,6 +89,38 @@ begin
   // Возвращаем true, если бит установлен, иначе false
   Result := (Value and (1 shl BitPosition)) <> 0;
 end;
+
+function SetBit(var Value: Byte; BitPosition: Integer): Byte;
+begin
+  // Проверяем, что позиция бита находится в пределах 0-7
+  if (BitPosition < 0) or (BitPosition > 7) then
+    raise Exception.Create('Bit position must be between 0 and 7.');
+
+  // Устанавливаем бит с помощью операции OR
+  Result := Value or (1 shl BitPosition);
+end;
+
+function ResetBit(var Value: Byte; BitPosition: Integer): Byte;
+begin
+  // Проверяем, что позиция бита находится в пределах 0-7
+  if (BitPosition < 0) or (BitPosition > 7) then
+    raise Exception.Create('Bit position must be between 0 and 7.');
+
+  // Сбрасываем бит с помощью операции AND и инверсии маски
+  Result := Value and not (1 shl BitPosition);
+end;
+
+
+//procedure SetBit(var SetWord: Byte; BitNum: Byte);
+//begin
+//  SetWord := SetWord or BitNum; { Устанавливаем бит }
+//end;
+//
+//procedure resetBit(var SetWord: Byte ; BitNum: Byte);
+//begin
+//  SetWord := SetWord or BitNum; { Устанавливаем бит }
+//  SetWord := SetWord xor BitNum; { Переключаем бит   }
+//end;
 
 function TTempCard.getCardCode: Cardinal;
 begin
@@ -84,22 +139,22 @@ end;
 
 function TTempCard.getIsAdmin: boolean;
 begin
-  result := GetBit(FRole, 1);
+  result := GetBit(FRole, ADMIN_BIT_NUM);
 end;
 
 function TTempCard.getIsDriver: boolean;
 begin
-  result := GetBit(FRole, 0);
+  result := GetBit(FRole, DRIVER_BIT_NUM);
 end;
 
 function TTempCard.getIsMechan: boolean;
 begin
-  result := GetBit(FRole, 2);
+  result := GetBit(FRole, MECH_BIT_NUM);
 end;
 
 function TTempCard.getIsPNR: boolean;
 begin
-  result := GetBit(FRole, 3);
+  result := GetBit(FRole, PNR_BIT_NUM);
 end;
 
 function TTempCard.getOperatorID: Cardinal;
@@ -140,12 +195,12 @@ begin
   SetLength(Data, 14);
 
   // Копируем данные из полей класса в массив
-  Move(FCardCode, Data[0], SizeOf(FCardCode));
-  Move(FOperatorID, Data[4], SizeOf(FOperatorID));
-  Move(FRole, Data[8], SizeOf(FRole));
-  Move(FSpeed, Data[9], SizeOf(FSpeed));
-  Move(FIGNTime, Data[10], SizeOf(FIGNTime));
-  Move(FWorkTime, Data[12], SizeOf(FWorkTime));
+  Move(FCardCode,   Data[00], SizeOf(FCardCode));
+  Move(FOperatorID, Data[04], SizeOf(FOperatorID));
+  Move(FRole,       Data[08], SizeOf(FRole));
+  Move(FSpeed,      Data[09], SizeOf(FSpeed));
+  Move(FIGNTime,    Data[10], SizeOf(FIGNTime));
+  Move(FWorkTime,   Data[12], SizeOf(FWorkTime));
 
   Result := Data; // Возвращаем массив данных
 end;
@@ -156,10 +211,73 @@ begin
 end;
 
 
+procedure TTempCard.setAdmin(role: boolean);
+begin
+ if role then
+    FRole := SetBit(FRole, ADMIN_BIT_NUM) // Присваиваем результат обратно в FRole
+  else
+    FRole := resetBit(FRole, ADMIN_BIT_NUM); // Присваиваем результат обратно в FRole
+end;
+
+procedure TTempCard.setDriver(role: boolean);
+begin
+ if role then
+    FRole := SetBit(FRole, DRIVER_BIT_NUM) // Присваиваем результат обратно в FRole
+  else
+    FRole := resetBit(FRole, DRIVER_BIT_NUM); // Присваиваем результат обратно в FRole
+end;
+
+procedure TTempCard.setMechan(role: boolean);
+begin
+  if role then
+    FRole := SetBit(FRole, MECH_BIT_NUM) // Присваиваем результат обратно в FRole
+  else
+    FRole := resetBit(FRole, MECH_BIT_NUM); // Присваиваем результат обратно в FRole
+end;
+
+procedure TTempCard.setPNR(role: boolean);
+begin
+  if role then
+    FRole := SetBit(FRole, PNR_BIT_NUM) // Присваиваем результат обратно в FRole
+  else
+    FRole := resetBit(FRole, PNR_BIT_NUM); // Присваиваем результат обратно в FRole
+end;
+
+procedure TTempCard.setIGNTime(IGNMin: word);
+begin
+  FIGNTime := IGNMin * 60; // Save to seconds
+end;
+
+procedure TTempCard.setWorkTime(workMin: word);
+begin
+  FWorkTime := workMin * 60; // Save to seconds
+end;
+
+function TTempCard.setOperatorID(id: String) : boolean;
+begin
+  if TryStrToInt(id, Integer(FOperatorID))
+  then result := true  // Если преобразование прошло успешно, устанавливаем значение
+  else result := false;
+end;
+
+function TTempCard.setCardCode(id: String) : boolean;
+begin
+  if TryStrToInt(id, Integer(FCardCode))
+  then result := true  // Если преобразование прошло успешно, устанавливаем значение
+  else result := false;
+end;
+
+procedure TTempCard.setOperatorID(id: Cardinal);
+begin
+  FOperatorID := id;
+end;
+
 procedure TTempCard.setSpeed(_speed: Byte);
 begin
   FSpeed := _speed;
 end;
+
+
 
 //
 function TTempCard.TempCardVerification(tempCardRow: TArray<Byte>): boolean;

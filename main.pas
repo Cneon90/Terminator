@@ -186,15 +186,15 @@ type
     Label23: TLabel;
     vImgTerm: TVirtualImageList;
     ADOQuerydata: TBlobField;
-    OpenDialogTempCard: TOpenDialog;
     ImageCollectionTempCard: TImageCollection;
     gbCardTemp: TGroupBox;
     CheckTempCard: TCheckBox;
-    btnTempCardAdd: TButton;
+    btnTempCardEdit: TButton;
     imgTempCard: TVirtualImage;
     edCardCode: TEdit;
-    viTempCard: TVirtualImage;
-    lbCardCode: TLabel;
+    btnTempCardWrite: TButton;
+    vimgTempCard: TVirtualImageList;
+    imgCollCard: TImageCollection;
     procedure FormCreate(Sender: TObject);
     procedure actConnectExecute(Sender: TObject);
     procedure actDisconnectExecute(Sender: TObject);
@@ -277,7 +277,7 @@ type
     procedure ViServerClick(Sender: TObject);
     procedure ViWifiClick(Sender: TObject);
     procedure btnDebugClick(Sender: TObject);
-    procedure btnTempCardAddClick(Sender: TObject);
+    procedure btnTempCardEditClick(Sender: TObject);
     procedure plCardCodeClick(Sender: TObject);
     procedure CheckTempCardClick(Sender: TObject);
     procedure viTempCardMouseLeave(Sender: TObject);
@@ -288,6 +288,7 @@ type
     procedure btnLoadConfAllKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure edCardCodeChange(Sender: TObject);
+    procedure btnTempCardWriteClick(Sender: TObject);
   private
     { Private declarations }
     FlagTerminalConfig:boolean;                                                 // Флаг запроса конфигурации терминала
@@ -309,6 +310,7 @@ type
     procedure showMenuButton(actFile: Taction; actDb:Taction);
     procedure parserBuffer(Text: String);
     procedure setTempCard(Data : TArray<byte>);
+    procedure TempCardWrite();
     function LoadConfigFromDB(TableName:String; caption:String; DataSize: integer): TdbReadRec;
 
   public
@@ -498,16 +500,16 @@ procedure Tfr_main.viTempCardClick(Sender: TObject);
 begin
 //  btnCardTempAdd.SetFocus();
 
-  frTempCard.setTempCard(Terminal.TempCard);
-  frTempCard.ShowModal();
+//  frTempCard.setTempCard(Terminal.TempCard);
+//  frTempCard.ShowModal();
 end;
 
 procedure Tfr_main.viTempCardMouseLeave(Sender: TObject);
 begin
 //  viTempCard.ImageIndex := 2;
 
-  if CheckTempCard.Checked then  viTempCard.ImageIndex := 2
-                           else  viTempCard.ImageIndex := 4;
+//  if CheckTempCard.Checked then  viTempCard.ImageIndex := 2
+//                           else  viTempCard.ImageIndex := 4;
 end;
 
 procedure Tfr_main.viTempCardMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -515,8 +517,8 @@ procedure Tfr_main.viTempCardMouseMove(Sender: TObject; Shift: TShiftState; X,
 begin
 //  viTempCard.ImageIndex := 3;
 
-  if CheckTempCard.Checked then  viTempCard.ImageIndex := 3
-                           else  viTempCard.ImageIndex := 4;
+//  if CheckTempCard.Checked then  viTempCard.ImageIndex := 3
+//                           else  viTempCard.ImageIndex := 4;
 end;
 
 procedure Tfr_main.ViWifiClick(Sender: TObject);
@@ -688,7 +690,7 @@ begin
     // set forms
 //    Terminal.TempCard.TempCardDataRow := Data;
     Terminal.TempCard.ParseData(Data);
-    frTempCard.setTempCard(Terminal.TempCard);
+//    frTempCard.setTempCard(Terminal.TempCard);
     edCardCode.Text := Terminal.TempCard.getCardCodeStr();
 end;
 
@@ -796,6 +798,9 @@ end;
 procedure Tfr_main.actTerminalConnectExecute(Sender: TObject);
 begin
   imgConnectTerminal.ImageIndex := CONNECT_GREEN;
+  if CheckTempCard.Checked then btnTempCardWrite.Enabled := true;
+  btnFirmware.Enabled           := true;
+//  imgTempCard.ImageIndex        := -1;
 end;
 
 //Отключение UART
@@ -923,19 +928,23 @@ begin
   Terminal.clearInfo;
   Terminal.clearConfigInfo;
   imgConnectTerminal.ImageIndex := CONNECT_RED;
-  lbTerminalID.Caption := '-';
+  lbTerminalID.Caption    := '-';
   TerminalInfo.Clear;
   TerminalInfobuf.Clear;
-  TerminalInfo.Text    := TerminalInfoBuf.Text;
-  edInfoDataProd.Text  := '00.00.00';
-  edInfoMacST.Text     := '-:-:-:-:-:-';
-  edInfoSimID.Text     := '-';
-  edInfoMacAP.Text     := '-:-:-:-:-:-';
-  edInfoSW.Text        := 'v0.00(00.00.00)';
-  edInfoCode.Text      := '-';
-  lbGsmOperator.caption:= '';
+  TerminalInfo.Text       := TerminalInfoBuf.Text;
+  edInfoDataProd.Text     := '00.00.00';
+  edInfoMacST.Text        := '-:-:-:-:-:-';
+  edInfoSimID.Text        := '-';
+  edInfoMacAP.Text        := '-:-:-:-:-:-';
+  edInfoSW.Text           := 'v0.00(00.00.00)';
+  edInfoCode.Text         := '-';
+  lbGsmOperator.caption   := '';
   vimgOperator.ImageIndex := -1;
   edInfoTerminalName.text := '';
+
+  btnTempCardWrite.Enabled := false;
+  btnFirmware.Enabled := false;
+  imgTempCard.ImageIndex := -1;
 end;
 
 //Чтение из базы Wifi
@@ -1263,20 +1272,20 @@ begin
     TerminalBuf.setCanDriverName(TerminalBuf.CanDriverNameBuf);
   move(TerminalBuf.TermianlConfig,Terminal.TermianlConfig,sizeOf(Terminal.TermianlConfig));
 
-  imgTempCard.ImageIndex := -1;
-  if CheckTempCard.Checked then
-  begin
-      var st : String;
-      st :=  edCardCode.Text ;
-      if st.IsEmpty then
-      begin
-        edCardCode.Text := '0000000000';
-
-      end;
-
-      FlagTempCard := false; // Для запроса с терминала
-      Terminal.TempCardWrite(Terminal.TempCard.BuildCard());
-  end;
+//  imgTempCard.ImageIndex := 0;
+//  if CheckTempCard.Checked then
+//  begin
+//      var st : String;
+//      st :=  edCardCode.Text ;
+//      if st.IsEmpty then
+//      begin
+//        edCardCode.Text := '0000000000';
+//
+//      end;
+//
+//      FlagTempCard := false; // Для запроса с терминала
+//      Terminal.TempCardWrite(Terminal.TempCard.BuildCard());
+//  end;
 
 
   waitFirmware := True;
@@ -1346,23 +1355,19 @@ begin
   Clipboard.AsText := Terminal.getTerminalID;
 end;
 
-procedure Tfr_main.btnTempCardAddClick(Sender: TObject);
-var
-  TempCardFileStream  : TFileStream;
-  cardTempBuf : Tarray<byte>;
-
+procedure Tfr_main.btnTempCardWriteClick(Sender: TObject);
 begin
-  if OpenDialogTempCard.Execute() then
-  begin
-    imgTempCard.ImageIndex := -1;
-    SetLength(cardTempBuf, 16);
+  TempCardWrite();
+end;
 
-    TempCardFileStream := TFileStream.Create(OpenDialogTempCard.FileName, fmOpenRead);
-    TempCardFileStream.ReadBuffer(cardTempBuf[0],   16);
-    TempCardFileStream.Position := 0;
-    setTempCard(cardTempBuf);
-  end;
+procedure Tfr_main.btnTempCardEditClick(Sender: TObject);
+begin
+//  frTempCard.setTempCard(Terminal.TempCard);
 
+  frTempCard.ShowModal();
+
+//  edCardCode.Text := IntToStr(Terminal.TempCard.getCardCode);
+  edCardCode.Text := Terminal.TempCard.getCardCodeStr();
 end;
 
 procedure Tfr_main.btnExportCANClick(Sender: TObject);
@@ -1493,6 +1498,24 @@ begin
   ];
 end;
 
+procedure Tfr_main.TempCardWrite;
+begin
+  imgTempCard.ImageIndex := 0;
+  if CheckTempCard.Checked then
+  begin
+    var st : String;
+    st :=  edCardCode.Text ;
+    if st.IsEmpty then
+    begin
+      edCardCode.Text := '0000000000';
+
+    end;
+
+    FlagTempCard := false; // Для запроса с терминала
+    Terminal.TempCardWrite(Terminal.TempCard.BuildCard());
+  end;
+end;
+
 //Обновляем список доступных компортов
 procedure Tfr_main.trmAvailableComportsTimer(Sender: TObject);
 begin
@@ -1552,15 +1575,17 @@ end;
 procedure Tfr_main.CheckTempCardClick(Sender: TObject);
 begin
   imgTempCard.ImageIndex := -1;
-  lbCardCode.Enabled := CheckTempCard.Checked;
+//  lbCardCode.Enabled := CheckTempCard.Checked;
   edCardCode.Enabled := CheckTempCard.Checked;
-  viTempCard.Enabled := CheckTempCard.Checked;
+//  viTempCard.Enabled := CheckTempCard.Checked;
+  btnTempCardEdit.Enabled := CheckTempCard.Checked;
 
   if TempCardEdit then
-  btnTempCardAdd.Enabled := CheckTempCard.Checked;
+  btnTempCardEdit.Enabled := CheckTempCard.Checked;
+//  btnTempCardWrite.Enabled := CheckTempCard.Checked;
 
-  if CheckTempCard.Checked then  viTempCard.ImageIndex := 2
-                           else  viTempCard.ImageIndex := 4;
+//  if CheckTempCard.Checked then  viTempCard.ImageIndex := 2
+//                           else  viTempCard.ImageIndex := 4;
 end;
 
 procedure Tfr_main.Database1Click(Sender: TObject);
@@ -1621,10 +1646,11 @@ var
   TempCardNum : Cardinal;
 begin
   imgTempCard.ImageIndex := -1;
+  if( not Terminal.TempCard.setCardCode(edCardCode.Text)) then edCardCode.Text := '';
   // Проверяем, что edCardCode.Text содержит корректное значение
-  if TryStrToInt(edCardCode.Text, Integer(TempCardNum))
-  then Terminal.TempCard.setCardCode(TempCardNum)  // Если преобразование прошло успешно, устанавливаем значение
-  else edCardCode.Text := '';
+//  if TryStrToInt(edCardCode.Text, Integer(TempCardNum))
+//  then Terminal.TempCard.setCardCode(TempCardNum)  // Если преобразование прошло успешно, устанавливаем значение
+//  else edCardCode.Text := '';
 end;
 
 procedure Tfr_main.edNameClientKeyPress(Sender: TObject; var Key: Char);
@@ -1714,6 +1740,7 @@ begin
 
   // forms create
   frTempCard := TfrTempCard.Create(nil);
+  frTempCard.FTerminalPtr := @Terminal;
 
   TerminalBuf     := Tterminal.Create();     // Буферный файл
   Terminal        := Tterminal.Create(comport); // Терминал (Передача компонента)
@@ -2063,6 +2090,7 @@ begin
       fr_Terminal.mmTerminal.Lines.Add('Received data: ' + HexString);
     end
   );
+
 
 
 

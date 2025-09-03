@@ -1540,78 +1540,68 @@ object fr_main: Tfr_main
     end
     object gbCardTemp: TGroupBox
       Left = 800
-      Top = 36
-      Width = 435
-      Height = 84
+      Top = 38
+      Width = 235
+      Height = 55
       Caption = 'TEMP CARD'
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 12
       object imgTempCard: TVirtualImage
-        Left = 237
-        Top = 20
-        Width = 22
-        Height = 21
+        AlignWithMargins = True
+        Left = 210
+        Top = 23
+        Width = 20
+        Height = 25
+        Margins.Left = 0
+        Margins.Right = 0
+        Margins.Bottom = 5
+        Align = alLeft
         ImageCollection = ImageCollectionTempCard
         ImageWidth = 0
         ImageHeight = 0
         ImageIndex = -1
-      end
-      object viTempCard: TVirtualImage
-        AlignWithMargins = True
-        Left = 354
-        Top = 17
-        Width = 80
-        Height = 59
-        Cursor = crHandPoint
-        Margins.Top = 0
-        Margins.Bottom = 2
-        DragCursor = crHandPoint
-        ImageCollection = ImageCollectionTempCard
-        ImageWidth = 0
-        ImageHeight = 0
-        ImageIndex = 4
-        ImageName = 'TempCard_gray'
-        Enabled = False
-        OnClick = viTempCardClick
-        OnMouseLeave = viTempCardMouseLeave
-        OnMouseMove = viTempCardMouseMove
-      end
-      object lbCardCode: TLabel
-        Left = 15
-        Top = 48
-        Width = 110
-        Height = 22
-        Caption = 'CARD CODE:'
-        Enabled = False
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -19
-        Font.Name = 'Courier New'
-        Font.Style = [fsBold]
-        ParentFont = False
+        ExplicitLeft = 275
+        ExplicitTop = 30
+        ExplicitHeight = 27
       end
       object CheckTempCard: TCheckBox
-        Left = 12
-        Top = 21
-        Width = 224
-        Height = 21
+        AlignWithMargins = True
+        Left = 5
+        Top = 23
+        Width = 15
+        Height = 27
         Cursor = crHandPoint
-        Caption = #1055#1088#1086#1087#1080#1089#1072#1090#1100' '#1074#1088#1077#1084#1077#1085#1085#1091#1102' '#1082#1072#1088#1090#1091
+        Hint = #1055#1088#1086#1087#1080#1089#1072#1090#1100' '#1074#1088#1077#1084#1077#1085#1085#1091#1102' '#1082#1072#1088#1090#1091
+        Margins.Right = 0
+        Align = alLeft
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
         Font.Name = 'Courier New'
         Font.Style = [fsBold]
         ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 0
         OnClick = CheckTempCardClick
       end
-      object btnTempCardAdd: TButton
-        Left = 273
-        Top = 35
-        Width = 43
-        Height = 41
+      object btnTempCardEdit: TButton
+        AlignWithMargins = True
+        Left = 157
+        Top = 23
+        Width = 25
+        Height = 25
         Cursor = crHandPoint
-        Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1088#1077#1084#1077#1085#1085#1091#1102' '#1082#1072#1088#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
+        Margins.Left = 0
+        Margins.Right = 0
+        Margins.Bottom = 5
+        Align = alLeft
+        Caption = '...'
         Enabled = False
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
@@ -1622,18 +1612,22 @@ object fr_main: Tfr_main
         ImageName = 'ImportFile_32'
         ImageMargins.Left = 2
         ImageMargins.Top = 2
-        Images = imgList
         ParentFont = False
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
-        OnClick = btnTempCardAddClick
+        OnClick = btnTempCardEditClick
       end
       object edCardCode: TEdit
-        Left = 122
-        Top = 45
+        AlignWithMargins = True
+        Left = 20
+        Top = 23
         Width = 137
-        Height = 31
+        Height = 25
+        Margins.Left = 0
+        Margins.Right = 0
+        Margins.Bottom = 5
+        Align = alLeft
         Enabled = False
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
@@ -1646,6 +1640,28 @@ object fr_main: Tfr_main
         TabOrder = 2
         Text = '0000000000'
         OnChange = edCardCodeChange
+        ExplicitHeight = 31
+      end
+      object btnTempCardWrite: TButton
+        AlignWithMargins = True
+        Left = 185
+        Top = 23
+        Width = 25
+        Height = 25
+        Cursor = crHandPoint
+        Hint = #1047#1072#1087#1080#1089#1072#1090#1100' '#1082#1072#1088#1090#1091' '
+        Margins.Right = 0
+        Margins.Bottom = 5
+        Align = alLeft
+        Enabled = False
+        ImageAlignment = iaCenter
+        ImageIndex = 0
+        ImageName = 'edit'
+        Images = vimgTempCard
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 3
+        OnClick = btnTempCardWriteClick
       end
     end
   end
@@ -23667,13 +23683,6 @@ object fr_main: Tfr_main
     Left = 742
     Top = 74
   end
-  object OpenDialogTempCard: TOpenDialog
-    DefaultExt = '*.tcd'
-    Filter = 'tcd|*.tcd|all|*.*'
-    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
-    Left = 1015
-    Top = 65526
-  end
   object ImageCollectionTempCard: TImageCollection
     Images = <
       item
@@ -25374,5 +25383,108 @@ object fr_main: Tfr_main
       end>
     Left = 20
     Top = 235
+  end
+  object vimgTempCard: TVirtualImageList
+    Images = <
+      item
+        CollectionIndex = 0
+        CollectionName = 'edit'
+        Name = 'edit'
+      end>
+    ImageCollection = imgCollCard
+    Width = 20
+    Height = 20
+    Left = 683
+    Top = 153
+  end
+  object imgCollCard: TImageCollection
+    Images = <
+      item
+        Name = 'edit'
+        SourceImages = <
+          item
+            Image.Data = {
+              89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
+              A2000001376943435041646F6265205247422028313939382900002891958FBF
+              4AC3501487BF1B45C5A15608E2E0702751506CD5C18C495B8A2058AB4392AD49
+              439562126EAE7FFA108E6E1D5CDC7D022747C141F1097C03C5A98343840C058B
+              DFF49DDF391CCE01A362D79D865186F358AB76D391AEE7CBD917669802804E98
+              A576AB7500102771C418DFEF0880D74DBBEE34C6FB7F321FA64A032360BB1B65
+              21880AD0BFD2A9063104CCA09F6A100F80A94EDA35104F40A997FB1B500A72FF
+              004ACAF57C105F80D9733D1F8C39C00C725F014C1D5D6B805A920ED459EF54CB
+              AA6559D2EE2641248F07998ECE33B91F87894A13D5D15117C8EF0360311F6C37
+              1DB956B5ACBDF57FFE3D11D7F3656E9F4708402C3D17594178A12E7F55183B93
+              EB62C770190EEF617A5464BB3770B7010BB745B65A85F2163C0E7F00C0C64FFD
+              F3533FC8000000097048597300000EC400000EC401952B0E1B000005D1695458
+              74584D4C3A636F6D2E61646F62652E786D7000000000003C3F787061636B6574
+              20626567696E3D22EFBBBF222069643D2257354D304D7043656869487A726553
+              7A4E54637A6B633964223F3E203C783A786D706D65746120786D6C6E733A783D
+              2261646F62653A6E733A6D6574612F2220783A786D70746B3D2241646F626520
+              584D5020436F726520352E362D633134352037392E3136333439392C20323031
+              382F30382F31332D31363A34303A32322020202020202020223E203C7264663A
+              52444620786D6C6E733A7264663D22687474703A2F2F7777772E77332E6F7267
+              2F313939392F30322F32322D7264662D73796E7461782D6E7323223E203C7264
+              663A4465736372697074696F6E207264663A61626F75743D222220786D6C6E73
+              3A786D703D22687474703A2F2F6E732E61646F62652E636F6D2F7861702F312E
+              302F2220786D6C6E733A64633D22687474703A2F2F7075726C2E6F72672F6463
+              2F656C656D656E74732F312E312F2220786D6C6E733A70686F746F73686F703D
+              22687474703A2F2F6E732E61646F62652E636F6D2F70686F746F73686F702F31
+              2E302F2220786D6C6E733A786D704D4D3D22687474703A2F2F6E732E61646F62
+              652E636F6D2F7861702F312E302F6D6D2F2220786D6C6E733A73744576743D22
+              687474703A2F2F6E732E61646F62652E636F6D2F7861702F312E302F73547970
+              652F5265736F757263654576656E74232220786D703A43726561746F72546F6F
+              6C3D2241646F62652050686F746F73686F702043432032303139202857696E64
+              6F7773292220786D703A437265617465446174653D22323032352D30392D3033
+              5431303A31323A31312B30353A30302220786D703A4D6F64696679446174653D
+              22323032352D30392D30335431303A31343A31392B30353A30302220786D703A
+              4D65746164617461446174653D22323032352D30392D30335431303A31343A31
+              392B30353A3030222064633A666F726D61743D22696D6167652F706E67222070
+              686F746F73686F703A436F6C6F724D6F64653D22332220786D704D4D3A496E73
+              74616E636549443D22786D702E6969643A33633963663236662D396162302D62
+              3534622D393136392D3534616530303262316162352220786D704D4D3A446F63
+              756D656E7449443D2261646F62653A646F6369643A70686F746F73686F703A61
+              613432303165372D383333342D636434302D386364362D383336646363336264
+              3236622220786D704D4D3A4F726967696E616C446F63756D656E7449443D2278
+              6D702E6469643A36626161333730312D373136392D623934612D616164362D62
+              3739626330376465376639223E203C786D704D4D3A486973746F72793E203C72
+              64663A5365713E203C7264663A6C692073744576743A616374696F6E3D226372
+              6561746564222073744576743A696E7374616E636549443D22786D702E696964
+              3A36626161333730312D373136392D623934612D616164362D62373962633037
+              6465376639222073744576743A7768656E3D22323032352D30392D3033543130
+              3A31323A31312B30353A3030222073744576743A736F6674776172654167656E
+              743D2241646F62652050686F746F73686F702043432032303139202857696E64
+              6F777329222F3E203C7264663A6C692073744576743A616374696F6E3D227361
+              766564222073744576743A696E7374616E636549443D22786D702E6969643A33
+              633963663236662D396162302D623534622D393136392D353461653030326231
+              616235222073744576743A7768656E3D22323032352D30392D30335431303A31
+              343A31392B30353A3030222073744576743A736F6674776172654167656E743D
+              2241646F62652050686F746F73686F702043432032303139202857696E646F77
+              7329222073744576743A6368616E6765643D222F222F3E203C2F7264663A5365
+              713E203C2F786D704D4D3A486973746F72793E203C2F7264663A446573637269
+              7074696F6E3E203C2F7264663A5244463E203C2F783A786D706D6574613E203C
+              3F787061636B657420656E643D2272223F3ECF191F5100000243494441544889
+              CDD73F6C4D6118C7F1CF2D11A56230880889C5C46061A0836235A9960D11D56A
+              546212B349A4C49F041D2CA58D412224489A0A931006829CD9424CD234A22DC3
+              FB1EF7F4B87FCEBDED4DFC9237CF93F73DE77CCFF3BC7FCE734A499268A18671
+              0C53388FDBE9C0D21642C77030FA1DB88595B80C6D2D828E66A0C77131FAC338
+              4D6B22BE879EE80F2AA7773D0E45F88F2CB8846D055EE6375E479BD738BAA3DF
+              8F1B99B1C3F882B3184921BDB8804D75A0A91E627F0D2874E12666337D1311AC
+              0D7B713703FD55A7FDC4A71CF46E063A82691CC02BE575D48DC7E94B969224F9
+              8CCD78863E7CAB13ED9CB03D2A453A80EBD88997B1EF091E28A77D125DA52449
+              D2B9DA8AF775A07965A183B89A19DB873B5897E99BC46E421AE66267A35BEB5E
+              063A9483123278A7123485A593BFBC01E8A8F29619120F859C0EE264F49F67A1
+              34B78FB3E93D856B55A063D19FCC43693CBD59E8E966A18D8247CD9FD32BCD42
+              1B018F0AC71D21D24A73DA5B144AB139EECD40F35B2655B770881482522CE2CE
+              681FD5808E57819E118ECD8EFC4D45226E8FF66383D0365C8AFE7D3C951BACA7
+              35D17EC8F5F7D48012BE76DFAB3DB448C41BA3EDC40AACC5061CA9014D359BB3
+              0D8197457B34B6AC26B0A7C033FE5111709F50BA74E0ABF0F5FA2EA4BED2625B
+              34F00BEC6816504DAD2AF6FE6F709AEEA95A1736A159CC447F49257029FAAB16
+              190CABAB0D2C150AB2ED42A53F20ACDC85AA1DE7843F077853097C026FB145A8
+              14165BFD2A9C606D78875D113A2D14EA0B6D3342E178CCFCA2FEAFFE003FBC9A
+              FF4EFECBDA0000000049454E44AE426082}
+          end>
+      end>
+    Left = 723
+    Top = 153
   end
 end

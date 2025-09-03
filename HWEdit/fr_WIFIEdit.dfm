@@ -27,7 +27,6 @@ object frWifiEdit: TfrWifiEdit
     Align = alTop
     Caption = 'Common settings:'
     TabOrder = 0
-    ExplicitWidth = 997
     object lbMode: TLabel
       AlignWithMargins = True
       Left = 5
@@ -108,7 +107,6 @@ object frWifiEdit: TfrWifiEdit
       MinValue = 0
       TabOrder = 2
       Value = 0
-      ExplicitLeft = 880
     end
   end
   object plMain: TPanel
@@ -122,8 +120,6 @@ object frWifiEdit: TfrWifiEdit
     Caption = 'plMain'
     ShowCaption = False
     TabOrder = 1
-    ExplicitWidth = 997
-    ExplicitHeight = 351
     object gbAPSettongs: TGroupBox
       Left = 0
       Top = 0
@@ -132,7 +128,6 @@ object frWifiEdit: TfrWifiEdit
       Align = alLeft
       Caption = 'AP settongs:'
       TabOrder = 0
-      ExplicitHeight = 351
       object plAPVisibility: TPanel
         Left = 2
         Top = 26
@@ -174,8 +169,7 @@ object frWifiEdit: TfrWifiEdit
             Cursor = crHandPoint
             Margins.Left = 0
             Align = alClient
-            DoubleBuffered = True
-            ParentDoubleBuffered = False
+            ParentColor = True
             StateCaptions.CaptionOn = 'Hidden'
             StateCaptions.CaptionOff = 'Visible'
             TabOrder = 0
@@ -225,8 +219,7 @@ object frWifiEdit: TfrWifiEdit
             Cursor = crHandPoint
             Margins.Left = 0
             Align = alClient
-            DoubleBuffered = True
-            ParentDoubleBuffered = False
+            ParentColor = True
             StateCaptions.CaptionOn = 'Secured (WPA)'
             StateCaptions.CaptionOff = 'Opened'
             TabOrder = 0
@@ -347,9 +340,6 @@ object frWifiEdit: TfrWifiEdit
           Caption = 'plAPDHCPts'
           ShowCaption = False
           TabOrder = 0
-          ExplicitLeft = 178
-          ExplicitTop = -3
-          ExplicitHeight = 31
           object tsAPDHCP: TToggleSwitch
             AlignWithMargins = True
             Left = 3
@@ -358,8 +348,7 @@ object frWifiEdit: TfrWifiEdit
             Height = 35
             Cursor = crHandPoint
             Align = alClient
-            DoubleBuffered = True
-            ParentDoubleBuffered = False
+            ParentColor = True
             StateCaptions.CaptionOn = 'Enabled'
             StateCaptions.CaptionOff = 'Disabled'
             TabOrder = 0
@@ -378,7 +367,6 @@ object frWifiEdit: TfrWifiEdit
         Caption = 'plAPIP'
         ShowCaption = False
         TabOrder = 5
-        ExplicitTop = 221
         object lbAPIP: TLabel
           AlignWithMargins = True
           Left = 140
@@ -389,7 +377,6 @@ object frWifiEdit: TfrWifiEdit
           Margins.Right = 0
           Align = alRight
           Caption = 'IP:'
-          ExplicitTop = 10
           ExplicitHeight = 24
         end
         object plAPIPAssebler: TPanel
@@ -520,7 +507,6 @@ object frWifiEdit: TfrWifiEdit
         Caption = 'plAPMask'
         ShowCaption = False
         TabOrder = 6
-        ExplicitTop = 262
         object lbAPMask: TLabel
           AlignWithMargins = True
           Left = 116
@@ -661,7 +647,6 @@ object frWifiEdit: TfrWifiEdit
         Caption = 'plAPGateWay'
         ShowCaption = False
         TabOrder = 7
-        ExplicitTop = 303
         object lbAPGateWay: TLabel
           AlignWithMargins = True
           Left = 80
@@ -801,8 +786,6 @@ object frWifiEdit: TfrWifiEdit
       Align = alRight
       Caption = 'Client settings:'
       TabOrder = 1
-      ExplicitLeft = 484
-      ExplicitHeight = 351
       object plCLNetSelection: TPanel
         Left = 2
         Top = 26
@@ -1025,8 +1008,8 @@ object frWifiEdit: TfrWifiEdit
             StateCaptions.CaptionOn = 'FIXED'
             StateCaptions.CaptionOff = 'AUTO'
             TabOrder = 0
-            ExplicitLeft = 3
-            ExplicitTop = -3
+            ExplicitWidth = 116
+            ExplicitHeight = 26
           end
         end
       end
@@ -1461,8 +1444,6 @@ object frWifiEdit: TfrWifiEdit
     Caption = 'plButtons'
     ShowCaption = False
     TabOrder = 2
-    ExplicitTop = 431
-    ExplicitWidth = 1003
     object btnReset: TButton
       AlignWithMargins = True
       Left = 4
@@ -1486,7 +1467,6 @@ object frWifiEdit: TfrWifiEdit
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       TabOrder = 0
       OnClick = btnSaveClick
-      ExplicitLeft = 713
     end
     object btnClose: TButton
       AlignWithMargins = True
@@ -1499,7 +1479,6 @@ object frWifiEdit: TfrWifiEdit
       Caption = #1047#1072#1082#1088#1099#1090#1100
       TabOrder = 1
       OnClick = btnCloseClick
-      ExplicitLeft = 859
     end
   end
 end

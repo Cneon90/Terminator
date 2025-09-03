@@ -63,7 +63,7 @@ begin
   try
     SetLength(buf, DataSize);
     Move(DataPtr^, buf[0], DataSize);
-    if buf[0] = $AAthen
+    if buf[0] = $AA then
       begin
         count := 0;
         pingData :=[$F0,$FE,$FF,$FF]
@@ -97,13 +97,15 @@ begin
   begin
     DataPtr := @pingData[0];
     DataSize := SizeOf(pingData);
+
     CommPortReceiveData(nil,  DataPtr, DataSize);
     try
       if FCommPort.Connected then FTerminal.info;
     except
       FCommPort.Disconnect;
     end;
-    sleep(1000);
+//    sleep(1000);
+      sleep(200);
   end;
 end;
 

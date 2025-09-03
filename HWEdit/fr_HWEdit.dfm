@@ -34,8 +34,6 @@ object frHWEdit: TfrHWEdit
     ShowCaption = False
     TabOrder = 0
     StyleName = 'Glow'
-    ExplicitTop = 825
-    ExplicitWidth = 837
     object btnClose: TButton
       AlignWithMargins = True
       Left = 695
@@ -47,7 +45,6 @@ object frHWEdit: TfrHWEdit
       Caption = #1047#1072#1082#1088#1099#1090#1100
       TabOrder = 1
       OnClick = btnCloseClick
-      ExplicitLeft = 693
     end
     object btnSave: TButton
       AlignWithMargins = True
@@ -60,7 +57,6 @@ object frHWEdit: TfrHWEdit
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       TabOrder = 0
       OnClick = btnSaveClick
-      ExplicitLeft = 547
     end
     object btnReset: TButton
       AlignWithMargins = True
@@ -92,8 +88,6 @@ object frHWEdit: TfrHWEdit
     TabOrder = 1
     OnMouseWheelDown = ScrollBoxMouseWheelDown
     OnMouseWheelUp = ScrollBoxMouseWheelUp
-    ExplicitWidth = 837
-    ExplicitHeight = 822
     object plAccessControl: TPanel
       AlignWithMargins = True
       Left = 3
@@ -107,7 +101,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 26
-      ExplicitWidth = 810
       object lbAccessControl: TLabel
         AlignWithMargins = True
         Left = 3
@@ -146,7 +139,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 19
-      ExplicitWidth = 810
       object lbBeep2: TLabel
         AlignWithMargins = True
         Left = 3
@@ -184,7 +176,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 4
-      ExplicitWidth = 810
       object lbCanDriverLabel: TLabel
         AlignWithMargins = True
         Left = 3
@@ -222,7 +213,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 6
-      ExplicitWidth = 810
       object lbCardEnabledTimeoutLablel: TLabel
         AlignWithMargins = True
         Left = 3
@@ -315,7 +305,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 2
-      ExplicitWidth = 810
       object lbPowerRelayLabel: TLabel
         AlignWithMargins = True
         Left = 3
@@ -353,7 +342,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 27
-      ExplicitWidth = 810
       object lbOperatorSessionTimeout: TLabel
         AlignWithMargins = True
         Left = 3
@@ -405,7 +393,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 8
-      ExplicitWidth = 810
       object lbPowerOnSignal: TLabel
         AlignWithMargins = True
         Left = 3
@@ -444,7 +431,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 1
-      ExplicitWidth = 810
       object lbPowerRelay: TLabel
         AlignWithMargins = True
         Left = 3
@@ -484,7 +470,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 0
-      ExplicitWidth = 810
       object lbRelayModuleType: TLabel
         AlignWithMargins = True
         Left = 3
@@ -524,7 +509,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 7
-      ExplicitWidth = 810
       object lbRemoteModuleID: TLabel
         AlignWithMargins = True
         Left = 3
@@ -565,7 +549,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 5
-      ExplicitWidth = 810
       object lbRFIDReadMode: TLabel
         AlignWithMargins = True
         Left = 3
@@ -603,7 +586,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 3
-      ExplicitWidth = 810
       object lbSignalRelayLabel: TLabel
         AlignWithMargins = True
         Left = 3
@@ -641,7 +623,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 16
-      ExplicitWidth = 810
       object lbSignalSourceCharge: TLabel
         AlignWithMargins = True
         Left = 3
@@ -679,7 +660,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 10
-      ExplicitWidth = 810
       object lbSignalSourceEngine: TLabel
         AlignWithMargins = True
         Left = 3
@@ -717,7 +697,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 9
-      ExplicitWidth = 810
       object lbSignalSourceIgnition: TLabel
         AlignWithMargins = True
         Left = 3
@@ -755,7 +734,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 15
-      ExplicitWidth = 810
       object lbSignalSourceLevel: TLabel
         AlignWithMargins = True
         Left = 3
@@ -793,7 +771,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 12
-      ExplicitWidth = 810
       object lbSignalSourceMech: TLabel
         AlignWithMargins = True
         Left = 3
@@ -831,7 +808,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 11
-      ExplicitWidth = 810
       object lbSignalSourceMove: TLabel
         AlignWithMargins = True
         Left = 3
@@ -869,7 +845,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 13
-      ExplicitWidth = 810
       object lbSignalSourceSpeed: TLabel
         AlignWithMargins = True
         Left = 3
@@ -903,11 +878,9 @@ object frHWEdit: TfrHWEdit
       Height = 35
       Align = alTop
       BevelOuter = bvNone
-      ParentShowHint = False
+      ParentColor = True
       ShowCaption = False
-      ShowHint = False
       TabOrder = 20
-      ExplicitWidth = 810
       object lbSignalSourceTurboTimer: TLabel
         AlignWithMargins = True
         Left = 3
@@ -927,8 +900,7 @@ object frHWEdit: TfrHWEdit
         Height = 29
         Cursor = crHandPoint
         Align = alLeft
-        DoubleBuffered = True
-        ParentDoubleBuffered = False
+        ParentColor = True
         TabOrder = 0
         ExplicitHeight = 26
       end
@@ -945,7 +917,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 14
-      ExplicitWidth = 810
       object lbSpeedSensorKoefficient: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1027,7 +998,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 17
-      ExplicitWidth = 810
       object lbMassFactor: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1109,7 +1079,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 18
-      ExplicitWidth = 810
       object lbMotionSensorCoefficient: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1188,11 +1157,9 @@ object frHWEdit: TfrHWEdit
       Height = 35
       Align = alTop
       BevelOuter = bvNone
-      ParentShowHint = False
+      ParentColor = True
       ShowCaption = False
-      ShowHint = False
       TabOrder = 21
-      ExplicitWidth = 810
       object lbSignalMechBeep: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1212,8 +1179,7 @@ object frHWEdit: TfrHWEdit
         Height = 29
         Cursor = crHandPoint
         Align = alLeft
-        DoubleBuffered = True
-        ParentDoubleBuffered = False
+        ParentColor = True
         TabOrder = 0
         ExplicitHeight = 26
       end
@@ -1230,7 +1196,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 22
-      ExplicitWidth = 810
       object lbAccelerometr: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1268,7 +1233,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 23
-      ExplicitWidth = 810
       object lbAccelTimeout: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1306,7 +1270,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 24
-      ExplicitWidth = 810
       object lbDeviceProtocol: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1347,7 +1310,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 25
-      ExplicitWidth = 810
       object lbDeviceKoef: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1429,7 +1391,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 28
-      ExplicitWidth = 810
       object lbMaxSpeed: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1480,7 +1441,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 29
-      ExplicitWidth = 810
       object lbSpeedLimitType: TLabel
         AlignWithMargins = True
         Left = 3
@@ -1518,7 +1478,6 @@ object frHWEdit: TfrHWEdit
       ShowCaption = False
       ShowHint = False
       TabOrder = 30
-      ExplicitWidth = 810
       object lbUsageMode: TLabel
         AlignWithMargins = True
         Left = 3
